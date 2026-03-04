@@ -895,7 +895,7 @@ function closeLightbox(event) {
 }
 
 // --- ACTIVATION & FREEMIUM LOGIC CONSTANTS ---
-const MAX_FREE_DAYS = 7;
+const MAX_FREE_DAYS = 3; // تقليل الفترة التجريبية لـ 3 أيام كطلب الدكتورة
 const TRIAL_START_KEY = 'lailaApp_trialStart';
 const LAST_GENERATION_KEY = 'lailaApp_lastGenerationDate';
 const ACTIVATION_KEY = 'lailaApp_activationCode';
