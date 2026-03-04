@@ -516,7 +516,7 @@ function openLightbox(imageSrc) {
     const modal = document.getElementById('image-lightbox');
     const img = document.getElementById('lightbox-img');
     img.src = imageSrc;
-    modal.style.display = 'block';
+    modal.style.display = 'flex';
 }
 
 function closeLightbox(event) {
