@@ -929,7 +929,7 @@ function openSupportLink(platform, event) {
         // For Telegram personal profiles, pre-filling message isn't standard like WhatsApp.
         // We'll copy the info to clipboard for the user then open the profile.
         navigator.clipboard.writeText(message).then(() => {
-            alert("تم نسخ بيانات جهازك بنجاح! سيتم الآن فتح تليجرام الدكتورة، يرجى (لصق) الرسالة وإرسالها مع وصل الدفع.");
+            alert("تم تجهيز رسالة التفعيل بنجاح! سيتم الآن فتح تليجرام الدكتورة، يرجى (لصق) الرسالة وإرسالها مع وصل الدفع لإتمام اشتراكك.");
             window.open(`https://t.me/profleila`, '_blank');
         }).catch(err => {
             // Fallback if clipboard fails
