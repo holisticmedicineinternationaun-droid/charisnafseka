@@ -922,10 +922,19 @@ function openSupportLink(platform, event) {
     const message = `مرحباً، أود تفعيل (الاشتراك الشهري لتطبيق التشخيص الذاتي).\nالتاريخ: ${dateStr}\nرمز الجهاز الخاص بي: ${deviceId}\n\nمرفق وصل الدفع للحصول على الكود فوراً.`;
 
     const encodedMessage = encodeURIComponent(message);
+
     if (platform === 'whatsapp') {
         window.open(`https://wa.me/213664083947?text=${encodedMessage}`, '_blank');
     } else {
-        window.open(`https://t.me/Leilaappbot?text=${encodedMessage}`, '_blank');
+        // For Telegram personal profiles, pre-filling message isn't standard like WhatsApp.
+        // We'll copy the info to clipboard for the user then open the profile.
+        navigator.clipboard.writeText(message).then(() => {
+            alert("تم نسخ بيانات جهازك بنجاح! سيتم الآن فتح تليجرام الدكتورة، يرجى (لصق) الرسالة وإرسالها مع وصل الدفع.");
+            window.open(`https://t.me/profleila`, '_blank');
+        }).catch(err => {
+            // Fallback if clipboard fails
+            window.open(`https://t.me/profleila`, '_blank');
+        });
     }
 }
 
