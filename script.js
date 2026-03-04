@@ -914,6 +914,17 @@ function getDeviceID() {
     return Math.abs(hash).toString(36).toUpperCase().substring(0, 6).padStart(6, 'X');
 }
 
+// Helper to show a modern toast instead of alert
+function showToast(text) {
+    const toast = document.getElementById('toast');
+    if (!toast) return;
+    toast.innerText = text;
+    toast.style.display = 'block';
+    setTimeout(() => {
+        toast.style.display = 'none';
+    }, 4000);
+}
+
 // Generate pre-filled support message
 function openSupportLink(platform, event) {
     if (event) event.preventDefault();
@@ -921,20 +932,19 @@ function openSupportLink(platform, event) {
     const deviceId = getDeviceID();
     const message = `مرحباً، أود تفعيل (الاشتراك الشهري لتطبيق التشخيص الذاتي).\nالتاريخ: ${dateStr}\nرمز الجهاز الخاص بي: ${deviceId}\n\nمرفق وصل الدفع للحصول على الكود فوراً.`;
 
-    const encodedMessage = encodeURIComponent(message);
-
     if (platform === 'whatsapp') {
+        const encodedMessage = encodeURIComponent(message);
         window.open(`https://wa.me/213664083947?text=${encodedMessage}`, '_blank');
     } else {
-        // For Telegram personal profiles, pre-filling message isn't standard like WhatsApp.
-        // We'll copy the info to clipboard for the user then open the profile.
-        navigator.clipboard.writeText(message).then(() => {
-            alert("تم تجهيز رسالة التفعيل بنجاح! سيتم الآن فتح تليجرام الدكتورة، يرجى (لصق) الرسالة وإرسالها مع وصل الدفع لإتمام اشتراكك.");
-            window.open(`https://t.me/profleila`, '_blank');
-        }).catch(err => {
-            // Fallback if clipboard fails
-            window.open(`https://t.me/profleila`, '_blank');
-        });
+        // Copy to clipboard
+        navigator.clipboard.writeText(message);
+
+        // Show visual feedback that it's ready
+        showToast("✓ تم تجهيز رسالة التفعيل! يرجى (لصقها) في محادثة الدكتورة.");
+
+        // Open Telegram immediately to avoid pop-up blocker
+        // We open it directly here because navigator.clipboard.then() breaks the user-gesture chain
+        window.open(`https://t.me/profleila`, '_blank');
     }
 }
 
