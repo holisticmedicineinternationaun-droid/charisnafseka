@@ -1050,6 +1050,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// --- DIAGNOSTIC WIZARD NAVIGATION ---
+function nextDiagStep(step) {
+    // Hide all pages
+    document.querySelectorAll('.diag-page').forEach(p => p.classList.remove('active'));
+    // Show current page
+    document.getElementById(`step-${step}`).classList.add('active');
+
+    // Update progress bar
+    document.querySelectorAll('.diag-step').forEach(s => {
+        const stepNum = parseInt(s.dataset.step);
+        if (stepNum === step) s.classList.add('active');
+        else s.classList.remove('active');
+    });
+
+    // Scroll to top of wizard
+    document.getElementById('diagnostic-wizard').scrollIntoView({ behavior: 'smooth' });
+}
+
 // --- PLAN GENERATOR LOGIC (TREATMENT & DIET) ---
 function generatePlan() {
     // --- Freemium Paywall & Premium Logic ---
@@ -1061,43 +1079,73 @@ function generatePlan() {
         let trialStartStr = localStorage.getItem(TRIAL_START_KEY);
         let lastGenStr = localStorage.getItem(LAST_GENERATION_KEY);
 
-        // Set trial start if first time
         if (!trialStartStr) {
             trialStartStr = now.toISOString();
             localStorage.setItem(TRIAL_START_KEY, trialStartStr);
         }
 
-        // Check if 7 days passed
         const trialStartDate = new Date(trialStartStr);
         const diffDays = Math.ceil(Math.abs(now - trialStartDate) / (1000 * 60 * 60 * 24));
 
         if (diffDays > MAX_FREE_DAYS) {
-            showPaywall("انتهت الفترة التجريبية!", "لقد استمتعت بتجربة أسبوع كامل مجاناً. للاستمرار في توليد خطط دقيقة مخصصة لحالتك يومياً، يرجى الاشتراك في الباقة الذهبية لدكتورة ليلى سكاك أو إدخال كود التفعيل بالأسفل.");
+            showPaywall("انتهت الفترة التجريبية!", "لقد استمتعت بتجربة 3 أيام مجاناً. للاستمرار في الحصول على تشخيصات دقيقة، يرجى الاشتراك في الباقة الذهبية.");
             return;
         }
 
-        // Check if already generated today
         if (lastGenStr === todayStr) {
-            showPaywall("استنفدت الحد اليومي!", "في الفترة التجريبية، يُسمح بتوليد خطة علاجية واحدة فقط باليوم لضمان دقة التركيز. اشترك الآن في الباقة الذهبية للحصول على عدد لا محدود من الخطط لك ولعائلتك.");
+            showPaywall("استنفدت الحد اليومي!", "في الفترة التجريبية، يُسمح بتوليد خطة تشخيصية واحدة فقط باليوم لضمان دقة التركيز.");
             return;
         }
 
-        // Valid generation: update last generation date
         localStorage.setItem(LAST_GENERATION_KEY, todayStr);
     }
-    // ----------------------------
 
+    // --- Collect Diagnostic Data ---
     const mizaj = document.getElementById('user-mizaj').value;
     const blood = document.getElementById('user-blood').value;
-    const neuro = document.getElementById('user-neuro').value;
     const ingredients = document.getElementById('user-ingredients').value.trim();
     const diseases = document.getElementById('user-diseases').value.trim();
-    const spiritual = document.getElementById('user-spiritual').value;
+
+    // Group 3: Presidential Organs detection
+    const liverCheck = document.getElementById('liver-1').checked || document.getElementById('liver-2').checked || document.getElementById('liver-3').checked;
+    const brainCheck = document.getElementById('brain-1').checked || document.getElementById('brain-2').checked;
+    const heartCheck = document.getElementById('heart-1').checked;
+
+    // Group 2/4: Pain signals & Humors
+    const painType = document.getElementById('diag-pain-type').value;
+    const dreams = document.getElementById('diag-dreams').value;
+    const mainSign = document.getElementById('diag-sign').value;
 
     const resultDiv = document.getElementById('plan-result');
 
-    // Logic 1: Determine treatment temperament (علاج الضد)
+    // Logic 1: Root Cause Analysis (التشخيص الشمولي)
+    let rootCauseHTML = "";
+    if (liverCheck) {
+        rootCauseHTML = `
+            <div class="plan-section" style="border-right: 5px solid #ff9800; background: rgba(255,152,0,0.1);">
+                <h4 style="color: #ff9800;"><i class="fas fa-microscope"></i> التحليل الشمولي: العلة في الكبد (العضو الرئيس)</h4>
+                <p>بناءً على إجابتك حول (ثقل الأكل ومرارة الفم)، يتضح أن العضو الظاهر المتألم ليس هو المصدر، بل هو "خادم" تأثر بفشل الكبد في تنقية الأخلاط. علاجك يبدأ من **تنقية الكبد** أولاً.</p>
+            </div>
+        `;
+    } else if (brainCheck) {
+        rootCauseHTML = `
+            <div class="plan-section" style="border-right: 5px solid #2196f3; background: rgba(33,150,243,0.1);">
+                <h4 style="color: #2196f3;"><i class="fas fa-brain"></i> التحليل الشمولي: العلة في الدماغ والأعصاب</h4>
+                <p>الأعراض مثل (النسيان والتنميل) تدل على أن مادة الخلط ترسبت في بطينات الدماغ أو مجاري الأعصاب. خطتك ستركز على **تلطيف الدماغ** وفتح السدد العصبية.</p>
+            </div>
+        `;
+    } else if (heartCheck) {
+        rootCauseHTML = `
+            <div class="plan-section" style="border-right: 5px solid #f44336; background: rgba(244,67,54,0.1);">
+                <h4 style="color: #f44336;"><i class="fas fa-heartbeat"></i> التحليل الشمولي: العلة في القلب</h4>
+                <p>الأعراض مثل (ضيق التنفس والخفقان) تشير إلى أن العضو الشاكي يتأثر بضعف "القوة الحيوانية" المنبعثة من القلب. خطتك ستركز على **تقوية القلب** وتعديل حرارته.</p>
+            </div>
+        `;
+    }
+
+    // Logic 2: Determine treatment temperament (علاج الضد)
     let opposingDiet = "";
+
     let forbiddenMizaj = "";
     let dailySuggestions = { breakfast: "", lunch: "", snack: "", dinner: "" };
 
@@ -1214,37 +1262,35 @@ function generatePlan() {
 
     // Generate HTML Result
     resultDiv.innerHTML = `
-        <h3><i class="fas fa-clipboard-check"></i> الخطة الغذائية والعلاجية المتكاملة لحالتك</h3>
+        <h3 style="color:var(--secondary-color); text-align:center; border-bottom: 2px solid var(--secondary-color); padding-bottom:15px; margin-bottom:25px;">
+            <i class="fas fa-clipboard-check"></i> الخطة الغذائية والعلاجية المتكاملة لحالتك الشمولية
+        </h3>
         
+        ${rootCauseHTML}
         ${medicalHTML}
 
         <div class="plan-section">
-            <h4><i class="fas fa-calendar-day"></i> 1. الجدول الغذائي اليومي المقترح (مدرج بقاعدة علاج الضد)</h4>
+            <h4><i class="fas fa-calendar-day"></i> 1. الجدول الغذائي اليومي (بناءً على توازن الأخلاط)</h4>
             <ul>
-                <li style="margin-bottom:12px;"><strong style="color:var(--primary-color)"><i class="fas fa-sun"></i> الإفطار:</strong> ${dailySuggestions.breakfast}</li>
-                <li style="margin-bottom:12px;"><strong style="color:var(--primary-color)"><i class="fas fa-utensils"></i> الغداء:</strong> ${dailySuggestions.lunch}</li>
-                <li style="margin-bottom:12px;"><strong style="color:var(--primary-color)"><i class="fas fa-coffee"></i> قهوة المساء/تصبيرة:</strong> ${dailySuggestions.snack}</li>
-                <li style="margin-bottom:12px;"><strong style="color:var(--primary-color)"><i class="fas fa-moon"></i> العشاء:</strong> ${dailySuggestions.dinner}</li>
+                <li style="margin-bottom:12px;"><strong style="color:var(--secondary-color)"><i class="fas fa-sun"></i> الإفطار:</strong> ${dailySuggestions.breakfast}</li>
+                <li style="margin-bottom:12px;"><strong style="color:var(--secondary-color)"><i class="fas fa-utensils"></i> الغداء:</strong> ${dailySuggestions.lunch}</li>
+                <li style="margin-bottom:12px;"><strong style="color:var(--secondary-color)"><i class="fas fa-coffee"></i> قهوة المساء/تصبيرة:</strong> ${dailySuggestions.snack}</li>
+                <li style="margin-bottom:12px;"><strong style="color:var(--secondary-color)"><i class="fas fa-moon"></i> العشاء:</strong> ${dailySuggestions.dinner}</li>
             </ul>
         </div>
 
         ${ingredientsHTML}
 
         <div class="plan-section">
-            <h4><i class="fas fa-balance-scale-right"></i> 2. استراتيجية علاج الضد</h4>
-            <p>لأن الطبع الطاغي لك هو <strong>${document.getElementById('user-mizaj').options[document.getElementById('user-mizaj').selectedIndex].text}</strong>، فمفتاح المعاكسة هو الطبيعة (<strong style="color:green">${opposingDiet}</strong>).</p>
-            <ul>
-                <li>توقف عن الأطعمة ذات الطبع (<span style="color:red; font-weight:bold;">${forbiddenMizaj}</span>).</li>
-            </ul>
+            <h4><i class="fas fa-balance-scale-right"></i> 2. استراتيجية علاج الضد (قانون الشفاء)</h4>
+            <p>لأنك تعاني حالياً من هيمنة <strong>${document.getElementById('user-mizaj').options[document.getElementById('user-mizaj').selectedIndex].text}</strong>، فمفتاح المعاكسة هو الطبيعة (<strong style="color:#4ade80">${opposingDiet}</strong>).</p>
+            <p style="margin-top:10px;">• تجنب تماماً الأطعمة ذات الطبع: <strong style="color:#f87171">${forbiddenMizaj}</strong>.</p>
         </div>
 
         <div class="plan-section">
-            <h4><i class="fas fa-dna"></i> 3. تدعيم الخطة بفصيلة الدم والهرمونات</h4>
-            <p><strong>بناء على الفصيلة:</strong> ${bloodAdvice}</p>
-            <p style="margin-top:10px;"><strong>توجيه العصبي والنفسي:</strong> ${neuroAdvice}</p>
+            <h4><i class="fas fa-dna"></i> 3. تدعيم الخطة بفصيلة الدم</h4>
+            <p><strong>بناء على الفصيلة (${blood}):</strong> ${bloodAdvice}</p>
         </div>
-
-        ${spiritualHTML}
     `;
 
     resultDiv.classList.remove('hidden');

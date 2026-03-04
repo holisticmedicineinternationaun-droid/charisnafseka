@@ -252,17 +252,6 @@ h2::after {
 /* Interactive Humors Styles */
 .intro-header {
     text-align: center;
-    margin-bottom: 30px;
-}
-
-.intro-header p {
-    color: #cbd5e1 !important;
-    /* light gray for readability */
-}
-
-.humors-interactive-container {
-    display: flex;
-    justify-content: center;
     gap: 30px;
     flex-wrap: wrap;
     margin-bottom: 30px;

@@ -628,75 +628,170 @@
                                 الباقات</a>.</span>
                     </div>
 
-                    <p class="plan-intro">ادخل بياناتك (تشخيصك الذاتي) ليقوم النظام بتحليل "المزاج، فصيلة الدم، والنواقل
-                        العصبية" وتكوين خطة طبائعية خاصة بك بناءً على قاعدة <strong>علاج الضد</strong>.</p>
-
-                    <div class="plan-form">
-                        <div class="form-group">
-                            <label><i class="fas fa-thermometer-three-quarters"></i> ما هو مزاجك المهيمن (الذي
-                                شخصته)؟</label>
-                            <select id="user-mizaj">
-                                <option value="hot-dry">صفراوي (حار يابس)</option>
-                                <option value="hot-moist">دموي (حار رطب)</option>
-                                <option value="cold-moist">بلغمي (بارد رطب)</option>
-                                <option value="cold-dry">سوداوي (بارد يابس)</option>
-                            </select>
+                    <div class="diagnostic-wizard" id="diagnostic-wizard">
+                        <!-- Progress Bar -->
+                        <div class="diag-progress">
+                            <div class="diag-step active" data-step="1">1. القصة</div>
+                            <div class="diag-step" data-step="2">2. العضو</div>
+                            <div class="diag-step" data-step="3">3. المصدر</div>
+                            <div class="diag-step" data-step="4">4. الخلط</div>
+                            <div class="diag-step" data-step="5">5. الوظائف</div>
                         </div>
 
-                        <div class="form-group">
-                            <label><i class="fas fa-tint"></i> ما هي فصيلة دمك؟</label>
-                            <select id="user-blood">
-                                <option value="O">فصيلة O (المزارع/الصياد - يميل للبروتين)</option>
-                                <option value="A">فصيلة A (النباتي - هضم رقيق)</option>
-                                <option value="B">فصيلة B (المتوازن - يتحمل الألبان)</option>
-                                <option value="AB">فصيلة AB (المركب الغامض)</option>
-                            </select>
+                        <!-- Step 1: القصة المرضية -->
+                        <div class="diag-page active" id="step-1">
+                            <h3><i class="fas fa-history"></i> المرحلة 1: الاستقبال المنظم (القصة المرضية)</h3>
+                            <div class="form-group">
+                                <label>ما الذي تغيّر أولاً؟ ومتى بدأ ذلك بالتحديد؟</label>
+                                <textarea id="diag-story" rows="3"
+                                    placeholder="مثلاً: بدأ ألم المعدة قبل شهر، ثم ظهر طفح جلدي الأسبوع الماضي..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>هل توجد عوامل تزيد من الألم أو تهدئه؟</label>
+                                <input type="text" id="diag-factors"
+                                    placeholder="مثلاً: يهدأ بالكمادات الدافئة، ويزداد عند المشي...">
+                            </div>
+                            <div class="wizard-nav">
+                                <button class="btn-next" onclick="nextDiagStep(2)">التالي: استنطاق العضو <i
+                                        class="fas fa-arrow-left"></i></button>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label><i class="fas fa-brain"></i> ما هي أبرز الأعراض العصبية/النفسية لديك؟</label>
-                            <select id="user-neuro">
-                                <option value="dopamine">فقدان الشغف، ضعف التركيز، كسل (نقص الدوبامين)</option>
-                                <option value="serotonin">اكتئاب، قلق، أرق، حزن (نقص السيروتونين)</option>
-                                <option value="gaba">توتر شديد، تشنج عضلي، لا تستطيع الاسترخاء (نقص جابا GABA)</option>
-                                <option value="adrenaline">عصبية مفاجئة، خفقان، ضغط، تفكير مفرط (ارتفاع الأدرينالين)
-                                </option>
-                            </select>
+                        <!-- Step 2: استنطاق العضو الظاهر -->
+                        <div class="diag-page" id="step-2">
+                            <h3><i class="fas fa-search-plus"></i> المرحلة 2: استنطاق العضو الشاكي</h3>
+                            <div class="form-group">
+                                <label>وصف طبيعة الألم بدقة:</label>
+                                <select id="diag-pain-type">
+                                    <option value="nerve">وخز كهربائي ممتد (عصبي)</option>
+                                    <option value="muscle">نقطة محددة داخل العضلة (عضلي)</option>
+                                    <option value="joint">ألم عميق يزيد مع الحركة (مفصلي)</option>
+                                    <option value="vascular">نبض مستمر مع حرارة (وعائي/دموي)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>تأثير الراحة والحركة:</label>
+                                <select id="diag-movement">
+                                    <option value="inflammatory">يزداد مع الراحة وفي الصباح (التهابي)</option>
+                                    <option value="compressive">يزداد مع وضعيات معينة كالانحناء (انضغاطي)</option>
+                                    <option value="fixed">ثابت لا يتأثر بالحركة</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>هل الألم ثابت أم متنقل؟</label>
+                                <select id="diag-mobility">
+                                    <option value="fixed">ثابت في مكانه</option>
+                                    <option value="moving">ينتقل من موضع لآخر (غالباً العلة في عضو رئيس)</option>
+                                </select>
+                            </div>
+                            <div class="wizard-nav">
+                                <button class="btn-prev" onclick="nextDiagStep(1)"><i class="fas fa-arrow-right"></i>
+                                    السابق</button>
+                                <button class="btn-next" onclick="nextDiagStep(3)">التالي: البحث عن المصدر <i
+                                        class="fas fa-arrow-left"></i></button>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label><i class="fas fa-shopping-basket"></i> ما هي قائمة طعامك لليوم والمكونات المتوفرة
-                                لديك؟</label>
-                            <textarea id="user-ingredients" rows="3"
-                                placeholder="اكتب بالضبط ما تنوي أكله اليوم أو ما يتوفر في مطبخك ليتم توزيعه في حميتك (مثلاً: شوفان، دجاج، بطاطس، بيض، تفاح، خبز أسمر...)"
-                                style="padding:12px; border-radius:10px; border:2px solid #ccc; font-family:inherit; resize:vertical;"></textarea>
+                        <!-- Step 3: البحث عن العضو السيد -->
+                        <div class="diag-page" id="step-3">
+                            <h3><i class="fas fa-crown"></i> المرحلة 3: البحث عن "العضو السَّيِّد" (المصدر)</h3>
+                            <div class="diag-check-group">
+                                <h5><i class="fas fa-capsules"></i> هل ترتبط الشكوى بالكبد؟ (مصنع الأخلاط)</h5>
+                                <label><input type="checkbox" id="liver-1"> ألم يزداد بعد الأكل مباشرة وثقل</label>
+                                <label><input type="checkbox" id="liver-2"> مرارة في الفم أو لون بول غامق</label>
+                                <label><input type="checkbox" id="liver-3"> انتفاخ أو تطبل في البطن</label>
+                            </div>
+                            <div class="diag-check-group">
+                                <h5><i class="fas fa-brain"></i> هل ترتبط الشكوى بالدماغ؟ (الوزير الأول)</h5>
+                                <label><input type="checkbox" id="brain-1"> دوار، نسيان، أو اضطراب في النوم</label>
+                                <label><input type="checkbox" id="brain-2"> تنميل في الأطراف أو اضطراب بصر</label>
+                            </div>
+                            <div class="diag-check-group">
+                                <h5><i class="fas fa-heart"></i> هل ترتبط الشكوى بالقلب؟</h5>
+                                <label><input type="checkbox" id="heart-1"> ضيق تنفس أو خفقان وكرب</label>
+                            </div>
+                            <div class="wizard-nav">
+                                <button class="btn-prev" onclick="nextDiagStep(2)"><i class="fas fa-arrow-right"></i>
+                                    السابق</button>
+                                <button class="btn-next" onclick="nextDiagStep(4)">التالي: تحديد الخلط <i
+                                        class="fas fa-arrow-left"></i></button>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label><i class="fas fa-heartbeat"></i> هل تعاني من أمراض مزمنة أو تتناول أدوية
-                                حالياً؟</label>
-                            <textarea id="user-diseases" rows="2"
-                                placeholder="اذكر أمراضك (مثلاً: ضغط، سكري، غدة درقية) أو أدويتك (مثلاً: مسيلات دم) لضمان خطة آمنة لا تتعارض مع وضعك الطبي..."
-                                style="padding:12px; border-radius:10px; border:2px solid #ccc; font-family:inherit; resize:vertical;"></textarea>
+                        <!-- Step 4: تحديد الخلط المهيمن -->
+                        <div class="diag-page" id="step-4">
+                            <h3><i class="fas fa-vial"></i> المرحلة 4: تحديد الخلط المهيمن</h3>
+                            <div class="form-group">
+                                <label>ما هي طبيعة أحلامك الغالبة؟</label>
+                                <select id="diag-dreams">
+                                    <option value="blood">أشياء حمراء، طيران، أصوات عالية (دموي)</option>
+                                    <option value="yellow">نيران، حرارة، صواعق، أشياء صفراء (صفراوي)</option>
+                                    <option value="phlegm">مياه، ثلوج، أمطار، برودة (بلغمي)</option>
+                                    <option value="black">مقابر، أماكن صعبة، خوف، أشياء سوداء (سوداوي)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>العلامة الجسدية الأكثر وضوحاً:</label>
+                                <select id="diag-sign">
+                                    <option value="heat">حرارة مفرطة واحمرار وعطش (حار)</option>
+                                    <option value="heaviness">ثقل شديد وكسل وكثرة نوم (رطب/بارد)</option>
+                                    <option value="dryness">جفاف قحولة الجلد وتيبس مفاصل (يابس)</option>
+                                    <option value="obsession">وساوس فكرية واكتئاب وأرق (سوداوي)</option>
+                                </select>
+                            </div>
+                            <div class="wizard-nav">
+                                <button class="btn-prev" onclick="nextDiagStep(3)"><i class="fas fa-arrow-right"></i>
+                                    السابق</button>
+                                <button class="btn-next" onclick="nextDiagStep(5)">التالي: علامات حيوية <i
+                                        class="fas fa-arrow-left"></i></button>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label><i class="fas fa-eye"></i> الجانب الروحي: هل تعاني من أي من هذه الأعراض الغريبة
-                                والمتكررة؟ (للتشخيص الآلي)</label>
-                            <select id="user-spiritual">
-                                <option value="none">لا أعاني من أعراض روحية واضحة، الحمد لله</option>
-                                <option value="magic">آلام متكررة في المعدة/القولون بدون سبب طبي مستمر، كوابيس مزعجة
-                                    وحيوانات مفترسة، تعطيل مفاجئ في الحياة</option>
-                                <option value="envy">تثاؤب شديد عند قراءة القرآن أو العمل، خمول مفاجئ، برودة في الأطراف،
-                                    نفور مفاجئ من شيء كنت تحبه</option>
-                                <option value="possession">عزلة تامة، غضب وانفعال شديد ومفاجئ، كراهية مفاجئة للأهل،
-                                    وساوس قهرية قوية جداً</option>
-                            </select>
+                        <!-- Step 5: الاستفراغات والبيانات الحتمية -->
+                        <div class="diag-page" id="step-5">
+                            <h3><i class="fas fa-stethoscope"></i> المرحلة 5: الاستفراغات والبيانات الختامية</h3>
+                            <div class="diag-grid-compact">
+                                <div class="form-group">
+                                    <label>فصيلة الدم:</label>
+                                    <select id="user-blood">
+                                        <option value="O">O</option>
+                                        <option value="A">A</option>
+                                        <option value="B">B</option>
+                                        <option value="AB">AB</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>المزاج الأساسي:</label>
+                                    <select id="user-mizaj">
+                                        <option value="hot-dry">صفراوي</option>
+                                        <option value="hot-moist">دموي</option>
+                                        <option value="cold-moist">بلغمي</option>
+                                        <option value="cold-dry">سوداوي</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>طبيعة البراز والبول:</label>
+                                    <input type="text" id="diag-excretion"
+                                        placeholder="مثلاً: إمساك، بول أحمر، أصفر فاقع...">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>قائمة طعامك لليوموالمكونات المتوفرة؟</label>
+                                <textarea id="user-ingredients" rows="2" placeholder="أرز، لحم، خضار..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>أمراض مزمنة أو أدوية؟</label>
+                                <textarea id="user-diseases" rows="2" placeholder="ضغط، سكري، مسيلات..."></textarea>
+                            </div>
+                            <div class="wizard-nav">
+                                <button class="btn-prev" onclick="nextDiagStep(4)"><i class="fas fa-arrow-right"></i>
+                                    السابق</button>
+                                <button class="btn-generate" onclick="generatePlan()"><i class="fas fa-magic"></i> تحليل
+                                    وتوليد الخطة الشمولية</button>
+                            </div>
                         </div>
-
-                        <button class="btn btn-generate" onclick="generatePlan()"><i class="fas fa-magic"></i> توليد
-                            الخطة الشاملة</button>
                     </div>
+
 
                     <div id="plan-result" class="plan-result hidden">
                         <!-- Plan generated by JS will appear here -->
