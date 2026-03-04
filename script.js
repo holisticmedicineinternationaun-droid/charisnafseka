@@ -545,6 +545,21 @@ function getDeviceID() {
     return Math.abs(hash).toString(36).toUpperCase().substring(0, 6).padStart(6, 'X');
 }
 
+// Generate pre-filled support message
+function openSupportLink(platform, event) {
+    if (event) event.preventDefault();
+    const dateStr = new Date().toLocaleDateString('ar-DZ');
+    const deviceId = getDeviceID();
+    const message = `مرحباً، أود تفعيل (الاشتراك الشهري لتطبيق التشخيص الذاتي).\nالتاريخ: ${dateStr}\nرمز الجهاز الخاص بي: ${deviceId}\n\nمرفق وصل الدفع للحصول على الكود فوراً.`;
+
+    const encodedMessage = encodeURIComponent(message);
+    if (platform === 'whatsapp') {
+        window.open(`https://wa.me/213664083947?text=${encodedMessage}`, '_blank');
+    } else {
+        window.open(`https://t.me/Leilaappbot?text=${encodedMessage}`, '_blank');
+    }
+}
+
 // Same hash function as admin generator for validation
 function hashCode(str) {
     let hash = 0;
@@ -857,10 +872,10 @@ function showPaywall(title, message) {
                         رمز جهازك: <strong style="color: var(--gold); user-select: all; letter-spacing: 2px; font-family: monospace; background: #000; padding: 5px 10px; border-radius: 5px;">${getDeviceID()}</strong>
                     </div>
                     <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
-                        <a href="https://wa.me/213664083947" target="_blank" style="background: #25D366; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; font-weight: bold; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 8px;">
+                        <a href="#" onclick="openSupportLink('whatsapp', event)" style="background: #25D366; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; font-weight: bold; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 8px;">
                             <i class="fab fa-whatsapp" style="font-size: 1.3rem;"></i> تواصل واتساب
                         </a>
-                        <a href="http://t.me/Leilaappbot" target="_blank" style="background: #0088cc; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; font-weight: bold; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 8px;">
+                        <a href="#" onclick="openSupportLink('telegram', event)" style="background: #0088cc; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; font-weight: bold; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 8px;">
                             <i class="fab fa-telegram-plane" style="font-size: 1.3rem;"></i> تواصل تليجرام
                         </a>
                     </div>
