@@ -939,12 +939,40 @@ function openSupportLink(platform, event) {
         // Copy to clipboard
         navigator.clipboard.writeText(message);
 
-        // Show visual feedback that it's ready
-        showToast("✓ تم تجهيز رسالة التفعيل! يرجى (لصقها) في محادثة الدكتورة.");
+        // Build a beautiful confirmation UI (Step by Step)
+        const modalHTML = `
+            <div id="step-confirm-modal" class="lightbox-modal" style="display:block; z-index:110000; animation: fadeIn 0.3s;">
+                <div class="lightbox-content step-modal">
+                    <h2 style="color: var(--secondary-color); margin-bottom: 25px;"><i class="fas fa-check-circle"></i> جاهز للإرسال!</h2>
+                    
+                    <div class="step-item">
+                        <div class="step-number">1</div>
+                        <div class="step-text">لقد قمنا بـ <strong>نسخ</strong> رسالة التفعيل الخاصة بك تلقائياً.</div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-text">بمجرد الضغط بالأسفل، سيفتح حساب الدكتورة.</div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-number">3</div>
+                        <div class="step-text">قم بعمل <strong>لصق (Paste)</strong> للرسالة وأرفق <strong>صورة الوصل</strong>.</div>
+                    </div>
 
-        // Open Telegram immediately to avoid pop-up blocker
-        // We open it directly here because navigator.clipboard.then() breaks the user-gesture chain
-        window.open(`https://t.me/profleila`, '_blank');
+                    <button onclick="window.open('https://t.me/profleila', '_blank'); document.getElementById('step-confirm-modal').remove();" 
+                            style="background: linear-gradient(135deg, var(--secondary-color), #b8982c); color: var(--primary-color); width: 100%; border: none; padding: 15px; border-radius: 30px; font-family: inherit; font-size: 1.2rem; font-weight: bold; cursor: pointer; margin-top: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.5);">
+                        <i class="fab fa-telegram-plane"></i> افتح تليجرام الآن
+                    </button>
+                    
+                    <button onclick="document.getElementById('step-confirm-modal').remove();" 
+                            style="background: transparent; border: none; color: #a0aec0; cursor: pointer; text-decoration: underline; margin-top: 15px; font-family:inherit;">
+                        إلغاء
+                    </button>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
     }
 }
 
