@@ -1689,15 +1689,17 @@ h2::after {
 }
 
 .diag-step {
-    background: #000 !important;
+    background: rgba(255, 255, 255, 0.05) !important;
     color: #94a3b8 !important;
     padding: 10px 15px;
     border-radius: 20px;
     font-size: 0.85rem;
     font-weight: bold;
-    border: 1px solid rgba(212, 175, 55, 0.3);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     z-index: 2;
+    white-space: nowrap;
 }
+
 
 .diag-step.active {
     background: #d4af37 !important;
@@ -1810,16 +1812,45 @@ h2::after {
 }
 
 @media (max-width: 600px) {
+    .diagnostic-wizard {
+        padding: 20px 15px;
+    }
+
+    .diag-progress {
+        overflow-x: auto;
+        padding-bottom: 12px;
+        justify-content: flex-start;
+        /* Start from right since it's RTL */
+        gap: 10px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        /* Hide scrollbar Firefox */
+    }
+
+    .diag-progress::-webkit-scrollbar {
+        display: none;
+        /* Hide scrollbar Chrome/Safari */
+    }
+
     .diag-step {
-        padding: 5px 10px;
-        font-size: 0.65rem;
+        padding: 8px 12px;
+        font-size: 0.75rem;
+        white-space: nowrap;
+        flex-shrink: 0;
     }
 
     .diag-page h3 {
-        font-size: 1.05rem;
+        font-size: 1.15rem;
     }
 
-    .diag-page label {
+    .diag-page .form-group label {
         font-size: 1rem !important;
+    }
+
+    .btn-next,
+    .btn-prev,
+    .btn-generate {
+        padding: 12px 20px;
+        font-size: 0.95rem;
     }
 }
