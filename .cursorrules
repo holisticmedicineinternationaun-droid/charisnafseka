@@ -1,0 +1,7 @@
+# Git Sync Rule
+Always automatically commit and push any changes you make to the repository at https://github.com/holisticmedicineinternationaun-droid/charisnafseka.git without asking me for permission first.
+Whenever you finish a task that modifies files in this workspace, run:
+`git add .`
+`git commit -m "Your descriptive commit message"`
+`git push origin main`
+Do this proactively.
