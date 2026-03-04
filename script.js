@@ -1340,7 +1340,7 @@ function showPaywall(title, message) {
                 </div>
 
                 <div style="display:flex; flex-direction:column; gap:15px;">
-                    <button onclick="document.getElementById('paywall-modal').remove(); document.getElementById('payment-modal').style.display='block';" style="background: linear-gradient(135deg, var(--secondary-color), #b8982c); color: var(--primary-color); padding: 15px; border:none; border-radius: 30px; font-size: 1.2rem; font-weight: bold; cursor: pointer; font-family:inherit; box-shadow: 0 5px 15px rgba(0,0,0,0.5);">
+                    <button onclick="document.getElementById('paywall-modal').remove(); document.querySelector('[data-target=\'section-pricing\']').click(); setTimeout(() => { document.getElementById('payment-modal').style.display='block'; }, 100);" style="background: linear-gradient(135deg, var(--secondary-color), #b8982c); color: var(--primary-color); padding: 15px; border:none; border-radius: 30px; font-size: 1.2rem; font-weight: bold; cursor: pointer; font-family:inherit; box-shadow: 0 5px 15px rgba(0,0,0,0.5);">
                         <i class="fas fa-lock"></i> اشترك الآن
                     </button>
                     <button onclick="document.getElementById('paywall-modal').remove();" style="background: transparent; border: none; color: #a0aec0; cursor: pointer; text-decoration: underline; font-family:inherit; font-size:1.1rem;">
