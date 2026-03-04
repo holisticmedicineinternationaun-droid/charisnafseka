@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>اللوحة التفاعلية: طبائع الأعشاب والأغذية والأعضاء</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=4">
+    <link rel="stylesheet" href="style.css?v=5">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
@@ -27,11 +27,14 @@
                     والتشخيص</button>
                 <button class="nav-btn" data-target="section-concepts"><i class="fas fa-brain"></i> اختبار المفاهيم
                     العميقة</button>
-                <button class="nav-btn" data-target="section-meals"><i class="fas fa-utensils"></i> تدبير الوجبات (100
-                    وجبة)
+                <button class="nav-btn premium-nav-btn" data-target="section-plan"
+                    style="background: rgba(220, 38, 38, 0.2); border: 1px solid #ef4444; color: #fca5a5; font-weight: 900;">
+                    <i class="fas fa-utensils"></i> مصمم البرامج الغذائية اليومي
                 </button>
-                <button class="nav-btn" data-target="section-plan"><i class="fas fa-clipboard-list"></i> التدبير
-                    والخطط</button>
+                <button class="nav-btn" data-target="section-meals">
+                    <i class="fas fa-apple-alt"></i> تدبير الوجبات (100 وجبة)
+                </button>
+
                 <button class="nav-btn" data-target="section-gallery"><i class="fas fa-images"></i> موسوعة الأعضاء
                     والأعشاب المصورة</button>
                 <button class="nav-btn" data-target="section-4"><i class="fas fa-check-circle"></i> صح وخطأ</button>
@@ -452,7 +455,17 @@
 
             <!-- القسم الجديد: تدبير وإصلاح 100 وجبة يومية -->
             <section id="section-meals" class="interactive-section">
-                <h2>التدبير اليومي: إصلاح 100 وجبة من مطبخك البسيط</h2>
+                <h2>تدبير الوجبات: إصلاح 100 وجبة من مطبخك البسيط</h2>
+                <div id="meals-trial-warning"
+                    style="display:none; background: rgba(212, 175, 55, 0.1); border: 1px solid var(--secondary-color); padding: 15px; border-radius: 10px; margin-bottom: 25px; text-align: center;">
+                    <span style="color: var(--secondary-color); font-weight: bold;"><i class="fas fa-info-circle"></i>
+                        تنويه التجربة:</span>
+                    <span style="color: #e2e8f0;">هذا القسم متاح فقط لمدة 3 أيام للمستخدمين الجدد. <a href="#"
+                            onclick="document.querySelector('[data-target=\'section-pricing\']').click(); event.preventDefault();"
+                            style="color: var(--secondary-color); text-decoration: underline;">اشترك الآن</a> لفتح كامل
+                        المزايا.</span>
+                </div>
+
                 <div class="tricky-container">
                     <div class="bot-message"
                         style="background:#fff; border:2px solid var(--secondary-color); color:#333;">
@@ -615,7 +628,7 @@
 
             <!-- Section 8: التدبير والخطة العلاجية الشاملة -->
             <section id="section-plan" class="interactive-section">
-                <h2>المولّد التفاعلي للخطط العلاجية الشاملة</h2>
+                <h2>مصمم البرامج الغذائية والخطط العلاجية الشاملة</h2>
                 <div class="plan-generator-container">
                     <div
                         style="background: rgba(212, 175, 55, 0.1); border: 1px solid var(--secondary-color); padding: 15px; border-radius: 10px; margin-bottom: 25px; text-align: center;">
@@ -806,7 +819,7 @@
         </footer>
     </div>
     <div id="toast" class="toast-msg"></div>
-    <script src="script.js?v=5"></script>
+    <script src="script.js?v=6"></script>
 </body>
 
 </html>

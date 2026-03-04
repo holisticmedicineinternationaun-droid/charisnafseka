@@ -864,11 +864,34 @@ const mealScenarios = [
 ];
 
 function loadRandomMeal() {
+    // --- Freemium Paywall check for Meals ---
+    const isPremium = checkActivation();
+    if (!isPremium) {
+        const now = new Date();
+        let trialStartStr = localStorage.getItem(TRIAL_START_KEY);
+        if (!trialStartStr) {
+            trialStartStr = now.toISOString();
+            localStorage.setItem(TRIAL_START_KEY, trialStartStr);
+        }
+        const trialStartDate = new Date(trialStartStr);
+        const diffDays = Math.ceil(Math.abs(now - trialStartDate) / (1000 * 60 * 60 * 24));
+
+        if (diffDays > MAX_FREE_DAYS) {
+            showPaywall("انتهت تجربة الوجبات!", "لقد انتهت فترة الـ 3 أيام التجريبية لتصفح وجبات التدبير. يرجى الاشتراك لفتح الموسوعة الكاملة.");
+            return;
+        }
+
+        // Show trial warning if it exists in DOM
+        const warning = document.getElementById('meals-trial-warning');
+        if (warning) warning.style.display = 'block';
+    }
+
     const randomIndex = Math.floor(Math.random() * mealScenarios.length);
     const m = mealScenarios[randomIndex];
     document.getElementById('meal-scenario-text').textContent = "الطبق / العادة السيئة: " + m.meal;
     document.getElementById('meal-islaah-text').textContent = "كيفية الإصلاح والتدبير: " + m.islaah;
 }
+
 
 // Initialization
 window.onload = () => {
@@ -1088,17 +1111,18 @@ function generatePlan() {
         const diffDays = Math.ceil(Math.abs(now - trialStartDate) / (1000 * 60 * 60 * 24));
 
         if (diffDays > MAX_FREE_DAYS) {
-            showPaywall("انتهت الفترة التجريبية!", "لقد استمتعت بتجربة 3 أيام مجاناً. للاستمرار في الحصول على تشخيصات دقيقة، يرجى الاشتراك في الباقة الذهبية.");
+            showPaywall("انتهت الفترة التجريبية!", "لقد استمتعت بتجربة 3 أيام مجاناً لمصمم البرامج. للاستمرار في الحصول على تشخيصات دقيقة، يرجى الاشتراك في الباقة الذهبية.");
             return;
         }
 
         if (lastGenStr === todayStr) {
-            showPaywall("استنفدت الحد اليومي!", "في الفترة التجريبية، يُسمح بتوليد خطة تشخيصية واحدة فقط باليوم لضمان دقة التركيز.");
+            showPaywall("استنفدت الحد اليومي!", "في الفترة التجريبية، يُسمح بتوليد برنامج غذائي واحد فقط باليوم لضمان دقة التركيز.");
             return;
         }
 
         localStorage.setItem(LAST_GENERATION_KEY, todayStr);
     }
+
 
     // --- Collect Diagnostic Data ---
     const mizaj = document.getElementById('user-mizaj').value;
