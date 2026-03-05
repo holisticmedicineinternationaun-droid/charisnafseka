@@ -1340,7 +1340,7 @@ function showPaywall(title, message) {
                 </div>
 
                 <div style="display:flex; flex-direction:column; gap:15px;">
-                    <button onclick="document.getElementById('paywall-modal').remove(); document.querySelector('[data-target=\'section-pricing\']').click(); setTimeout(() => { document.getElementById('payment-modal').style.display='block'; }, 100);" style="background: linear-gradient(135deg, var(--secondary-color), #b8982c); color: var(--primary-color); padding: 15px; border:none; border-radius: 30px; font-size: 1.2rem; font-weight: bold; cursor: pointer; font-family:inherit; box-shadow: 0 5px 15px rgba(0,0,0,0.5);">
+                    <button onclick="document.getElementById('paywall-modal').remove(); document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); document.querySelectorAll('.interactive-section').forEach(s => s.classList.remove('active')); const pb=document.querySelector('[data-target=\'section-pricing\']'); if(pb){pb.classList.add('active');} document.getElementById('section-pricing').classList.add('active'); window.scrollTo({top:0, behavior:'smooth'}); setTimeout(() => { document.getElementById('payment-modal').style.display='block'; }, 200);" style="background: linear-gradient(135deg, var(--secondary-color), #b8982c); color: var(--primary-color); padding: 15px; border:none; border-radius: 30px; font-size: 1.2rem; font-weight: bold; cursor: pointer; font-family:inherit; box-shadow: 0 5px 15px rgba(0,0,0,0.5);">
                         <i class="fas fa-lock"></i> اشترك الآن
                     </button>
                     <button onclick="document.getElementById('paywall-modal').remove();" style="background: transparent; border: none; color: #a0aec0; cursor: pointer; text-decoration: underline; font-family:inherit; font-size:1.1rem;">
@@ -1713,14 +1713,14 @@ function checkTrialLimit() {
     // Daily limit: 1 time per day
     if (trialData.lastTrialDate === today) {
         showToast("لقد استنفدت تجربتك المجانية لهذا اليوم. يرجى الاشتراك للوصول غير المحدود.");
-        showPaywall();
+        showPaywall("استنفدت الحد اليومي!", "في الفترة التجريبية، يُسمح بتوليد برنامج غذائي واحد فقط باليوم لضمان دقة التركيز والنتائج.");
         return false;
     }
 
     // 3-day total limit
     if (trialData.days.length >= 3 && !trialData.days.includes(today)) {
         showToast("انتهت فترة التجربة المجانية (3 أيام). يرجى الاشتراك للمتابعة.");
-        showPaywall();
+        showPaywall("انتهت الفترة التجريبية!", "لقد استمتعت بتجربة 3 أيام مجاناً لأكاديمية الطفل. للاستمرار في الحصول على تشخيصات دقيقة وبرامج علاجية، يرجى الاشتراك في الباقة الذهبية.");
         return false;
     }
 
