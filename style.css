@@ -2208,3 +2208,17 @@ h2::after {
     border: 1px solid rgba(212, 175, 55, 0.1);
 }
 
+.remedy-detail {
+    background: rgba(255, 255, 255, 0.03);
+    border-right: 3px solid var(--secondary-color);
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #e2e8f0;
+}
+.remedy-detail strong { color: var(--secondary-color); font-weight: 900; }
+.meal-plan-adult p { margin-bottom: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 5px; }
+.meal-plan-adult p:last-child { border-bottom: none; }
+

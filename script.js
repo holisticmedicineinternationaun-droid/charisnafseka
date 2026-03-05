@@ -1896,33 +1896,31 @@ const remedyDatabase = {
         cold: {
             title: "منضجات الأخلاط الباردة (البلغم والسوداء)",
             items: [
-                "البابونج وإكليل الملك والشبث: لإنضاج الأورام والمواد الباردة.",
-                "الزوفا الرطب والحاشا (الزعتر البري): لتلطيف الخلط وجعله أرق.",
-                "المرزنجوش وورق الغار والشيح: لإنضاج المادة البلغمية.",
-                "الفودنج (النعناع البري) والسذاب: منضجات قوية للخلط السوداوي."
+                { herb: "البابونج وإكليل الملك والشبث", prep: "تُغلى الأعشاب معاً في لتر ماء وتُصفى.", dose: "كوب دافئ 3 مرات يومياً قبل الأكل.", duration: "يستمر عليها حتى يرق قوام البول ويصفو." },
+                { herb: "الزوفا الرطب والزعتر البري", prep: "نقع ملعقة كبيرة في كوب ماء مغلي وتغطيته 10 دقائق.", dose: "كوب مرتين يومياً (صباحاً ومساءً).", duration: "من 7 إلى 10 أيام حتى ترق المادة." },
+                { herb: "الشيح والمرزنجوش", prep: "يُطبخ مع قليل من الخل والماء.", dose: "نصف كوب مرتين يومياً.", duration: "حتى يزول الثقل والكمود." }
             ]
         },
         hot: {
             title: "منضجات الأخلاط الحارة (الدم والصفراء)",
             items: [
-                "ماء الشعير: مبرد مرطب يجمع قوام المادة الحارة وينضجها.",
-                "البنفسج والنيلوفر: لإنضاج المواد الحارة وتسكين الالتهاب.",
-                "عنب الثعلب وعصا الراعي: بقول باردة تنضج الأخلاط الحارة.",
-                "لعابات البذور (مثل بزر قطونا): للترطيب وتسكين اللذع."
+                { herb: "ماء الشعير المصفى", prep: "يُغلى كوب شعير في لترين ماء ويُصفى بعد نضجه.", dose: "كوب واحد كل 4 ساعات (بارد أو فاتر).", duration: "لمدة 3-5 أيام لإطفاء الحرارة." },
+                { herb: "البنفسج والورد الجوري", prep: "نقع الورد في ماء فاتر ليلة كاملة.", dose: "كوب على الريق يومياً.", duration: "حتى يهدأ النبض وتقل الحمرة." },
+                { herb: "لعابات البذور (بزر قطونا)", prep: "تُوضع ملعقة في كوب ماء دافئ وتُترك لتتكون الطبقة الهلامية.", dose: "شرب اللعاب اللزج (بدون البذر) مرة يومياً.", duration: "لتسكين لدغ المادة الحارة." }
             ]
         }
     },
     purging: {
-        yellow: ["السقمونيا (بحذر)", "الإهليلج الأصفر", "الشاهترج", "خيار شنبر (ملين لطيف)"],
-        phlegm: ["شحم الحنظل (قوي)", "التُّرْبِد مع الزنجبيل", "غاريقون نفعاً للأعصاب", "حب الفربيون"],
-        black: ["الأفتيمون (ملك مستفرغات السوداء)", "الخربق الأسود (بحذر)", "حجر اللازورد", "البسفايج"],
-        blood: ["الفصد (تحت إشراف)", "الحجامة في الأوقات المعلومة", "الشاهترج لتنقية الدم"]
+        yellow: { herb: "الإهليلج الأصفر وخيار شنبر", prep: "يُطبخ خيار شنبر ويُهرس ثم يُضاف إليه مسحوق الإهليلج.", dose: "ملعقة كبيرة على الريق.", duration: "مرة واحدة أسبوعياً للتنقية." },
+        phlegm: { herb: "التُّرْبِد مع الزنجبيل", prep: "يُخلط التربد المطحون مع قليل من العسل والزنجبيل.", dose: "ملعقة صغيرة صباحاً.", duration: "3 أيام متتالية." },
+        black: { herb: "الأفتيمون (ملك السوداء)", prep: "يُنقع في ماء ساخن ولا يُغلى (لأن غليه يفسد قوته).", dose: "كوب صغير قبل النوم.", duration: "لمدة 5 أيام." },
+        blood: { herb: "الحجامة في الأوقات المعلومة (17، 19، 21 هجري)", prep: "تتم عند معالج مختص في الأيام الرطبة من الشهر.", dose: "جلسة واحدة فقط.", duration: "مرتين في السنة كوقاية." }
     },
     local: {
-        reducers: ["عنب الثعلب وعصا الراعي", "الطين المختوم والأرمني", "الجلّنار وقشر الرمان", "دهن الورد والسفرجل"],
-        sedatives: ["البابونج والشبث", "بزر الكتان ودقيق الحلبة", "دهن اللوز والنيلوفر"],
-        anesthetics: ["الأفيون (للضرورة القصوى)", "بزر البنج", "قشور الخشخاش (للشقيقة)"],
-        liniments: ["الزيت العتيق (زيتون قديم)", "دهن الخروع", "دهن القسط والسذاب"]
+        reducers: { items: ["أضمدة من عنب الثعلب والطين الأرمني", "دهن الورد والسفرجل"], prep: "يُخلط الطين بالخل ودهن الورد حتى يصبح كالعجين.", dose: "يُطلى به الموضع المتضرر بارداً.", duration: "يُترك 4 ساعات ثم يُغسل." },
+        sedatives: { items: ["ضماد البابونج وبزر الكتان", "دهن اللوز والنيلوفر"], prep: "تُسخن بذور الكتان المهروسة مع قليل من دهن اللوز.", dose: "توضع دافئة (كمادة) على مكان الألم.", duration: "كل ليلة قبل النوم." },
+        anesthetics: { items: ["قشور الخشخاش وبزر البنج", "الأفيون الموضعي"], prep: "يُغلى قشر الخشخاش غلياً قوياً حتى يسود الماء.", dose: "يُمسح به الموضع مسحاً خفيفاً (احذر من الشرب).", duration: "للحالات القصوى فقط." },
+        liniments: { items: ["دهن القسط والسذاب", "الزيت العتيق والحرمل"], prep: "تُنقع الأعشاب في الزيت لمدة 40 يوماً أو تُسخن في حمام مائي.", dose: "دلك دائري لطيف للعضو فجراً.", duration: "يومياً لمدة 21 يوماً." }
     }
 };
 
@@ -1965,6 +1963,7 @@ function generatePlan() {
     const spiritual = document.getElementById('user-spiritual').value;
     const neuro = document.getElementById('user-neuro').value;
     const innateNature = document.getElementById('user-nature-base').value;
+    const combinedIngredients = ingredients.toLowerCase();
 
     // --- Smart Inference (Helping the non-expert user) ---
     // If user text contains "started now", "severe pulse", etc., we infer status
@@ -2030,8 +2029,8 @@ function generatePlan() {
             </div>
             <p style="margin-top:15px; font-size:0.9rem; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">
                 ${innateNature === mizaj ?
-            "العلة ناتجة عن <strong>اشتداد طبيعتك الأصلية</strong> (مثلاً: أنت صفراوي أصلاً وزاد خلط الصفراء بسبب طعام حار أو انفعال)." :
-            "العلة ناتجة عن <strong>مزاج غريب</strong> طرأ على بدنك (مثلاً: أنت دموي أصلاً لكن غلب عليك البلغم بسبب الرطوبة أو الخمول)، وهذا يسمى 'خلطاً غريباً'."}
+            `العلة ناتجة عن <strong>اشتداد طبيعتك الأصلية</strong> (مثلاً: أنت ${getHumorText(innateNature)} أصلاً وزاد هذا الخلط بسبب نمط غذائي غير ملائم أو انفعالات نفسية موافقة لمزاجك).` :
+            `العلة ناتجة عن <strong>مزاج غريب</strong> طرأ على بدنك (مثلاً: أنت ${getHumorText(innateNature)} أصلاً لكن غلب عليك خلط ${getHumorText(mizaj)} بسبب المؤثرات الخارجية أو فساد الهضم)، وهذا يسمى "خلطاً غريباً".`}
             </p>
         </div>
     `;
@@ -2081,11 +2080,24 @@ function generatePlan() {
             <div class="stepper">
                 <div class="step">
                     <div class="step-num">1</div>
-                    <div class="step-txt"><strong>الغذاء:</strong> "إن أمكن العلاج بالغذاء فلا يعالج بالدواء". اعتمد حمية ${mizaj.includes('hot') ? 'باردة رطبة' : 'حارة يابسة'} لمدة 7 أيام.</div>
+                    <div class="step-txt">
+                        <strong>الغذاء العلاجي (التدبير):</strong> "إن أمكن العلاج بالغذاء فلا يعالج بالدواء". 
+                        <div class="meal-plan-adult" style="background:rgba(212,175,55,0.05); padding:10px; border-radius:10px; margin-top:5px; border:1px dashed var(--secondary-color);">
+                            <p><strong>🥗 الإفطار:</strong> ${generateSmartMeal('breakfast', mizaj, combinedIngredients, 30, diseases)}</p>
+                            <p><strong>🍲 الغداء:</strong> ${generateSmartMeal('lunch', mizaj, combinedIngredients, 30, diseases)}</p>
+                            <p><strong>☕ العصر (بديل القهوة):</strong> ${mizaj.includes('hot') ? 'منقوع الخروب أو الشعير البارد' : 'شاي أعشاب دافئ (زعتر أو إكليل الجبل)'} مع تمرات.</p>
+                            <p><strong>🥣 العشاء:</strong> ${generateSmartMeal('dinner', mizaj, combinedIngredients, 30, diseases)}</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="step">
                     <div class="step-num">2</div>
-                    <div class="step-txt"><strong>الدواء المفرد:</strong> استخدم أعشاب المنضجات اللطيفة (البابونج، الزعرور، الشعير) بجرعات معتدلة.</div>
+                    <div class="step-txt">
+                        <strong>الدواء المفرد (المنضج):</strong> استخدم الأعشاب المحددة في (العلاج الكلي) أعلاه. 
+                        <div class="remedy-detail" style="border-right-color:#f1c40f; margin-top:5px; font-size:0.85rem;">
+                            ⚠️ التوقيت: يُؤخذ الدواء دائماً بعيداً عن الوجبات بمدة لا تقل عن ساعتين لضمان نفوذ قوته للأعضاء.
+                        </div>
+                    </div>
                 </div>
                 <div class="step blur">
                     <div class="step-num">3</div>
@@ -2136,13 +2148,27 @@ function getSystemicRemedy(mizaj, maturity) {
     const isHot = mizaj.includes('hot');
     const category = isHot ? 'hot' : 'cold';
     if (maturity === 'raw') {
-        const list = remedyDatabase.maturation[category].items;
-        return list[Math.floor(Math.random() * list.length)];
+        const item = remedyDatabase.maturation[category].items[0];
+        return `
+            <div class="remedy-detail">
+                <strong>النبات:</strong> ${item.herb}<br>
+                <strong>طريقة التحضير:</strong> ${item.prep}<br>
+                <strong>الجرعة:</strong> ${item.dose}<br>
+                <strong>المدة:</strong> ${item.duration}
+            </div>
+        `;
     } else {
         const humors = { 'hot-dry': 'yellow', 'hot-moist': 'blood', 'cold-moist': 'phlegm', 'cold-dry': 'black' };
         const humorKey = humors[mizaj] || 'phlegm';
-        const list = remedyDatabase.purging[humorKey];
-        return "يُستخدم الآن (الاستفراغ) بـ: " + list.join('، ');
+        const item = remedyDatabase.purging[humorKey];
+        return `
+            <div class="remedy-detail">
+                <strong>الدواء:</strong> ${item.herb}<br>
+                <strong>التحضير:</strong> ${item.prep}<br>
+                <strong>الجرعة:</strong> ${item.dose}<br>
+                <strong>المدة:</strong> ${item.duration}
+            </div>
+        `;
     }
 }
 
@@ -2153,10 +2179,20 @@ function getLocalPurpose(phase) {
 }
 
 function getLocalRemedy(pain, phase) {
-    if (pain === 'severe') return "مخدرات موضعية (للضرورة): " + remedyDatabase.local.anesthetics.join('، ');
-    if (phase === 'start') return "رادعات: " + remedyDatabase.local.reducers.join('، ');
-    if (phase === 'peak') return "مسكنات ومحللات: " + remedyDatabase.local.sedatives.join('، ');
-    return "مروخات ومنشطات: " + remedyDatabase.local.liniments.join('، ');
+    let type = "liniments";
+    if (pain === 'severe') type = "anesthetics";
+    else if (phase === 'start') type = "reducers";
+    else if (phase === 'peak') type = "sedatives";
+
+    const res = remedyDatabase.local[type];
+    return `
+        <div class="remedy-detail">
+            <strong>المكونات:</strong> ${res.items.join('، ')}<br>
+            <strong>التحضير:</strong> ${res.prep}<br>
+            <strong>الاستعمال:</strong> ${res.dose}<br>
+            <strong>المتابعة:</strong> ${res.duration}
+        </div>
+    `;
 }
 
 function getSpiritualHTML(type) {
@@ -2164,8 +2200,12 @@ function getSpiritualHTML(type) {
     return `
         <div class="plan-section spiritual-card">
             <h4><i class="fas fa-quran"></i> التحصين والتدبير الروحي</h4>
-            <p><strong>التشخيص:</strong> احتمالية ${diagnosis}.</p>
-            <p><strong>العلاج:</strong> استخدام "القسط الهندي" والتبخير به يضيق مجاري الأذى، مع السنا المكي لتنظيف البطن.</p>
+            <p><strong>التشخيص الاستنتاجي:</strong> احتمالية ${diagnosis}.</p>
+            <div class="remedy-detail" style="background:rgba(74, 144, 226, 0.1); padding:10px; border-radius:10px; border:1px solid #4a90e2;">
+                <p><strong>استخدام القسط الهندي:</strong> يُخلط ملعقة صغيرة مع ملعقة عسل، أو يُستخدم كتبخير للمنزل (يضيق مجاري الأذى).</p>
+                <p><strong>الجرعة والوقت:</strong> ملعقة صغيرة على الريق يومياً لمدة 21 يوماً.</p>
+                <p><strong>التنظيف المادي (السنا المكي):</strong> يُغلى السنا مع قليل من اليانسون ويُشرب كوب واحد لتنظيف البطن من فضلات الحسد، مرة واحدة كل 15 يوماً.</p>
+            </div>
         </div>
     `;
 }
@@ -2260,7 +2300,7 @@ function getHumorText(h) {
     const hints = {
         'hot-moist': 'حار رطب (دموي)',
         'hot-dry': 'حار يابس (صفراوي)',
-        'cold-wet': 'بارد رطب (بلغمي)',
+        'cold-moist': 'بارد رطب (بلغمي)',
         'cold-dry': 'بارد يابس (سوداوي)'
     };
     return hints[h] || h;
