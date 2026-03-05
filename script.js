@@ -1771,16 +1771,23 @@ function generateChildPlan() {
                 <h4><i class="fas fa-utensils"></i> تقسيم الوجبات (المطبخ المتوفر لديكِ)</h4>
                 <div class="meal-block">
                     <strong>🥗 وجبة الإفطار:</strong>
-                    <p>${generateSmartMeal('breakfast', humor, lowerKitchen)}</p>
+                    <p>${generateSmartMeal('breakfast', humor, lowerKitchen, age)}</p>
                 </div>
                 <div class="meal-block">
                     <strong>🍲 وجبة الغداء:</strong>
-                    <p>${generateSmartMeal('lunch', humor, lowerKitchen)}</p>
+                    <p>${generateSmartMeal('lunch', humor, lowerKitchen, age)}</p>
                 </div>
                 <div class="meal-block">
                     <strong>🍵 وجبة العشاء:</strong>
-                    <p>${generateSmartMeal('dinner', humor, lowerKitchen)}</p>
+                    <p>${generateSmartMeal('dinner', humor, lowerKitchen, age)}</p>
                 </div>
+            </div>
+
+            <div class="healing-advice plan-section" style="border-top: 1px solid rgba(212,175,55,0.2); margin-top: 15px; padding-top: 15px;">
+                <h4><i class="fas fa-hand-holding-heart"></i> نصائح للقضاء على أصل العلة</h4>
+                <ul style="color: #e2e8f0; font-size: 0.95rem; line-height: 1.6;">
+                    ${getHealingTips(humor, masterOrgan, age)}
+                </ul>
             </div>
 
             <div class="medical-rules">
@@ -1788,7 +1795,7 @@ function generateChildPlan() {
                 <ul>
                     ${getCorrectors(humor, lowerKitchen)}
                     <li>يجب تقسيم الوجبات إلى كميات صغيرة (قاعدة الرازي: الهضم الجيد خير من الأكل الكثير).</li>
-                    <li><strong>المدة المقترحة:</strong> استمري على هذا النظام لمدة <strong>${age > 7 ? '21 يوماً' : '15 يوماً'}</strong> ليرتاح البدن.</li>
+                    <li><strong>المدة المقترحة:</strong> استمري على هذا "النهج العلاجي" لمدة <strong>${age > 7 ? '21 يوماً' : '15 يوماً'}</strong>. إذا نفدت بعض المكونات من مطبخك، استبدليها بمكونات من نفس "طبيعة الخلط" المذكورة في التحليل أعلاه لضمان استمرار التعافي.</li>
                 </ul>
             </div>
         </div>
@@ -1801,7 +1808,8 @@ function generateChildPlan() {
     saveTrial();
 }
 
-function generateSmartMeal(type, humor, kitchen) {
+function generateSmartMeal(type, humor, kitchen, age) {
+    const isToddler = age < 2;
     const hasHoney = kitchen.includes('عسل') || kitchen.includes('honey');
     const hasDates = kitchen.includes('تمر') || kitchen.includes('dates') || kitchen.includes('زبيب');
     const hasMeat = kitchen.includes('لحم') || kitchen.includes('دم');
@@ -1809,21 +1817,49 @@ function generateSmartMeal(type, humor, kitchen) {
     const hasOlive = kitchen.includes('زيت') || kitchen.includes('olive');
 
     if (type === 'breakfast') {
-        if (hasHoney) return "كوب ماء فاتر مذاب فيه ملعقة عسل (لغسل المعدة وتنشيط الكبد).";
-        if (hasDates) return "3 حبات تمر مع قليل من الجوز أو السمسم المتوفر.";
-        return "خبز أسمر بمسحة زيت زيتون أو بيضة مسلوقة جيداً.";
+        if (hasHoney && age >= 1) return "ملعقة عسل مُذابة في ماء فاتر (لغسل المعدة وتنشيط الكبد).";
+        if (hasDates) return isToddler ? "تمرة واحدة مهروسة جيداً أو منقوعة في ماء دافئ." : "3 حبات تمر مع قليل من الجوز المتوفر.";
+        return isToddler ? "عصيدة قمح رقيقة مع مسحة زيت زيتون." : "خبز أسمر بمسحة زيت زيتون أو بيضة مسلوقة.";
     }
 
     if (type === 'lunch') {
-        if (hasMeat) return "مرق لحم مطبوخ جيداً مع خضروات موسمية، مع الحرص على مضغه تماماً.";
-        if (kitchen.includes('قمح') || kitchen.includes('رز')) return "طبق صغير من حبوب (القمح أو الأرز) المطبوخة بمرق الخضار.";
+        if (hasMeat) {
+            return isToddler ? "مرق لحم (شوربة) مع خضروات مهروسة تماماً ناعمة." : "مرق لحم مطبوخ جيداً مع خضروات موسمية، مع الحرص على مضغه تماماً.";
+        }
+        if (kitchen.includes('قمح') || kitchen.includes('رز')) {
+            return isToddler ? "أرز أو قمح مطبوخ جيداً ومهروس مع مرق." : "طبق من حبوب (القمح أو الأرز) المطبوخة بمرق الخضار.";
+        }
         return "شوربة دافئة من المكونات المتوفرة مع إضافة رشة ملح وكمون.";
     }
 
     if (type === 'dinner') {
-        if (humor.includes('hot')) return "روب (زبادي) أو فاكهة رطبة باردة لترطيب حرارة الطفل قبل النوم.";
-        return "خضروات مسلوقة وسهلة الهضم مع شرب منقوع دافئ (يانسون أو بابونج).";
+        if (humor.includes('hot')) return isToddler ? "روب (زبادي) ناعم لترطيب حرارة الطفل." : "روب (زبادي) أو فاكهة رطبة باردة لترطيب الحرارة قبل النوم.";
+        return isToddler ? "خضروات مسلوقة ومهروسة سهلة البلع." : "خضروات مسلوقة وسهلة الهضم مع شرب منقوع دافئ (يانسون أو بابونج).";
     }
+}
+
+function getHealingTips(humor, organ, age) {
+    let tips = "";
+    // Tips based on Humor
+    if (humor === 'hot-dry' || humor === 'hot-wet') {
+        tips += "<li><strong>تبريد العلة:</strong> استخدمي كمادات فاتر (ليست مثلجة) على منطقة الكبد لإطفاء الحرارة المهيجة.</li>";
+        tips += "<li>تجنبي تعريض الطفل للشمس المباشرة وقت الظهيرة لأنها تزيد من حدة الخلط الحار.</li>";
+    } else if (humor === 'cold-wet' || humor === 'cold-dry') {
+        tips += "<li><strong>تدفئة العلة:</strong> احرصي على تدفئة أطراف الطفل ودهن البطن بزيت السمسم الدافئ لتحريك البرودة الراكدة.</li>";
+        tips += "<li>شجعيه على الحركة اللطيفة في المنزل لتنشيط الحرارة الغريزية.</li>";
+    }
+
+    // Tips based on Organ
+    if (organ === 'stomach') {
+        tips += "<li><strong>حماية المعدة:</strong> امنعي الماء البارد أثناء الأكل تماماً، واعطيه المنقوعات الدافئة كالبابونج.</li>";
+    } else if (organ === 'liver') {
+        tips += "<li><strong>دعم الكبد:</strong> النوم المبكر (قبل الساعة 10 ليلاً) ضروري جداً لأن الكبد يقوم بالتنظيف في هذا الوقت.</li>";
+    } else if (organ === 'lung') {
+        tips += "<li><strong>راحة الصدر:</strong> تأكدي من تهوية الغرفة جيداً وترطيب الهواء بمنقوع لبان الذكر (تبخير لطيف).</li>";
+    }
+
+    if (tips === "") tips = "<li>احرصي على الحالة النفسية للطفل، فالحزن يبرد الروح ويضعف المناعة.</li>";
+    return tips;
 }
 
 function getCorrectors(humor, kitchen) {
