@@ -1125,10 +1125,19 @@ function generatePlan() {
 
 
     // --- Collect Diagnostic Data ---
-    const mizaj = document.getElementById('user-mizaj').value;
+    const mizajSelection = document.getElementById('user-mizaj');
+    const mizaj = mizajSelection.value;
     const blood = document.getElementById('user-blood').value;
     const ingredients = document.getElementById('user-ingredients').value.trim();
     const diseases = document.getElementById('user-diseases').value.trim();
+    const story = document.getElementById('diag-story').value.trim();
+    const spiritual = document.getElementById('user-spiritual').value;
+    const neuro = document.getElementById('user-neuro').value;
+
+    // Smart Disease Matching for Adults
+    const matchedFromDisease = getDiseaseFromComplaint(diseases);
+    const matchedFromStory = getDiseaseFromComplaint(story);
+    const matchedDisease = matchedFromDisease || matchedFromStory;
 
     // Group 3: Presidential Organs detection
     const liverCheck = document.getElementById('liver-1').checked || document.getElementById('liver-2').checked || document.getElementById('liver-3').checked;
@@ -1144,22 +1153,33 @@ function generatePlan() {
 
     // Logic 1: Root Cause Analysis (التشخيص الشمولي)
     let rootCauseHTML = "";
+
+    if (matchedDisease) {
+        rootCauseHTML += `
+            <div class="plan-section" style="border-right: 5px solid #d4af37; background: rgba(212,175,55,0.1);">
+                <h4 style="color: #d4af37;"><i class="fas fa-book-open"></i> تحليل موسوعة "المغنى": ${matchedDisease.nature === 'hot-dry' ? 'هيمنة الصفراء' : matchedDisease.nature === 'cold-moist' ? 'هيمنة البلغم' : matchedDisease.nature === 'hot-moist' ? 'هيمنة الدم' : 'هيمنة السوداء'}</h4>
+                <p><strong>تشخيص الحالة:</strong> تُصنف هذه العلة في كتب الطب الأصيل على أنها من طبيعة (<strong>${getHumorText(matchedDisease.nature)}</strong>) وتصيب بذكاء (<strong>${getOrganText(matchedDisease.organ)}</strong>).</p>
+                <p><strong>توجيه العلة:</strong> ${matchedDisease.tip}</p>
+            </div>
+        `;
+    }
+
     if (liverCheck) {
-        rootCauseHTML = `
+        rootCauseHTML += `
             <div class="plan-section" style="border-right: 5px solid #ff9800; background: rgba(255,152,0,0.1);">
                 <h4 style="color: #ff9800;"><i class="fas fa-microscope"></i> التحليل الشمولي: العلة في الكبد (العضو الرئيس)</h4>
                 <p>بناءً على إجابتك حول (ثقل الأكل ومرارة الفم)، يتضح أن العضو الظاهر المتألم ليس هو المصدر، بل هو "خادم" تأثر بفشل الكبد في تنقية الأخلاط. علاجك يبدأ من **تنقية الكبد** أولاً.</p>
             </div>
         `;
     } else if (brainCheck) {
-        rootCauseHTML = `
+        rootCauseHTML += `
             <div class="plan-section" style="border-right: 5px solid #2196f3; background: rgba(33,150,243,0.1);">
                 <h4 style="color: #2196f3;"><i class="fas fa-brain"></i> التحليل الشمولي: العلة في الدماغ والأعصاب</h4>
                 <p>الأعراض مثل (النسيان والتنميل) تدل على أن مادة الخلط ترسبت في بطينات الدماغ أو مجاري الأعصاب. خطتك ستركز على **تلطيف الدماغ** وفتح السدد العصبية.</p>
             </div>
         `;
     } else if (heartCheck) {
-        rootCauseHTML = `
+        rootCauseHTML += `
             <div class="plan-section" style="border-right: 5px solid #f44336; background: rgba(244,67,54,0.1);">
                 <h4 style="color: #f44336;"><i class="fas fa-heartbeat"></i> التحليل الشمولي: العلة في القلب</h4>
                 <p>الأعراض مثل (ضيق التنفس والخفقان) تشير إلى أن العضو الشاكي يتأثر بضعف "القوة الحيوانية" المنبعثة من القلب. خطتك ستركز على **تقوية القلب** وتعديل حرارته.</p>
@@ -1312,9 +1332,11 @@ function generatePlan() {
         </div>
 
         <div class="plan-section">
-            <h4><i class="fas fa-dna"></i> 3. تدعيم الخطة بفصيلة الدم</h4>
+            <h4><i class="fas fa-dna"></i> 3. تدعيم الخطة بفصيلة الدم والأهواء</h4>
             <p><strong>بناء على الفصيلة (${blood}):</strong> ${bloodAdvice}</p>
+            <p style="margin-top:10px;"><strong>بناء على الصفة (${neuro !== 'none' ? document.getElementById('user-neuro').options[document.getElementById('user-neuro').selectedIndex].text : 'عام'}):</strong> ${neuroAdvice}</p>
         </div>
+        ${spiritualHTML}
     `;
 
     resultDiv.classList.remove('hidden');
@@ -1738,6 +1760,59 @@ function saveTrial() {
     localStorage.setItem('childAcademyTrial', JSON.stringify(trialData));
 }
 
+// --- UNIVERSAL DISEASE KNOWLEDGE BASE (Based on Al-Mughni & Ibn Sina) ---
+const diseaseRegistry = {
+    // Brain & Nerves (الدماغ والأعصاب)
+    "رعشة": { nature: "cold-moist", organ: "brain", tip: "تحتاج لتسخين الدماغ وتنشيف الرطوبات الفضلية، وتجنب البرد والبلغميات." },
+    "صرع": { nature: "cold-moist", organ: "brain", tip: "تقليل الألبان والأسماك والمبردات تماماً، والتركيز على اللطائف المسخنة." },
+    "صداع": { nature: "hot-dry", organ: "brain", tip: "تسكين الأبخرة بالخيارات والبرودة المعتدلة والشموم البارد." },
+    "نسيان": { nature: "cold-moist", organ: "brain", tip: "تحتاج للمسخنات اليابسة كالبان واللبان والزعتر لتقوية الحافظة." },
+    "أرق": { nature: "hot-dry", organ: "brain", tip: "ترطيب الدماغ بماء الشعير أو زيت اللوز قبيل النوم." },
+    "شلل": { nature: "cold-moist", organ: "brain", tip: "علاجها بالمسخنات القوية والتمريخ بالزيوت الحارة (كالفجل والخردل)." },
+    "اعتلال عصبي": { nature: "cold-dry", organ: "brain", tip: "تحتاج لترميم العصب بالحرارة اللطيفة والرطوبة (الزيوت والمساج)." },
+
+    // Chest & Breath (الصدر والتنفس)
+    "سعال": { nature: "cold-moist", organ: "lung", tip: "استخدام الصموغ والزوفا لتنقية البلغم من المجاري التنفسية." },
+    "ربو": { nature: "cold-moist", organ: "lung", tip: "تجنب كل ما يولد البلغم، والاعتماد على المسخنات المدرة للصدر." },
+    "ضيق تنفس": { nature: "hot-dry", organ: "lung", tip: "ترطيب الصدر باللعابات (مثل بزرة الكتان) وتجنب الغبار والدخان." },
+    "نزلة": { nature: "cold-moist", organ: "lung", tip: "تنشيف الرأس أولاً لمنع انحدار الفضلات للصدر." },
+
+    // Digestive & Liver (الجهاز الهضمي والكبد)
+    "السكري النوع الأول": { nature: "hot-dry", organ: "liver", tip: "تسكين حرارة الكبد والتركيز على السوائل المرطبة (مثل الهندباء) والابتعاد عن التوابل الحادة." },
+    "السكري النوع الثاني": { nature: "cold-moist", organ: "stomach", tip: "تقليل البلغم والرطوبات الفضلية، والاعتماد على الشعير والخل والرياضة لتحفيز الهضم." },
+    "السكري": { nature: "cold-moist", organ: "liver", tip: "تقليل النشويات والسكريات، والتركيز على الشعير والخل لتلطيف الأخلاط." },
+    "سكر": { nature: "cold-moist", organ: "liver", tip: "تقليل النشويات والسكريات، والتركيز على الشعير والخل لتلطيف الأخلاط." },
+    "فقر دم": { nature: "cold-dry", organ: "liver", tip: "تحفيز توليد الدم بالأغذية الحارة الرطبة كالكبدة واللحم والزبيب." },
+    "أنيميا": { nature: "cold-dry", organ: "liver", tip: "تحفيز توليد الدم بالأغذية الحارة الرطبة كالكبدة واللحم والزبيب." },
+    "يرقان": { nature: "hot-dry", organ: "liver", tip: "تبريد الكبد بماء الهندباء والسلق وتجنب المقليات والتوابل الحارة." },
+    "استسقاء": { nature: "cold-moist", organ: "liver", tip: "تجفيف البدن بالمدرات والرياضة وتقليل شرب الماء دفعة واحدة." },
+    "قولون": { nature: "cold-moist", organ: "stomach", tip: "طرد الرياح بالكمون واليانسون والابتعاد عن البقوليات غير المصلحة." },
+    "إمساك": { nature: "hot-dry", organ: "stomach", tip: "تليين الطبيعة بالمرطبات كالخوخ والسبانخ وزيت الزيتون." },
+    "إسهال": { nature: "cold-moist", organ: "stomach", tip: "قبض الطبيعة بالسماق والرمان والرمان الحامض وتجنب الملينات." },
+    "حموضة": { nature: "hot-dry", organ: "stomach", tip: "إطفاء لهيب المعدة بالطباشير أو قشور الرمان أو ماء الشعير." },
+    "ديدان": { nature: "cold-moist", organ: "stomach", tip: "استخدام طاردات الديدان الحارة (مثل الثوم والشيح) وتنظيف الأمعاء." },
+    "غثيان": { nature: "hot-dry", organ: "stomach", tip: "تسكين المعدة بالمبردات العطرية كالسفرجل والنعناع البارد." },
+
+    // Joints & Bone (المفاصل والعظام)
+    "نقرس": { nature: "hot-moist", organ: "none", tip: "تقليل اللحوم الحمراء والأخلاط الغليظة، والتركيز على المبردات الملطفة." },
+    "روماتيزم": { nature: "cold-moist", organ: "none", tip: "تدفئة المفاصل وتجنب التعرض للبرد والرطوبة، واستخدام الزنجبيل." },
+    "ألم ظهر": { nature: "cold-moist", organ: "none", tip: "دلك الظهر بالزيوت المسخنة وتقليل الجلوس في الأماكن الباردة." },
+
+    // General (أمراض عامة)
+    "حمى": { nature: "hot-dry", organ: "none", tip: "تبريد البدن بالكمادات والماء الفاتر ومنقوع الورد والشعير." },
+    "هزال": { nature: "cold-dry", organ: "none", tip: "تسمين البدن بالمرطبات المسخنة كالحلوى المصنوعة من السمن والعسل." },
+    "سمنة": { nature: "cold-moist", organ: "none", tip: "تجفيف الرطوبات بالرياضة وتقليل الغذاء واستخدام الخل." },
+    "تبول لا إرادي": { nature: "cold-moist", organ: "none", tip: "تقوية المثانة بالمسخنات اليابسة (مثل البندق وجوز الطيب) ومنع السوائل ليلاً." }
+};
+
+function getDiseaseFromComplaint(complaint) {
+    const text = complaint.toLowerCase();
+    for (let d in diseaseRegistry) {
+        if (text.includes(d)) return diseaseRegistry[d];
+    }
+    return null;
+}
+
 function generateChildPlan() {
     if (!checkTrialLimit()) return;
 
@@ -1750,20 +1825,26 @@ function generateChildPlan() {
 
     const lowerKitchen = kitchenText.toLowerCase();
 
+    // Smart Disease Matching
+    const matchedDisease = getDiseaseFromComplaint(complaint);
+    const finalNature = matchedDisease ? matchedDisease.nature : humor;
+    const finalOrgan = matchedDisease ? matchedDisease.organ : masterOrgan;
+
     // Analysis Logic
     let planHTML = `
         <div class="final-plan-card">
             <div class="plan-header">
-                <h3><i class="fas fa-magic"></i> برنامج طفلك الشفائي المدروس</h3>
+                <h3><i class="fas fa-magic"></i> برنامج طفلك الشفائي المدروس (الموسوعة الشاملة)</h3>
                 <p>بناءً على شكوى: <strong>${complaint}</strong> | السن: <strong>${age} سنوات</strong></p>
+                ${matchedDisease ? `<div style="background:rgba(212,175,55,0.1); border:1px solid var(--secondary-color); padding:5px 10px; border-radius:15px; display:inline-block; margin-top:10px; font-size:0.9rem;">تم التعرف على المرض في موسوعة "المغنى" بنجاح</div>` : ''}
             </div>
             
             <div class="plan-analysis">
                 <h4><i class="fas fa-stethoscope"></i> تحليل طبيب الذكاء الاستدلالي</h4>
                 <ul>
-                    <li><strong>أصل العلة (التحليل الكيميائي):</strong> يميل بدن الطفل لنوع من <span style="color:#d4af37">${getHumorText(humor)}</span> مما أضعف العضو.</li>
-                    <li><strong>العلاقة الحيوية:</strong> العضو المتضرر هو <strong>${getOrganText(masterOrgan)}</strong>، ونقوم بإصلاحه عبر العضو الخادم له.</li>
-                    <li><strong>منهجية العلج:</strong> نستخدم قاعدة "العلاج بالضد" لموازنة هذا الانحراف المزاجي.</li>
+                    <li><strong>أصل العلة (التحليل الكيميائي):</strong> يميل بدن الطفل لنوع من <span style="color:#d4af37">${getHumorText(finalNature)}</span> مما أضعف العضو.</li>
+                    <li><strong>العلاقة الحيوية:</strong> العضو المتضرر هو <strong>${getOrganText(finalOrgan)}</strong>، ونقوم بإصلاحه عبر العضو الخادم له.</li>
+                    <li><strong>منهجية العلاج:</strong> نستخدم قاعدة "العلاج بالضد" لموازنة هذا الانحراف المزاجي.</li>
                 </ul>
             </div>
 
@@ -1771,29 +1852,30 @@ function generateChildPlan() {
                 <h4><i class="fas fa-utensils"></i> تقسيم الوجبات (المطبخ المتوفر لديكِ)</h4>
                 <div class="meal-block">
                     <strong>🥗 وجبة الإفطار:</strong>
-                    <p>${generateSmartMeal('breakfast', humor, lowerKitchen, age, complaint)}</p>
+                    <p>${generateSmartMeal('breakfast', finalNature, lowerKitchen, age, complaint)}</p>
                 </div>
                 <div class="meal-block">
                     <strong>🍲 وجبة الغداء:</strong>
-                    <p>${generateSmartMeal('lunch', humor, lowerKitchen, age, complaint)}</p>
+                    <p>${generateSmartMeal('lunch', finalNature, lowerKitchen, age, complaint)}</p>
                 </div>
                 <div class="meal-block">
                     <strong>🍵 وجبة العشاء:</strong>
-                    <p>${generateSmartMeal('dinner', humor, lowerKitchen, age, complaint)}</p>
+                    <p>${generateSmartMeal('dinner', finalNature, lowerKitchen, age, complaint)}</p>
                 </div>
             </div>
 
             <div class="healing-advice plan-section" style="border-top: 1px solid rgba(212,175,55,0.2); margin-top: 15px; padding-top: 15px;">
                 <h4><i class="fas fa-hand-holding-heart"></i> نصائح للقضاء على أصل العلة</h4>
                 <ul style="color: #e2e8f0; font-size: 0.95rem; line-height: 1.6;">
-                    ${getHealingTips(humor, masterOrgan, age)}
+                    ${matchedDisease ? `<li><strong>نصيحة الموسوعة:</strong> ${matchedDisease.tip}</li>` : ''}
+                    ${getHealingTips(finalNature, finalOrgan, age)}
                 </ul>
             </div>
 
             <div class="medical-rules">
                 <h4><i class="fas fa-pills"></i> المصلحات والتعليمات الهامة</h4>
                 <ul>
-                    ${getCorrectors(humor, lowerKitchen)}
+                    ${getCorrectors(finalNature, lowerKitchen)}
                     <li>يجب تقسيم الوجبات إلى كميات صغيرة (قاعدة الرازي: الهضم الجيد خير من الأكل الكثير).</li>
                     <li><strong>المدة المقترحة:</strong> استمري على هذا "النهج العلاجي" لمدة <strong>${age > 7 ? '21 يوماً' : '15 يوماً'}</strong>. وفي حال نفاد بعض المكونات، انتقلي لقسم <strong>"سر السعادة"</strong> بالبرنامج لتحصلي على قائمة الأغذية الموافقة لخلط ابنك (أو ابنتك) والبدائل المتاحة لضمان استمرار التعافي.</li>
                 </ul>
@@ -1811,44 +1893,42 @@ function generateChildPlan() {
 function generateSmartMeal(type, humor, kitchen, age, complaint) {
     const isToddler = age < 2;
     // --- Classical medical classification (Hot/Cold/Dry/Wet) ---
-    const isHotDisease = humor.includes('hot') || complaint.includes('حمى') || complaint.includes('التهاب');
-    const isColdDisease = humor.includes('cold') || complaint.includes('شلل') || complaint.includes('رعشة') || complaint.includes('بلغم');
-    const isDryDisease = humor.includes('dry') || complaint.includes('هزال') || complaint.includes('يبس');
-    const isMoistDisease = humor.includes('wet') || complaint.includes('ترهل') || complaint.includes('سيلان');
-
-    // Specific exclusions based on texts
-    const isSugarRisk = complaint.includes('سكر') || complaint.includes('سكري');
-    const isBloodRisk = complaint.includes('فقر دم') || complaint.includes('أنيميا');
+    const isHot = humor.includes('hot');
+    const isCold = humor.includes('cold');
+    const isDry = humor.includes('dry');
+    const isWet = humor.includes('wet');
 
     const hasHoney = kitchen.includes('عسل');
     const hasDates = kitchen.includes('تمر') || kitchen.includes('زبيب') || kitchen.includes('دبس');
-    const hasMeat = kitchen.includes('لحم') || kitchen.includes('كبد');
+    const hasMeat = kitchen.includes('لحم') || kitchen.includes('كبد') || kitchen.includes('دجاج');
     const hasEgg = kitchen.includes('بيض');
     const hasOlive = kitchen.includes('زيت');
     const hasRice = kitchen.includes('رز') || kitchen.includes('أرز');
     const hasGrain = kitchen.includes('قمح') || kitchen.includes('شعير') || kitchen.includes('خبز');
 
     // --- Logical Restrictions & Prioritization ---
+    const isSugarRisk = humor.includes('cold') || complaint.includes('سكر');
+    const isBloodRisk = humor.includes('dry') || complaint.includes('أنيميا') || complaint.includes('فقر دم');
 
     if (type === 'breakfast') {
-        if (isSugarRisk) return isToddler ? "عصيدة شعير رقيقة (منعاً لارتفاع السكر)." : "خبز شعير كامل مع قليل من الجبن الطبيعي.";
-        if (isHotDisease) return "شربة ماء فاتر مع قليل من منقوع الخيار أو اليقطين لتبريد المزاج.";
-        if (isColdDisease && hasHoney && age >= 1) return "ملعقة عسل في كوب ماء دافئ لتسخين العضو البارد.";
+        if (isSugarRisk) return isToddler ? "عصيدة شعير رقيقة (منعاً لارتفاع السكر)." : "خبز شعير كامل مع قليل من الجبن الطبيعي (تجنب القمح والسكريات).";
+        if (isHot) return "شربة ماء فاتر مع قليل من منقوع الخيار أو اليقطين لتبريد المزاج.";
+        if (isCold && hasHoney && age >= 1) return "ملعقة عسل في كوب ماء دافئ لتسخين العضو البارد.";
         return isToddler ? "عصيدة قمح ناعمة بمسحة زيت زيتون." : "خبز أسمر مع بيضة مسلوقة.";
     }
 
     if (type === 'lunch') {
-        if (isBloodRisk && hasMeat) return isToddler ? "شوربة كبدة مهروسة مصفاة." : "مرق لحم أحمر مع الخضروات الورقية الخضراء (مولد دم).";
-        if (isHotDisease) return "خضروات باردة رطبة (مثل الكوسا أو السلق) مطبوخة مع قليل من الشعير.";
-        if (isColdDisease) return "مرق لحم (غنم أو طيور) مطيب بالكمون والزنجبيل لتحريك البرودة.";
+        if (isBloodRisk && hasMeat) return isToddler ? "شوربة كبدة مهروسة مصفاة." : "مرق لحم أحمر مع الخضروات الورقية الخضراء (مولد دم حار رطب).";
+        if (isHot) return "خضروات باردة رطبة (مثل الكوسا أو السلق) مطبوخة مع قليل من الشعير.";
+        if (isCold) return "مرق لحم (غنم أو طيور) مطيب بالكمون والزنجبيل لتحريك البرودة." + (hasRice ? " مع قليل من الأرز." : "");
         return "شوربة دافئة متوازنة مع الخضروات المتوفرة ورشة كمون.";
     }
 
     if (type === 'dinner') {
         const isBedWetting = complaint.includes('تبول') || complaint.includes('ليل');
-        if (isBedWetting) return "وجبة جافة (مثل خبز بجبن أو زيتون) مع تقليل السوائل تماماً ومنع الفواكه المدرة للبول (كالبطيخ) ليلاً.";
-        if (isHotDisease) return isToddler ? "روب (زبادي) ناعم لإطفاء حرارة الطفل." : "روب (زبادي) أو فواكه رطبة (كمثرى/تفاح) لإطفاء حرارة النهار.";
-        if (isColdDisease) return isToddler ? "حساء خضروات دافئة مهروسة." : "حساء خضروات دافئة مع رشة فلفل أسود خفيفة لتنشيط الحرارة الغريزية.";
+        if (isBedWetting) return "وجبة جافة (خبز بجبن أو زيتون) مع تقليل السوائل تماماً ومنع الفواكه المدرة للبول (كالبطيخ) ليلاً.";
+        if (isHot) return isToddler ? "روب (زبادي) ناعم لإطفاء حرارة الطفل." : "روب (زبادي) أو فواكه رطبة (كمثرى/تفاح) لإطفاء حرارة النهار.";
+        if (isCold) return isToddler ? "حساء خضروات دافئة مهروسة." : "حساء خضروات دافئة مع رشة فلفل أسود خفيفة لتنشيط الحرارة الغريزية.";
         return isToddler ? "خضروات مهروسة سهلة الهضم." : "خضروات مسلوقة مع شرب منقوع دافئ.";
     }
 }
@@ -1856,23 +1936,25 @@ function generateSmartMeal(type, humor, kitchen, age, complaint) {
 function getHealingTips(humor, organ, age) {
     let tips = "";
     // Tips based on Humor & The Law of Opposites (Ibn Sina Methodology)
-    if (humor === 'hot-dry') {
+    if (humor === 'hot-dry' || humor === 'yellow') {
         tips += "<li><strong>إصلاح اليبوسة:</strong> رطبي بدن الطفل بزيوت باردة (بنفسج أو لوز) لتسكين التهاب العضو وموازنة اليبوسة.</li>";
-    } else if (humor === 'cold-wet') {
-        tips += "<li><strong>تجفيف الفضلات:</strong> العلة سببها رطوبة غريبة راكدة، ركزي على الأغذية اليابسة (كما في كتاب المغنى) والرياضة الخفيفة لتنشيط العضو.</li>";
-    } else if (humor === 'hot-wet') {
+    } else if (humor === 'cold-wet' || humor === 'phlegm') {
+        tips += "<li><strong>تجفيف الفضلات:</strong> العلة سببها رطوبة غريبة راكدة، ركزي على الأغذية اليابسة والرياضة الخفيفة لتنشيط العضو.</li>";
+    } else if (humor === 'hot-wet' || humor === 'blood') {
         tips += "<li><strong>حماية الدم:</strong> احذري من فورات الدم وتجنبي السكريات والمقليات التي تزيد من حدة الأخلاط وفورانها.</li>";
-    } else if (humor === 'cold-dry') {
+    } else if (humor.includes('dry') || humor === 'black') {
         tips += "<li><strong>فك الاحتقان (السوداء):</strong> العلة سببها تكثف سوداوي يحتاج لتسخين هادئ ومستمر (تمريخ بالزيت الدافئ) لفك سدد العروق.</li>";
     }
 
     // Master-Serf Organ Relationships
     if (organ === 'liver') {
         tips += "<li><strong>سر المطبخ (الكبد):</strong> عليكِ بإصلاح المعدة (العضو الخادم) ليرتاح الكبد، ففساد الهضم يرهق توليد الدم النقي.</li>";
-    } else if (organ === 'brain') {
+    } else if (organ === 'brain' || organ === 'nerves') {
         tips += "<li><strong>راحة الدماغ:</strong> في حالات الرعشة أو الاعتلال، امنعي الضجيج والشاشات، فالدماغ يحتاج للسكون لترميم قواه.</li>";
     } else if (organ === 'stomach') {
         tips += "<li><strong>قانون الهضم:</strong> لا تدخلي طعاماً على طعام، وانتظري الاستمراء التام لضمان عدم تولد أخلاط رديئة بالمعدة.</li>";
+    } else if (organ === 'lung') {
+        tips += "<li><strong>حماية الصدر:</strong> تجنب الروائح النفاذة والدخان، واحرص على بخار الأعشاب اللطيفة كالبابونج.</li>";
     }
 
     if (tips === "") tips = "<li>احرصي على الحالة النفسية للطفل، فالحزن يبرد الروح ويضعف المناعة الغريزية.</li>";

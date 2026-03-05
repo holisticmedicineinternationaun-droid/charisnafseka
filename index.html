@@ -982,6 +982,27 @@
                                 <label>أمراض مزمنة أو أدوية؟</label>
                                 <textarea id="user-diseases" rows="2" placeholder="ضغط، سكري، مسيلات..."></textarea>
                             </div>
+                            <div class="diag-grid-compact" style="margin-top: 15px;">
+                                <div class="form-group">
+                                    <label>الحالة النفسية/الروحية:</label>
+                                    <select id="user-spiritual">
+                                        <option value="none">طبيعية</option>
+                                        <option value="magic">كوابيس، ضيق غير مبرر، آلام متنقلة</option>
+                                        <option value="envy">خمول شديد، تثاؤب، تشتت ذهني</option>
+                                        <option value="possession">أصوات، وسواس قهري، عزلة</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>الصفة الغالبة (الأهواء):</label>
+                                    <select id="user-neuro">
+                                        <option value="none">طبيعي</option>
+                                        <option value="dopamine">شغوف بزيادة، مغامر، مندفع</option>
+                                        <option value="serotonin">هادئ ولكن حزين، يبحث عن الأمان</option>
+                                        <option value="gaba">متوتر جداً، سريع الانفعال العضلي</option>
+                                        <option value="adrenaline">دائم القلق من المستقبل والتفكير</option>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="wizard-nav">
                                 <button class="btn-prev" onclick="nextDiagStep(4)"><i class="fas fa-arrow-right"></i>
                                     السابق</button>
