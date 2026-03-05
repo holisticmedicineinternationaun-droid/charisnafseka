@@ -54,6 +54,9 @@
                 <button class="nav-btn" data-target="section-happiness">
                     <i class="fas fa-magic"></i> سر السعادة (حكمة الغذاء)
                 </button>
+                <button class="nav-btn" data-target="section-child-academy">
+                    <i class="fas fa-child"></i> أكاديمية صحة الطفل (تشخيص وغذاء)
+                </button>
                 <button class="nav-btn" data-target="section-pricing"
                     style="background: linear-gradient(135deg, #d4af37, #b8982c); color: var(--primary-color); border: 1px solid #fff;"><i
                         class="fas fa-crown"></i> الباقات والاشتراك</button>
@@ -61,6 +64,130 @@
         </header>
 
         <main class="content-area">
+
+
+            <!-- القسم الجديد: أكاديمية صحة الطفل (تشخيص وغذاء) -->
+            <section id="section-child-academy" class="interactive-section">
+                <div class="academy-intro">
+                    <h2><i class="fas fa-child"></i> أكاديمية صحة الطفل (طبيبك الذكي)</h2>
+                    <p>تشخيص غذائي معمق وفق منهجية ابن سينا والرازي والطب الحديث. صممي برنامجاً متكاملاً لطفلك بناءً على
+                        حالته ومطبخك.</p>
+                </div>
+
+                <div id="child-wizard-container" class="wizard-container">
+                    <!-- Progress Bar -->
+                    <div class="wizard-progress">
+                        <div class="progress-step active" data-step="1">1. البيانات</div>
+                        <div class="progress-step" data-step="2">2. التشخيص</div>
+                        <div class="progress-step" data-step="3">3. الأعضاء</div>
+                        <div class="progress-step" data-step="4">4. المطبخ</div>
+                    </div>
+
+                    <!-- Step 1: Basic Info -->
+                    <div class="wizard-step active" id="wizard-step-1">
+                        <h3><i class="fas fa-id-card"></i> البيانات الأساسية</h3>
+                        <div class="input-group">
+                            <label>عمر الطفل (بالسنوات):</label>
+                            <input type="number" id="child-age" placeholder="مثلاً: 8" min="1" max="18">
+                        </div>
+                        <div class="input-group">
+                            <label>نوع الشكوى أو المرض:</label>
+                            <input type="text" id="child-complaint" placeholder="مثلاً: فقر دم بسيط">
+                        </div>
+                        <button class="btn btn-next" onclick="nextWizardStep(1)">التالي <i
+                                class="fas fa-arrow-left"></i></button>
+                    </div>
+
+                    <!-- Step 2: Diagnosis (Al-Razi & Ibnu Sina) -->
+                    <div class="wizard-step" id="wizard-step-2">
+                        <h3><i class="fas fa-stethoscope"></i> التشخيص الاستدلالي</h3>
+                        <div class="input-group">
+                            <label>شدة الألم أو العَرَض (منهج الرازي):</label>
+                            <select id="child-severity">
+                                <option value="light">بسيط (يحتمله الطفل بسهولة)</option>
+                                <option value="medium">متوسط (يؤثر على نشاطه)</option>
+                                <option value="acute">حاد (يتطلب تدخلاً عاجلاً)</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>العلامة المهيمنة (الخلط):</label>
+                            <select id="child-humor-sign">
+                                <option value="hot-wet">حرارة ورطوبة (كثرة نوم، حمرة وجه)</option>
+                                <option value="hot-dry">حرارة ويبوسة (نحافة، قلق، عطش)</option>
+                                <option value="cold-wet">برودة ورطوبة (خمول، بلغم، كسل)</option>
+                                <option value="cold-dry">برودة ويبوسة (جفاف جلد، امساك، كوابيس)</option>
+                            </select>
+                        </div>
+                        <div class="wizard-btns">
+                            <button class="btn btn-prev" onclick="prevWizardStep(2)"><i class="fas fa-arrow-right"></i>
+                                السابق</button>
+                            <button class="btn btn-next" onclick="nextWizardStep(2)">التالي <i
+                                    class="fas fa-arrow-left"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Organ Analysis -->
+                    <div class="wizard-step" id="wizard-step-3">
+                        <h3><i class="fas fa-vitals"></i> تحليل العضو المتضرر</h3>
+                        <div class="input-group">
+                            <label>أين تكمن الشكوى أساساً؟</label>
+                            <select id="child-organ-master">
+                                <option value="liver">الكبد (مطبخ الدم - فقر دم، صفار)</option>
+                                <option value="stomach">المعدة (الهضم - فقدان شهية، غثيان)</option>
+                                <option value="lung">الصدر والرئة (تنفس، سعال)</option>
+                                <option value="heart">القلب والروح (خوف، سرعة نبض)</option>
+                                <option value="brain">الدماغ (تركيز، ذاكرة، نوم)</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>هل هناك عضو خادم متأثر؟</label>
+                            <select id="child-organ-servant">
+                                <option value="none">لا يوجد عضو متأثر بوضوح</option>
+                                <option value="eye">العين (ضعف نظر، جفاف)</option>
+                                <option value="skin">الجلد (شحوب، طفح)</option>
+                                <option value="nails">الأظافر والشعر (تكسر، سقوط)</option>
+                            </select>
+                        </div>
+                        <div class="wizard-btns">
+                            <button class="btn btn-prev" onclick="prevWizardStep(3)"><i class="fas fa-arrow-right"></i>
+                                السابق</button>
+                            <button class="btn btn-next" onclick="nextWizardStep(3)">التالي <i
+                                    class="fas fa-arrow-left"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Kitchen Ingredients -->
+                    <div class="wizard-step" id="wizard-step-4">
+                        <h3><i class="fas fa-utensils"></i> المطبخ الشفائي</h3>
+                        <p>اختاري المكونات المتوفرة لديكِ حالياً:</p>
+                        <div class="ingredient-grid">
+                            <label><input type="checkbox" value="honey"> عسل نحل</label>
+                            <label><input type="checkbox" value="dates"> تمر / زبيب</label>
+                            <label><input type="checkbox" value="beetroot"> شمندر</label>
+                            <label><input type="checkbox" value="oats"> شوفان / شعير</label>
+                            <label><input type="checkbox" value="olive-oil"> زيت زيتون</label>
+                            <label><input type="checkbox" value="meat"> لحم حمل لطيف</label>
+                            <label><input type="checkbox" value="herbs"> أعشاب (يانسون/بابونج)</label>
+                            <label><input type="checkbox" value="veg"> خضروات ورقية</label>
+                        </div>
+                        <div class="wizard-btns">
+                            <button class="btn btn-prev" onclick="prevWizardStep(4)"><i class="fas fa-arrow-right"></i>
+                                السابق</button>
+                            <button class="btn btn-generate" onclick="generateChildPlan()">صمم البرنامج الآن <i
+                                    class="fas fa-magic"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plan Result Area -->
+                <div id="child-plan-result" class="plan-result-container" style="display: none;">
+                    <div id="plan-content"></div>
+                    <button class="btn btn-print" onclick="window.print()"><i class="fas fa-print"></i> طباعة
+                        البرنامج</button>
+                    <button class="btn btn-reset" onclick="resetWizard()">تصميم برنامج جديد <i
+                            class="fas fa-redo"></i></button>
+                </div>
+            </section>
 
             <!-- القسم الجديد: سر السعادة (حكمة الغذاء) -->
             <section id="section-happiness" class="interactive-section">

@@ -1665,3 +1665,172 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+// --- CHILD HEALTH ACADEMY WIZARD LOGIC ---
+
+function nextWizardStep(currentStep) {
+    if (currentStep === 1) {
+        const age = document.getElementById('child-age').value;
+        const complaint = document.getElementById('child-complaint').value;
+        if (!age || !complaint) {
+            showToast("الرجاء إكمال البيانات الأساسية أولاً");
+            return;
+        }
+    }
+
+    document.getElementById(`wizard-step-${currentStep}`).classList.remove('active');
+    document.getElementById(`wizard-step-${currentStep + 1}`).classList.add('active');
+
+    // Update progress bar
+    document.querySelector(`.progress-step[data-step="${currentStep + 1}"]`).classList.add('active');
+}
+
+function prevWizardStep(currentStep) {
+    document.getElementById(`wizard-step-${currentStep}`).classList.remove('active');
+    document.getElementById(`wizard-step-${currentStep - 1}`).classList.add('active');
+    document.querySelector(`.progress-step[data-step="${currentStep}"]`).classList.remove('active');
+}
+
+function resetWizard() {
+    document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
+    document.getElementById('wizard-step-1').classList.add('active');
+    document.querySelectorAll('.progress-step').forEach((s, idx) => {
+        if (idx === 0) s.classList.add('active');
+        else s.classList.remove('active');
+    });
+    document.getElementById('child-plan-result').style.display = 'none';
+    document.getElementById('child-wizard-container').style.display = 'block';
+}
+
+function checkTrialLimit() {
+    const today = new Date().toISOString().split('T')[0];
+    let trialData = JSON.parse(localStorage.getItem('childAcademyTrial')) || { days: [], lastTrialDate: '' };
+
+    // Check if user is premium
+    const isPremium = localStorage.getItem('isPremiumUser') === 'true';
+    if (isPremium) return true;
+
+    // Daily limit: 1 time per day
+    if (trialData.lastTrialDate === today) {
+        showToast("لقد استنفدت تجربتك المجانية لهذا اليوم. يرجى الاشتراك للوصول غير المحدود.");
+        showPaywall();
+        return false;
+    }
+
+    // 3-day total limit
+    if (trialData.days.length >= 3 && !trialData.days.includes(today)) {
+        showToast("انتهت فترة التجربة المجانية (3 أيام). يرجى الاشتراك للمتابعة.");
+        showPaywall();
+        return false;
+    }
+
+    return true;
+}
+
+function saveTrial() {
+    const today = new Date().toISOString().split('T')[0];
+    let trialData = JSON.parse(localStorage.getItem('childAcademyTrial')) || { days: [], lastTrialDate: '' };
+
+    if (!trialData.days.includes(today)) {
+        trialData.days.push(today);
+    }
+    trialData.lastTrialDate = today;
+    localStorage.setItem('childAcademyTrial', JSON.stringify(trialData));
+}
+
+function generateChildPlan() {
+    if (!checkTrialLimit()) return;
+
+    const age = document.getElementById('child-age').value;
+    const complaint = document.getElementById('child-complaint').value;
+    const severity = document.getElementById('child-severity').value;
+    const humor = document.getElementById('child-humor-sign').value;
+    const masterOrgan = document.getElementById('child-organ-master').value;
+    const servantOrgan = document.getElementById('child-organ-servant').value;
+
+    const ingredients = Array.from(document.querySelectorAll('#wizard-step-4 input[type="checkbox"]:checked')).map(cb => cb.value);
+
+    // Logic for Plan Extraction & Analysis
+    let planHTML = `
+        <div class="final-plan-card">
+            <div class="plan-header">
+                <h3><i class="fas fa-file-medical"></i> البرنامج الغذائي الشامل للطفل</h3>
+                <p>بناءً على تشخيص: <strong>${complaint}</strong> | السن: <strong>${age} سنوات</strong></p>
+            </div>
+            
+            <div class="plan-analysis">
+                <h4><i class="fas fa-microscope"></i> التحليل الاستنباطي (مختبر ابن سينا والرازي)</h4>
+                <ul>
+                    <li><strong>تحديد الخلط:</strong> يظهر ميل الطفل نحو <span>${getHumorText(humor)}</span>.</li>
+                    <li><strong>درجة العلة:</strong> الحالة مصنفة كـ <span>${getSeverityText(severity)}</span>.</li>
+                    <li><strong>ارتباط الأعضاء:</strong> العضو المتضرر الرئيسي هو <span>${getOrganText(masterOrgan)}</span> والعضو الخادم هو <span>${getOrganText(servantOrgan)}</span>.</li>
+                </ul>
+            </div>
+
+            <div class="day-meals">
+                <h4><i class="fas fa-utensils"></i> تصميم الوجبات لليوم الكامل</h4>
+                <div class="meal-block">
+                    <strong>🥗 الإفطار:</strong>
+                    <p>${generateMeal('breakfast', humor, ingredients)}</p>
+                </div>
+                <div class="meal-block">
+                    <strong>🍲 الغداء:</strong>
+                    <p>${generateMeal('lunch', humor, ingredients)}</p>
+                </div>
+                <div class="meal-block">
+                    <strong>🍵 العشاء:</strong>
+                    <p>${generateMeal('dinner', humor, ingredients)}</p>
+                </div>
+            </div>
+
+            <div class="duration-box">
+                <h4><i class="fas fa-calendar-alt"></i> الميقات والمدة الزمنية</h4>
+                <p>يستمر هذا البرنامج لمدة <strong>${age > 10 ? '21 يوماً' : '15 يوماً'}</strong> مع ضرورة الالتزام بقانون التدرج (نصف الكمية في الـ 3 أيام الأولى).</p>
+            </div>
+
+            <div class="medical-rules">
+                <h4><i class="fas fa-balance-scale"></i> قوانين الإصلاح والموازنة</h4>
+                <p>هذا البرنامج مصمم لموازنة الكيفيات (الحرارة والرطوبة) وتغذية العضو الخادم لخدمة العضو الرئيس.</p>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('plan-content').innerHTML = planHTML;
+    document.getElementById('child-wizard-container').style.display = 'none';
+    document.getElementById('child-plan-result').style.display = 'block';
+
+    saveTrial();
+}
+
+function getHumorText(h) {
+    const hints = { 'hot-wet': 'الحرارة والرطوبة', 'hot-dry': 'الحرارة واليبوسة', 'cold-wet': 'البرودة والرطوبة', 'cold-dry': 'البرودة واليبوسة' };
+    return hints[h] || h;
+}
+
+function getSeverityText(s) {
+    const hints = { 'light': 'بسيطة', 'medium': 'متوسطة الشدة', 'acute': 'حادة' };
+    return hints[s] || s;
+}
+
+function getOrganText(o) {
+    const hints = { 'liver': 'الكبد', 'stomach': 'المعدة', 'lung': 'الصدر', 'heart': 'القلب', 'brain': 'الدماغ', 'eye': 'العين', 'skin': 'الجلد', 'nails': 'الأظافر/الشعر', 'none': 'غير محدد' };
+    return hints[o] || o;
+}
+
+function generateMeal(type, humor, ingredients) {
+    if (type === 'breakfast') {
+        if (ingredients.includes('honey') || ingredients.includes('dates')) return "ملعقة عسل نحل مذابة في ماء فاتر مع 3 حبات زبيب (لتقوية الكبد والدم).";
+        return "خبز شعير بمسحة زيت زيتون مع كوب حليب دافئ (إذا لم يكن هناك بلغم).";
+    }
+    if (type === 'lunch') {
+        if (ingredients.includes('meat') && ingredients.includes('beetroot')) return "مرق لحم حمل مطبوخ ببطء مع قطع الشمندر المسلوق (لتحفيز إنتاج الدم وبناء العضلات).";
+        if (ingredients.includes('oats')) return "شوربة شوفان بالخضروات الورقية وزيت الزيتون.";
+        return "وجبة متوازنة من المكونات المتوفرة مع التركيز على سهولة الهضم.";
+    }
+    if (type === 'dinner') {
+        if (ingredients.includes('herbs')) return "منقوع اليانسون الدافئ مع قطعة خبز صغيرة (لتهدئة الأعصاب وسكون الخلط قبل النوم).";
+        return "فاكهة رطبة (مثل التفاح) أو لبن رائب لترطيب المعدة.";
+    }
+    return "وجبة خفيفة موافقة لمزاج الطفل.";
+}
+
