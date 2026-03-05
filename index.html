@@ -951,7 +951,29 @@
                             <h3><i class="fas fa-stethoscope"></i> المرحلة 5: الاستفراغات والبيانات الختامية</h3>
                             <div class="diag-grid-compact">
                                 <div class="form-group">
-                                    <label>فصيلة الدم:</label>
+                                    <label><i class="fas fa-fingerprint"></i> الطبع الجبلي (فطرتك الأصلية):</label>
+                                    <select id="user-nature-base">
+                                        <option value="hot-moist">حار رطب (دموي): قوي البنية، اجتماعي، نشيط</option>
+                                        <option value="hot-dry">حار يابس (صفراوي): نحيف، عصبي، حاد الذكاء</option>
+                                        <option value="cold-moist">بارد رطب (بلغمي): هادئ، يميل للسمنة، كثير النوم
+                                        </option>
+                                        <option value="cold-dry">بارد يابس (سوداوي): دقيق، مفكر، قلق</option>
+                                    </select>
+                                    <small class="help-text">طبيعتك الغالبة منذ الصغر قبل أي مرض.</small>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-exclamation-triangle"></i> الخلط الغالب (سبب المرض
+                                        الآن):</label>
+                                    <select id="user-mizaj">
+                                        <option value="hot-moist">خلط دموي (ثقل، حمرة الوجه، ضيق تنفس)</option>
+                                        <option value="hot-dry">خلط صفراوي (مرارة فم، أرق، حدة طباع)</option>
+                                        <option value="cold-moist">خلط بلغمي (بلادة، كسل، رطوبة، نسيان)</option>
+                                        <option value="cold-dry">خلط سوداوي (وسواس، تفكير، سواد تحت العين)</option>
+                                    </select>
+                                    <small class="help-text">الحالة الطارئة التي تسببت في شكواك الحالية.</small>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-tint"></i> فصيلة الدم:</label>
                                     <select id="user-blood">
                                         <option value="O">O</option>
                                         <option value="A">A</option>
@@ -959,20 +981,11 @@
                                         <option value="AB">AB</option>
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <label>المزاج الأساسي:</label>
-                                    <select id="user-mizaj">
-                                        <option value="hot-dry">صفراوي</option>
-                                        <option value="hot-moist">دموي</option>
-                                        <option value="cold-moist">بلغمي</option>
-                                        <option value="cold-dry">سوداوي</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>طبيعة البراز والبول:</label>
-                                    <input type="text" id="diag-excretion"
-                                        placeholder="مثلاً: إمساك، بول أحمر، أصفر فاقع...">
-                                </div>
+                            </div>
+                            <div class="form-group" style="margin-top: 15px;">
+                                <label><i class="fas fa-notes-medical"></i> طبيعة الإخراج (البراز والبول):</label>
+                                <input type="text" id="diag-excretion"
+                                    placeholder="مثلاً: إمساك، بول أحمر، أصفر فاقع...">
                             </div>
                             <div class="form-group">
                                 <label>قائمة طعامك لليوموالمكونات المتوفرة؟</label>

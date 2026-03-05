@@ -1964,6 +1964,7 @@ function generatePlan() {
     const story = document.getElementById('diag-story').value.trim();
     const spiritual = document.getElementById('user-spiritual').value;
     const neuro = document.getElementById('user-neuro').value;
+    const innateNature = document.getElementById('user-nature-base').value;
 
     // --- Smart Inference (Helping the non-expert user) ---
     // If user text contains "started now", "severe pulse", etc., we infer status
@@ -2013,7 +2014,29 @@ function generatePlan() {
         </div>
     `;
 
-    // 2. ROOT CAUSE & MATURITY ANALYSIS
+    // 2. CONSTITUTIONAL ANALYSIS (New)
+    outputHTML += `
+        <div class="plan-section status-card" style="border-right-color: var(--secondary-color);">
+            <h4><i class="fas fa-fingerprint"></i> تحليل الطبائع (الفطرة مقابل العارض)</h4>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:10px;">
+                <div>
+                    <label style="display:block; font-size:0.8rem; color:#a0aec0;">طبعك الجبلي (الفطري):</label>
+                    <span style="font-weight:bold; color:var(--secondary-color)">${getHumorText(innateNature)}</span>
+                </div>
+                <div>
+                    <label style="display:block; font-size:0.8rem; color:#a0aec0;">الخلط الغالب (سبب العلة):</label>
+                    <span style="font-weight:bold; color:#e74c3c">${getHumorText(mizaj)}</span>
+                </div>
+            </div>
+            <p style="margin-top:15px; font-size:0.9rem; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">
+                ${innateNature === mizaj ?
+            "العلة ناتجة عن <strong>اشتداد طبيعتك الأصلية</strong> (مثلاً: أنت صفراوي أصلاً وزاد خلط الصفراء بسبب طعام حار أو انفعال)." :
+            "العلة ناتجة عن <strong>مزاج غريب</strong> طرأ على بدنك (مثلاً: أنت دموي أصلاً لكن غلب عليك البلغم بسبب الرطوبة أو الخمول)، وهذا يسمى 'خلطاً غريباً'."}
+            </p>
+        </div>
+    `;
+
+    // 3. ROOT CAUSE & MATURITY ANALYSIS
     let statusColor = maturity === 'raw' ? '#3498db' : '#e67e22';
     outputHTML += `
         <div class="plan-section status-card" style="border-right-color: ${statusColor}">
@@ -2234,7 +2257,12 @@ function getCorrectors(humor, kitchen) {
 }
 
 function getHumorText(h) {
-    const hints = { 'hot-wet': 'الحرارة والرطوبة', 'hot-dry': 'الحرارة واليبوسة', 'cold-wet': 'البرودة والرطوبة', 'cold-dry': 'البرودة واليبوسة' };
+    const hints = {
+        'hot-moist': 'حار رطب (دموي)',
+        'hot-dry': 'حار يابس (صفراوي)',
+        'cold-wet': 'بارد رطب (بلغمي)',
+        'cold-dry': 'بارد يابس (سوداوي)'
+    };
     return hints[h] || h;
 }
 
