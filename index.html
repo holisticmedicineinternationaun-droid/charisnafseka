@@ -978,6 +978,31 @@
                                 <label>قائمة طعامك لليوموالمكونات المتوفرة؟</label>
                                 <textarea id="user-ingredients" rows="2" placeholder="أرز، لحم، خضار..."></textarea>
                             </div>
+                            <div class="diag-grid-compact" style="margin-top: 15px;">
+                                <div class="form-group">
+                                    <label><i class="fas fa-microscope"></i> حالة الإصابة (المادة):</label>
+                                    <select id="diag-maturity">
+                                        <option value="raw">حديثة / متهيجة (ألم حاد، نبض، حرارة مكان الألم)</option>
+                                        <option value="ripe">مستقرة / استوت (هدوء الألم الحاد، ثقل، بول داكن)</option>
+                                    </select>
+                                    <small class="help-text">اختر "حديثة" إذا كان الوجع في بدايته وقوته.</small>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-chart-line"></i> مسار المرض الآن:</label>
+                                    <select id="diag-phase">
+                                        <option value="start">في تزايد (الأعراض تشتد ساعة بعد ساعة)</option>
+                                        <option value="peak">ثابت (وصلت الأعراض لذروتها ولا تتغير)</option>
+                                        <option value="decline">في تراجع (بدأت قوى الجسم تستعيد نشاطها)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-frown"></i> شدة معاناة العضو:</label>
+                                    <select id="diag-pain-level">
+                                        <option value="light">ألم محتمل (يزعج لكن لا يوقف الحركة)</option>
+                                        <option value="severe">ألم شديد جداً (لا يطاق، يمنع النوم والراحة)</option>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label>أمراض مزمنة أو أدوية؟</label>
                                 <textarea id="user-diseases" rows="2" placeholder="ضغط، سكري، مسيلات..."></textarea>

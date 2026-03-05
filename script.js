@@ -1760,59 +1760,6 @@ function saveTrial() {
     localStorage.setItem('childAcademyTrial', JSON.stringify(trialData));
 }
 
-// --- UNIVERSAL DISEASE KNOWLEDGE BASE (Based on Al-Mughni & Ibn Sina) ---
-const diseaseRegistry = {
-    // Brain & Nerves (الدماغ والأعصاب)
-    "رعشة": { nature: "cold-moist", organ: "brain", tip: "تحتاج لتسخين الدماغ وتنشيف الرطوبات الفضلية، وتجنب البرد والبلغميات." },
-    "صرع": { nature: "cold-moist", organ: "brain", tip: "تقليل الألبان والأسماك والمبردات تماماً، والتركيز على اللطائف المسخنة." },
-    "صداع": { nature: "hot-dry", organ: "brain", tip: "تسكين الأبخرة بالخيارات والبرودة المعتدلة والشموم البارد." },
-    "نسيان": { nature: "cold-moist", organ: "brain", tip: "تحتاج للمسخنات اليابسة كالبان واللبان والزعتر لتقوية الحافظة." },
-    "أرق": { nature: "hot-dry", organ: "brain", tip: "ترطيب الدماغ بماء الشعير أو زيت اللوز قبيل النوم." },
-    "شلل": { nature: "cold-moist", organ: "brain", tip: "علاجها بالمسخنات القوية والتمريخ بالزيوت الحارة (كالفجل والخردل)." },
-    "اعتلال عصبي": { nature: "cold-dry", organ: "brain", tip: "تحتاج لترميم العصب بالحرارة اللطيفة والرطوبة (الزيوت والمساج)." },
-
-    // Chest & Breath (الصدر والتنفس)
-    "سعال": { nature: "cold-moist", organ: "lung", tip: "استخدام الصموغ والزوفا لتنقية البلغم من المجاري التنفسية." },
-    "ربو": { nature: "cold-moist", organ: "lung", tip: "تجنب كل ما يولد البلغم، والاعتماد على المسخنات المدرة للصدر." },
-    "ضيق تنفس": { nature: "hot-dry", organ: "lung", tip: "ترطيب الصدر باللعابات (مثل بزرة الكتان) وتجنب الغبار والدخان." },
-    "نزلة": { nature: "cold-moist", organ: "lung", tip: "تنشيف الرأس أولاً لمنع انحدار الفضلات للصدر." },
-
-    // Digestive & Liver (الجهاز الهضمي والكبد)
-    "السكري النوع الأول": { nature: "hot-dry", organ: "liver", tip: "تسكين حرارة الكبد والتركيز على السوائل المرطبة (مثل الهندباء) والابتعاد عن التوابل الحادة." },
-    "السكري النوع الثاني": { nature: "cold-moist", organ: "stomach", tip: "تقليل البلغم والرطوبات الفضلية، والاعتماد على الشعير والخل والرياضة لتحفيز الهضم." },
-    "السكري": { nature: "cold-moist", organ: "liver", tip: "تقليل النشويات والسكريات، والتركيز على الشعير والخل لتلطيف الأخلاط." },
-    "سكر": { nature: "cold-moist", organ: "liver", tip: "تقليل النشويات والسكريات، والتركيز على الشعير والخل لتلطيف الأخلاط." },
-    "فقر دم": { nature: "cold-dry", organ: "liver", tip: "تحفيز توليد الدم بالأغذية الحارة الرطبة كالكبدة واللحم والزبيب." },
-    "أنيميا": { nature: "cold-dry", organ: "liver", tip: "تحفيز توليد الدم بالأغذية الحارة الرطبة كالكبدة واللحم والزبيب." },
-    "يرقان": { nature: "hot-dry", organ: "liver", tip: "تبريد الكبد بماء الهندباء والسلق وتجنب المقليات والتوابل الحارة." },
-    "استسقاء": { nature: "cold-moist", organ: "liver", tip: "تجفيف البدن بالمدرات والرياضة وتقليل شرب الماء دفعة واحدة." },
-    "قولون": { nature: "cold-moist", organ: "stomach", tip: "طرد الرياح بالكمون واليانسون والابتعاد عن البقوليات غير المصلحة." },
-    "إمساك": { nature: "hot-dry", organ: "stomach", tip: "تليين الطبيعة بالمرطبات كالخوخ والسبانخ وزيت الزيتون." },
-    "إسهال": { nature: "cold-moist", organ: "stomach", tip: "قبض الطبيعة بالسماق والرمان والرمان الحامض وتجنب الملينات." },
-    "حموضة": { nature: "hot-dry", organ: "stomach", tip: "إطفاء لهيب المعدة بالطباشير أو قشور الرمان أو ماء الشعير." },
-    "ديدان": { nature: "cold-moist", organ: "stomach", tip: "استخدام طاردات الديدان الحارة (مثل الثوم والشيح) وتنظيف الأمعاء." },
-    "غثيان": { nature: "hot-dry", organ: "stomach", tip: "تسكين المعدة بالمبردات العطرية كالسفرجل والنعناع البارد." },
-
-    // Joints & Bone (المفاصل والعظام)
-    "نقرس": { nature: "hot-moist", organ: "none", tip: "تقليل اللحوم الحمراء والأخلاط الغليظة، والتركيز على المبردات الملطفة." },
-    "روماتيزم": { nature: "cold-moist", organ: "none", tip: "تدفئة المفاصل وتجنب التعرض للبرد والرطوبة، واستخدام الزنجبيل." },
-    "ألم ظهر": { nature: "cold-moist", organ: "none", tip: "دلك الظهر بالزيوت المسخنة وتقليل الجلوس في الأماكن الباردة." },
-
-    // General (أمراض عامة)
-    "حمى": { nature: "hot-dry", organ: "none", tip: "تبريد البدن بالكمادات والماء الفاتر ومنقوع الورد والشعير." },
-    "هزال": { nature: "cold-dry", organ: "none", tip: "تسمين البدن بالمرطبات المسخنة كالحلوى المصنوعة من السمن والعسل." },
-    "سمنة": { nature: "cold-moist", organ: "none", tip: "تجفيف الرطوبات بالرياضة وتقليل الغذاء واستخدام الخل." },
-    "تبول لا إرادي": { nature: "cold-moist", organ: "none", tip: "تقوية المثانة بالمسخنات اليابسة (مثل البندق وجوز الطيب) ومنع السوائل ليلاً." }
-};
-
-function getDiseaseFromComplaint(complaint) {
-    const text = complaint.toLowerCase();
-    for (let d in diseaseRegistry) {
-        if (text.includes(d)) return diseaseRegistry[d];
-    }
-    return null;
-}
-
 function generateChildPlan() {
     if (!checkTrialLimit()) return;
 
@@ -1888,6 +1835,316 @@ function generateChildPlan() {
     document.getElementById('child-plan-result').style.display = 'block';
 
     saveTrial();
+}
+
+// --- UNIVERSAL DISEASE KNOWLEDGE BASE (Based on Al-Mughni & Ibn Sina) ---
+const diseaseRegistry = {
+    // Brain & Nerves (الدماغ والأعصاب)
+    "رعشة": { nature: "cold-moist", organ: "brain", tip: "تحتاج لتسخين الدماغ وتنشيف الرطوبات الفضلية، وتجنب البرد والبلغميات." },
+    "صرع": { nature: "cold-moist", organ: "brain", tip: "تقليل الألبان والأسماك والمبردات تماماً، والتركيز على اللطائف المسخنة." },
+    "صداع": { nature: "hot-dry", organ: "brain", tip: "تسكين الأبخرة بالخيارات والبرودة المعتدلة والشموم البارد." },
+    "نسيان": { nature: "cold-moist", organ: "brain", tip: "تحتاج للمسخنات اليابسة كالبان واللبان والزعتر لتقوية الحافظة." },
+    "أرق": { nature: "hot-dry", organ: "brain", tip: "ترطيب الدماغ بماء الشعير أو زيت اللوز قبيل النوم." },
+    "شلل": { nature: "cold-moist", organ: "brain", tip: "علاجها بالمسخنات القوية والتمريخ بالزيوت الحارة (كالفجل والخردل)." },
+    "اعتلال عصبي": { nature: "cold-dry", organ: "brain", tip: "تحتاج لترميم العصب بالحرارة اللطيفة والرطوبة (الزيوت والمساج)." },
+
+    // Chest & Breath (الصدر والتنفس)
+    "سعال": { nature: "cold-moist", organ: "lung", tip: "استخدام الصموغ والزوفا لتنقية البلغم من المجاري التنفسية." },
+    "ربو": { nature: "cold-moist", organ: "lung", tip: "تجنب كل ما يولد البلغم، والاعتماد على المسخنات المدرة للصدر." },
+    "ضيق تنفس": { nature: "hot-dry", organ: "lung", tip: "ترطيب الصدر باللعابات (مثل بزرة الكتان) وتجنب الغبار والدخان." },
+    "نزلة": { nature: "cold-moist", organ: "lung", tip: "تنشيف الرأس أولاً لمنع انحدار الفضلات للصدر." },
+
+    // Digestive & Liver (الجهاز الهضمي والكبد)
+    "السكري النوع الأول": { nature: "hot-dry", organ: "liver", tip: "تسكين حرارة الكبد والتركيز على السوائل المرطبة (مثل الهندباء) والابتعاد عن التوابل الحادة." },
+    "السكري النوع الثاني": { nature: "cold-moist", organ: "stomach", tip: "تقليل البلغم والرطوبات الفضلية، والاعتماد على الشعير والخل والرياضة لتحفيز الهضم." },
+    "السكري": { nature: "cold-moist", organ: "liver", tip: "تقليل النشويات والسكريات، والتركيز على الشعير والخل لتلطيف الأخلاط." },
+    "سكر": { nature: "cold-moist", organ: "liver", tip: "تقليل النشويات والسكريات، والتركيز على الشعير والخل لتلطيف الأخلاط." },
+    "فقر دم": { nature: "cold-dry", organ: "liver", tip: "تحفيز توليد الدم بالأغذية الحارة الرطبة كالكبدة واللحم والزبيب." },
+    "أنيميا": { nature: "cold-dry", organ: "liver", tip: "تحفيز توليد الدم بالأغذية الحارة الرطبة كالكبدة واللحم والزبيب." },
+    "يرقان": { nature: "hot-dry", organ: "liver", tip: "تبريد الكبد بماء الهندباء والسلق وتجنب المقليات والتوابل الحارة." },
+    "استسقاء": { nature: "cold-moist", organ: "liver", tip: "تجفيف البدن بالمدرات والرياضة وتقليل شرب الماء دفعة واحدة." },
+    "قولون": { nature: "cold-moist", organ: "stomach", tip: "طرد الرياح بالكمون واليانسون والابتعاد عن البقوليات غير المصلحة." },
+    "إمساك": { nature: "hot-dry", organ: "stomach", tip: "تليين الطبيعة بالمرطبات كالخوخ والسبانخ وزيت الزيتون." },
+    "إسهال": { nature: "cold-moist", organ: "stomach", tip: "قبض الطبيعة بالسماق والرمان والرمان الحامض وتجنب الملينات." },
+    "حموضة": { nature: "hot-dry", organ: "stomach", tip: "إطفاء لهيب المعدة بالطباشير أو قشور الرمان أو ماء الشعير." },
+    "ديدان": { nature: "cold-moist", organ: "stomach", tip: "استخدام طاردات الديدان الحارة (مثل الثوم والشيح) وتنظيف الأمعاء." },
+    "غثيان": { nature: "hot-dry", organ: "stomach", tip: "تسكين المعدة بالمبردات العطرية كالسفرجل والنعناع البارد." },
+
+    // Joints & Bone (المفاصل والعظام)
+    "نقرس": { nature: "hot-moist", organ: "none", tip: "تقليل اللحوم الحمراء والأخلاط الغليظة، والتركيز على المبردات الملطفة." },
+    "روماتيزم": { nature: "cold-moist", organ: "none", tip: "تدفئة المفاصل وتجنب التعرض للبرد والرطوبة، واستخدام الزنجبيل." },
+    "ألم ظهر": { nature: "cold-moist", organ: "none", tip: "دلك الظهر بالزيوت المسخنة وتقليل الجلوس في الأماكن الباردة." },
+
+    // General (أمراض عامة)
+    "حمى": { nature: "hot-dry", organ: "none", tip: "تبريد البدن بالكمادات والماء الفاتر ومنقوع الورد والشعير." },
+    "هزال": { nature: "cold-dry", organ: "none", tip: "تسمين البدن بالمرطبات المسخنة كالحلوى المصنوعة من السمن والعسل." },
+    "سمنة": { nature: "cold-moist", organ: "none", tip: "تجفيف الرطوبات بالرياضة وتقليل الغذاء واستخدام الخل." },
+    "تبول لا إرادي": { nature: "cold-moist", organ: "none", tip: "تقوية المثانة بالمسخنات اليابسة (مثل البندق وجوز الطيب) ومنع السوائل ليلاً." }
+};
+
+function getDiseaseFromComplaint(complaint) {
+    const text = complaint.toLowerCase();
+    for (let d in diseaseRegistry) {
+        if (text.includes(d)) return diseaseRegistry[d];
+    }
+    return null;
+}
+
+// --- SMART CLINIC REMEDY DATABASE (Based on Al-Mughni & Ibn Sina) ---
+const remedyDatabase = {
+    maturation: {
+        cold: {
+            title: "منضجات الأخلاط الباردة (البلغم والسوداء)",
+            items: [
+                "البابونج وإكليل الملك والشبث: لإنضاج الأورام والمواد الباردة.",
+                "الزوفا الرطب والحاشا (الزعتر البري): لتلطيف الخلط وجعله أرق.",
+                "المرزنجوش وورق الغار والشيح: لإنضاج المادة البلغمية.",
+                "الفودنج (النعناع البري) والسذاب: منضجات قوية للخلط السوداوي."
+            ]
+        },
+        hot: {
+            title: "منضجات الأخلاط الحارة (الدم والصفراء)",
+            items: [
+                "ماء الشعير: مبرد مرطب يجمع قوام المادة الحارة وينضجها.",
+                "البنفسج والنيلوفر: لإنضاج المواد الحارة وتسكين الالتهاب.",
+                "عنب الثعلب وعصا الراعي: بقول باردة تنضج الأخلاط الحارة.",
+                "لعابات البذور (مثل بزر قطونا): للترطيب وتسكين اللذع."
+            ]
+        }
+    },
+    purging: {
+        yellow: ["السقمونيا (بحذر)", "الإهليلج الأصفر", "الشاهترج", "خيار شنبر (ملين لطيف)"],
+        phlegm: ["شحم الحنظل (قوي)", "التُّرْبِد مع الزنجبيل", "غاريقون نفعاً للأعصاب", "حب الفربيون"],
+        black: ["الأفتيمون (ملك مستفرغات السوداء)", "الخربق الأسود (بحذر)", "حجر اللازورد", "البسفايج"],
+        blood: ["الفصد (تحت إشراف)", "الحجامة في الأوقات المعلومة", "الشاهترج لتنقية الدم"]
+    },
+    local: {
+        reducers: ["عنب الثعلب وعصا الراعي", "الطين المختوم والأرمني", "الجلّنار وقشر الرمان", "دهن الورد والسفرجل"],
+        sedatives: ["البابونج والشبث", "بزر الكتان ودقيق الحلبة", "دهن اللوز والنيلوفر"],
+        anesthetics: ["الأفيون (للضرورة القصوى)", "بزر البنج", "قشور الخشخاش (للشقيقة)"],
+        liniments: ["الزيت العتيق (زيتون قديم)", "دهن الخروع", "دهن القسط والسذاب"]
+    }
+};
+
+function generatePlan() {
+    // ... Check activation and limits logic ...
+    const now = new Date();
+    const todayStr = now.toDateString();
+
+    // Check trial/premium status (reusing existing logic)
+    const storedStatus = localStorage.getItem('isPremium');
+    const isPremium = storedStatus === 'true';
+
+    if (!isPremium) {
+        let trialStartStr = localStorage.getItem(TRIAL_START_KEY);
+        let lastGenStr = localStorage.getItem(LAST_GENERATION_KEY);
+        if (!trialStartStr) {
+            trialStartStr = now.toISOString();
+            localStorage.setItem(TRIAL_START_KEY, trialStartStr);
+        }
+        const trialStartDate = new Date(trialStartStr);
+        const diffDays = Math.ceil(Math.abs(now - trialStartDate) / (1000 * 60 * 60 * 24));
+        if (diffDays > MAX_FREE_DAYS) {
+            showPaywall("انتهت الفترة التجريبية!", "لقد استمتعت بتجربة 3 أيام مجاناً لمصمم البرامج.");
+            return;
+        }
+        if (lastGenStr === todayStr) {
+            showPaywall("استنفدت الحد اليومي!", "في الفترة التجريبية، يُسمح بتوليد برنامج واحد فقط.");
+            return;
+        }
+        localStorage.setItem(LAST_GENERATION_KEY, todayStr);
+    }
+
+    // --- Collect Diagnostic Data ---
+    const mizajSelection = document.getElementById('user-mizaj');
+    const mizaj = mizajSelection.value;
+    const blood = document.getElementById('user-blood').value;
+    const ingredients = document.getElementById('user-ingredients').value.trim();
+    const diseases = document.getElementById('user-diseases').value.trim();
+    const story = document.getElementById('diag-story').value.trim();
+    const spiritual = document.getElementById('user-spiritual').value;
+    const neuro = document.getElementById('user-neuro').value;
+
+    // --- Smart Inference (Helping the non-expert user) ---
+    // If user text contains "started now", "severe pulse", etc., we infer status
+    const combinedText = (diseases + " " + story).toLowerCase();
+
+    let inferredMaturity = document.getElementById('diag-maturity').value;
+    let inferredPhase = document.getElementById('diag-phase').value;
+
+    // Logic for Maturity Inference
+    if (combinedText.includes("نبض") || combinedText.includes("حرارة") || combinedText.includes("ألم حاد") || combinedText.includes("توّه بدأ")) {
+        inferredMaturity = "raw";
+    } else if (combinedText.includes("ثقل") || combinedText.includes("هدوء") || combinedText.includes("قديم")) {
+        inferredMaturity = "ripe";
+    }
+
+    // Logic for Phase Inference
+    if (combinedText.includes("يزداد") || combinedText.includes("أمس") || combinedText.includes("اليوم")) {
+        inferredPhase = "start";
+    } else if (combinedText.includes("مستقر") || combinedText.includes("يتحسن")) {
+        inferredPhase = "decline";
+    }
+
+    const maturity = inferredMaturity;
+    const diseasePhase = inferredPhase;
+    const painLevel = document.getElementById('diag-pain-level').value;
+
+    // Smart Disease Matching
+    const matchedFromDisease = getDiseaseFromComplaint(diseases);
+    const matchedFromStory = getDiseaseFromComplaint(story);
+    const matchedDisease = matchedFromDisease || matchedFromStory;
+
+    const liverCheck = document.getElementById('liver-1').checked || document.getElementById('liver-2').checked || document.getElementById('liver-3').checked;
+    const brainCheck = document.getElementById('brain-1').checked || document.getElementById('brain-2').checked;
+    const heartCheck = document.getElementById('heart-1').checked;
+
+    const resultDiv = document.getElementById('plan-result');
+    let outputHTML = "";
+
+    // 1. HEADER SECTION
+    outputHTML += `
+        <div class="smart-clinic-header">
+            <h3><i class="fas fa-file-medical-alt"></i> البروتوكول العلاجي المزدوج (العيادة الاستشارية)</h3>
+            <div class="phase-indicator ${diseasePhase}">
+                <i class="fas fa-hourglass-half"></i> طور المرض الحالي: 
+                <span>${getPhaseText(diseasePhase)}</span>
+            </div>
+        </div>
+    `;
+
+    // 2. ROOT CAUSE & MATURITY ANALYSIS
+    let statusColor = maturity === 'raw' ? '#3498db' : '#e67e22';
+    outputHTML += `
+        <div class="plan-section status-card" style="border-right-color: ${statusColor}">
+            <h4><i class="fas fa-vial"></i> تحليل حالة الخلط (مقياس النضج)</h4>
+            <div class="maturity-badge" style="background:${statusColor}">
+                ${maturity === 'raw' ? 'تحذير: خلط فجّ (غير ناضج)' : 'تنبيه: خلط ناضج وجاهز للاستفراغ'}
+            </div>
+            <p style="margin-top:10px;">
+                ${maturity === 'raw'
+            ? 'القاعدة الطبية تقول: "لا يُستفرغ الخلط قبل نضجه". بدنك الآن يحتاج لعملية "التلطيف والإنضاج" أولاً لفك قوام المادة الغليظة قبل المجازفة بطردها.'
+            : 'الخلط وصل لمرحلة النضج (استواء المادة). الآن هو الوقت المثالي للتنقية الواسعة للتخلص من أصل العلة تماماً.'}
+            </p>
+        </div>
+    `;
+
+    // 3. DUAL PROTOCOL (MASTER VS LOCAL)
+    outputHTML += `
+        <div class="protocol-grid">
+            <div class="protocol-card master">
+                <h5><i class="fas fa-chess-king"></i> أولاً: العلاج الكلي (للعضو السيد)</h5>
+                <p class="desc">يهدف لاستئصال المرض من منبعه الرئيسي.</p>
+                <ul>
+                    <li><strong>المقصد:</strong> تنقية ${liverCheck ? 'الكبد' : brainCheck ? 'الدماغ' : heartCheck ? 'القلب' : 'العضو المصدر'} من الأخلاط ${mizaj.includes('hot') ? 'الحارة' : 'الباردة'}.</li>
+                    <li><strong>العلاج المقترح:</strong> ${getSystemicRemedy(mizaj, maturity)}</li>
+                </ul>
+            </div>
+            <div class="protocol-card regional">
+                <h5><i class="fas fa-hand-holding-medical"></i> ثانياً: العلاج الموضعي (للعضو الخادم)</h5>
+                <p class="desc">لتسكين الألم الظاهر وحماية الموضع.</p>
+                <ul>
+                    <li><strong>المقصد:</strong> ${getLocalPurpose(diseasePhase)}</li>
+                    <li><strong>الأدوية الموضعية:</strong> ${getLocalRemedy(painLevel, diseasePhase)}</li>
+                </ul>
+            </div>
+        </div>
+    `;
+
+    // 4. HIERARCHY SCALE (STEPS)
+    outputHTML += `
+        <div class="plan-section ladder-section">
+            <h4><i class="fas fa-list-ol"></i> سُلّم العلاج المتدرج (خطة التنفيذ)</h4>
+            <div class="stepper">
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <div class="step-txt"><strong>الغذاء:</strong> "إن أمكن العلاج بالغذاء فلا يعالج بالدواء". اعتمد حمية ${mizaj.includes('hot') ? 'باردة رطبة' : 'حارة يابسة'} لمدة 7 أيام.</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <div class="step-txt"><strong>الدواء المفرد:</strong> استخدم أعشاب المنضجات اللطيفة (البابونج، الزعرور، الشعير) بجرعات معتدلة.</div>
+                </div>
+                <div class="step blur">
+                    <div class="step-num">3</div>
+                    <div class="step-txt"><strong>التنقية العميقة:</strong> في حال عدم الاستجابة، ننتقل للمسهلات القوية أو الحجامة (تُفتح صلاحيتها فقط بعد نضج الخلط).</div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // 5. PHASE-BASED CALENDAR (ROZNAMA)
+    outputHTML += `
+        <div class="plan-section roznama-section">
+            <h4><i class="fas fa-calendar-alt"></i> روزنامة متابعة أطوار المرض</h4>
+            <div class="timeline-container">
+                <div class="time-item ${diseasePhase === 'start' ? 'active' : ''}">
+                    <label>الابتداء والصعود</label>
+                    <p>${diseasePhase === 'start' ? '⚠️ تحذير: لا تحث الطبيعة الآن على الاستفراغ، القوة مشغولة بمقاومة المرض.' : 'تجاوزت هذه المرحلة.'}</p>
+                </div>
+                <div class="time-item ${diseasePhase === 'peak' ? 'active' : ''}">
+                    <label>الانتهاء (الوقوف)</label>
+                    <p>${diseasePhase === 'peak' ? '⚡ المرض ثابت. ابدأ بالإنضاج والتهيئة للتنقية ببطء.' : '--'}</p>
+                </div>
+                <div class="time-item ${diseasePhase === 'decline' ? 'active' : ''}">
+                    <label>الانحطاط (التراجع)</label>
+                    <p>${diseasePhase === 'decline' ? '✅ العدو يولّي. الآن هو وقت الاستئصال النهائي بقوة وآمان.' : '--'}</p>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Final extras
+    if (spiritual !== 'none') {
+        outputHTML += getSpiritualHTML(spiritual);
+    }
+
+    resultDiv.innerHTML = outputHTML;
+    resultDiv.classList.remove('hidden');
+    resultDiv.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Helper Functions
+function getPhaseText(p) {
+    const phases = { start: "الابتداء والصعود", peak: "الانتهاء (الوقوف)", decline: "الانحطاط (التراجع)" };
+    return phases[p] || p;
+}
+
+function getSystemicRemedy(mizaj, maturity) {
+    const isHot = mizaj.includes('hot');
+    const category = isHot ? 'hot' : 'cold';
+    if (maturity === 'raw') {
+        const list = remedyDatabase.maturation[category].items;
+        return list[Math.floor(Math.random() * list.length)];
+    } else {
+        const humors = { 'hot-dry': 'yellow', 'hot-moist': 'blood', 'cold-moist': 'phlegm', 'cold-dry': 'black' };
+        const humorKey = humors[mizaj] || 'phlegm';
+        const list = remedyDatabase.purging[humorKey];
+        return "يُستخدم الآن (الاستفراغ) بـ: " + list.join('، ');
+    }
+}
+
+function getLocalPurpose(phase) {
+    if (phase === 'start') return "ردع المادة ومنع انصبابها للعضو (تبريد وقبض).";
+    if (phase === 'peak') return "تليين العضو وإنضاج المادة المحتقنة فيه.";
+    return "تحليل البقايا وتنشيط القوة الغريزية.";
+}
+
+function getLocalRemedy(pain, phase) {
+    if (pain === 'severe') return "مخدرات موضعية (للضرورة): " + remedyDatabase.local.anesthetics.join('، ');
+    if (phase === 'start') return "رادعات: " + remedyDatabase.local.reducers.join('، ');
+    if (phase === 'peak') return "مسكنات ومحللات: " + remedyDatabase.local.sedatives.join('، ');
+    return "مروخات ومنشطات: " + remedyDatabase.local.liniments.join('، ');
+}
+
+function getSpiritualHTML(type) {
+    let diagnosis = type === 'magic' ? "سحر عضوي" : type === 'envy' ? "عين حاسدة" : "مس خارجي";
+    return `
+        <div class="plan-section spiritual-card">
+            <h4><i class="fas fa-quran"></i> التحصين والتدبير الروحي</h4>
+            <p><strong>التشخيص:</strong> احتمالية ${diagnosis}.</p>
+            <p><strong>العلاج:</strong> استخدام "القسط الهندي" والتبخير به يضيق مجاري الأذى، مع السنا المكي لتنظيف البطن.</p>
+        </div>
+    `;
 }
 
 function generateSmartMeal(type, humor, kitchen, age, complaint) {
