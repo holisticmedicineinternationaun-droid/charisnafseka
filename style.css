@@ -2122,3 +2122,71 @@ h2::after {
         font-size: 1.1rem;
     }
 }
+
+/* --- PRINT OPTIMIZATION --- */
+@media print {
+    body {
+        background: white !important;
+        color: black !important;
+    }
+
+    .app-container {
+        border: none !important;
+        box-shadow: none !important;
+        background: white !important;
+        width: 100% !important;
+        max-width: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .main-header,
+    .main-footer,
+    .nav-btn,
+    .welcome-card,
+    .intro-header,
+    .happiness-header,
+    .wizard-container,
+    .plan-actions,
+    .bottom-nav,
+    .interactive-section:not(.active) {
+        display: none !important;
+    }
+
+    .interactive-section.active {
+        display: block !important;
+    }
+
+    .final-plan-card {
+        background: white !important;
+        color: black !important;
+        border: 2px solid #0b2b1a !important;
+        box-shadow: none !important;
+        padding: 10px !important;
+    }
+
+    .plan-header h3,
+    .plan-analysis h4,
+    .day-meals h4,
+    .healing-advice h4,
+    .medical-rules h4,
+    .meal-block strong {
+        color: #0b2b1a !important;
+        border-color: #0b2b1a !important;
+    }
+
+    .meal-block {
+        background: #fdfdfd !important;
+        border: 1px solid #eee !important;
+    }
+
+    /* Prevent breaking content across pages if possible */
+    .final-plan-card {
+        page-break-inside: avoid;
+    }
+
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
