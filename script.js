@@ -927,8 +927,10 @@ const SECRET_SALT = "LailaClinic123!@#";
 
 // Function to generate a stable Device ID based on browser specifics
 function getDeviceID() {
-    // A simple fingerprint based on userAgent and screen info
-    const fingerprint = navigator.userAgent + screen.width + screen.height + navigator.language;
+    // Orientation-independent screen dimensions
+    const screenWidth = Math.max(window.screen.width, window.screen.height);
+    const screenHeight = Math.min(window.screen.width, window.screen.height);
+    const fingerprint = navigator.userAgent + screenWidth + screenHeight + navigator.language;
     let hash = 0;
     for (let i = 0; i < fingerprint.length; i++) {
         hash = ((hash << 5) - hash) + fingerprint.charCodeAt(i);
@@ -1092,256 +1094,8 @@ function nextDiagStep(step) {
 }
 
 // --- PLAN GENERATOR LOGIC (TREATMENT & DIET) ---
-function generatePlan() {
-    // --- Freemium Paywall & Premium Logic ---
-    const isPremium = checkActivation();
-    const now = new Date();
-    const todayStr = now.toISOString().split('T')[0];
+// Consolidated treatment plan logic moved to enhanced version below.
 
-    if (!isPremium) {
-        let trialStartStr = localStorage.getItem(TRIAL_START_KEY);
-        let lastGenStr = localStorage.getItem(LAST_GENERATION_KEY);
-
-        if (!trialStartStr) {
-            trialStartStr = now.toISOString();
-            localStorage.setItem(TRIAL_START_KEY, trialStartStr);
-        }
-
-        const trialStartDate = new Date(trialStartStr);
-        const diffDays = Math.ceil(Math.abs(now - trialStartDate) / (1000 * 60 * 60 * 24));
-
-        if (diffDays > MAX_FREE_DAYS) {
-            showPaywall("انتهت الفترة التجريبية!", "لقد استمتعت بتجربة 3 أيام مجاناً لمصمم البرامج. للاستمرار في الحصول على تشخيصات دقيقة، يرجى الاشتراك في الباقة الذهبية.");
-            return;
-        }
-
-        if (lastGenStr === todayStr) {
-            showPaywall("استنفدت الحد اليومي!", "في الفترة التجريبية، يُسمح بتوليد برنامج غذائي واحد فقط باليوم لضمان دقة التركيز.");
-            return;
-        }
-
-        localStorage.setItem(LAST_GENERATION_KEY, todayStr);
-    }
-
-
-    // --- Collect Diagnostic Data ---
-    const mizajSelection = document.getElementById('user-mizaj');
-    const mizaj = mizajSelection.value;
-    const blood = document.getElementById('user-blood').value;
-    const ingredients = document.getElementById('user-ingredients').value.trim();
-    const diseases = document.getElementById('user-diseases').value.trim();
-    const story = document.getElementById('diag-story').value.trim();
-    const spiritual = document.getElementById('user-spiritual').value;
-    const neuro = document.getElementById('user-neuro').value;
-
-    // Smart Disease Matching for Adults
-    const matchedFromDisease = getDiseaseFromComplaint(diseases);
-    const matchedFromStory = getDiseaseFromComplaint(story);
-    const matchedDisease = matchedFromDisease || matchedFromStory;
-
-    // Group 3: Presidential Organs detection
-    const liverCheck = document.getElementById('liver-1').checked || document.getElementById('liver-2').checked || document.getElementById('liver-3').checked;
-    const brainCheck = document.getElementById('brain-1').checked || document.getElementById('brain-2').checked;
-    const heartCheck = document.getElementById('heart-1').checked;
-
-    // Group 2/4: Pain signals & Humors
-    const painType = document.getElementById('diag-pain-type').value;
-    const dreams = document.getElementById('diag-dreams').value;
-    const mainSign = document.getElementById('diag-sign').value;
-
-    const resultDiv = document.getElementById('plan-result');
-
-    // Logic 1: Root Cause Analysis (التشخيص الشمولي)
-    let rootCauseHTML = "";
-
-    if (matchedDisease) {
-        rootCauseHTML += `
-            <div class="plan-section" style="border-right: 5px solid #d4af37; background: rgba(212,175,55,0.1);">
-                <h4 style="color: #d4af37;"><i class="fas fa-book-open"></i> تحليل موسوعة "المغنى": ${matchedDisease.nature === 'hot-dry' ? 'هيمنة الصفراء' : matchedDisease.nature === 'cold-moist' ? 'هيمنة البلغم' : matchedDisease.nature === 'hot-moist' ? 'هيمنة الدم' : 'هيمنة السوداء'}</h4>
-                <p><strong>تشخيص الحالة:</strong> تُصنف هذه العلة في كتب الطب الأصيل على أنها من طبيعة (<strong>${getHumorText(matchedDisease.nature)}</strong>) وتصيب بذكاء (<strong>${getOrganText(matchedDisease.organ)}</strong>).</p>
-                <p><strong>توجيه العلة:</strong> ${matchedDisease.tip}</p>
-            </div>
-        `;
-    }
-
-    if (liverCheck) {
-        rootCauseHTML += `
-            <div class="plan-section" style="border-right: 5px solid #ff9800; background: rgba(255,152,0,0.1);">
-                <h4 style="color: #ff9800;"><i class="fas fa-microscope"></i> التحليل الشمولي: العلة في الكبد (العضو الرئيس)</h4>
-                <p>بناءً على إجابتك حول (ثقل الأكل ومرارة الفم)، يتضح أن العضو الظاهر المتألم ليس هو المصدر، بل هو "خادم" تأثر بفشل الكبد في تنقية الأخلاط. علاجك يبدأ من **تنقية الكبد** أولاً.</p>
-            </div>
-        `;
-    } else if (brainCheck) {
-        rootCauseHTML += `
-            <div class="plan-section" style="border-right: 5px solid #2196f3; background: rgba(33,150,243,0.1);">
-                <h4 style="color: #2196f3;"><i class="fas fa-brain"></i> التحليل الشمولي: العلة في الدماغ والأعصاب</h4>
-                <p>الأعراض مثل (النسيان والتنميل) تدل على أن مادة الخلط ترسبت في بطينات الدماغ أو مجاري الأعصاب. خطتك ستركز على **تلطيف الدماغ** وفتح السدد العصبية.</p>
-            </div>
-        `;
-    } else if (heartCheck) {
-        rootCauseHTML += `
-            <div class="plan-section" style="border-right: 5px solid #f44336; background: rgba(244,67,54,0.1);">
-                <h4 style="color: #f44336;"><i class="fas fa-heartbeat"></i> التحليل الشمولي: العلة في القلب</h4>
-                <p>الأعراض مثل (ضيق التنفس والخفقان) تشير إلى أن العضو الشاكي يتأثر بضعف "القوة الحيوانية" المنبعثة من القلب. خطتك ستركز على **تقوية القلب** وتعديل حرارته.</p>
-            </div>
-        `;
-    }
-
-    // Logic 2: Determine treatment temperament (علاج الضد)
-    let opposingDiet = "";
-
-    let forbiddenMizaj = "";
-    let dailySuggestions = { breakfast: "", lunch: "", snack: "", dinner: "" };
-
-    if (mizaj === 'hot-dry') {
-        opposingDiet = "الباردة الرطبة";
-        forbiddenMizaj = "الحار اليابس";
-        dailySuggestions = {
-            breakfast: "وجبة باردة رطبة (مثل الشوفان بالحليب، أو فواكه طازجة كالبطيخ والكمثرى).",
-            lunch: "مرق خضار غير مبهر، وقرع مسلوق، مع إدام خفيف لتجنب زيادة الحرارة.",
-            snack: "عصير شعير، أو منقوع تمر هندي، أو قهوة شعير باردة.",
-            dinner: "لبن زبادي مع خيار، أو سلطة خس وخيار خفيفة."
-        };
-    } else if (mizaj === 'hot-moist') {
-        opposingDiet = "الباردة اليابسة";
-        forbiddenMizaj = "الحار الرطب";
-        dailySuggestions = {
-            breakfast: "خبز شعير، عدس، أو تفاح حامض.",
-            lunch: "وجبة مطبوخة بخل وتوابل باردة وقابضة كالسماق والكزبرة اليابسة.",
-            snack: "قهوة عربية خفيفة بدون هيل حرّيف، أو شاي أسود قابض.",
-            dinner: "سلطة ملفوف مقرمشة، أو الجبن الجاف منزوع الدسم."
-        };
-    } else if (mizaj === 'cold-moist') {
-        opposingDiet = "الحارة اليابسة (المجففة والمحللة)";
-        forbiddenMizaj = "البارد الرطب";
-        dailySuggestions = {
-            breakfast: "خبز بر حار مع عسل نحل وتوابل (قرفة، زنجبيل).",
-            lunch: "مشويات مبهرة بالثوم والبصل والفلفل، ومطبوخة جيداً.",
-            snack: "قهوة مضاف إليها الزنجبيل والقرنفل، مع بضع تمرات.",
-            dinner: "وجبة خفيفة ساخنة: شوربة حريرة بالتوابل، والابتعاد عن الألبان."
-        };
-    } else if (mizaj === 'cold-dry') {
-        opposingDiet = "الحارة الرطبة (المغذية والمرطبة)";
-        forbiddenMizaj = "البارد اليابس";
-        dailySuggestions = {
-            breakfast: "بيض مقلي بسمن بلدي، أو لوزيات، وكوب حليب دافئ بالعسل.",
-            lunch: "مرق بالخضار الدافئ (كالجزر واللفت)، وأرز بالزبدة.",
-            snack: "شاي بابونج دافئ، وموز أو زبيب أو تين.",
-            dinner: "شوربة غنية بالدسم الطبيعي أو مرق عظام."
-        };
-    }
-
-    let ingredientsHTML = "";
-    if (ingredients.length > 0) {
-        ingredientsHTML = `
-            <div class="plan-section" style="background-color: #e8f5e9; border: 1px solid #4caf50;">
-                <h4 style="color: #2e7d32;"><i class="fas fa-magic"></i> هندسة طبخ مكوناتك لليوم (${ingredients}):</h4>
-                <p>بما أن طبيعة جسمك الحالية تميل لمزاج <strong>${document.getElementById('user-mizaj').options[document.getElementById('user-mizaj').selectedIndex].text}</strong>، إليك التعديل الضمني الذي يجب أن تقوم به عند طبخ قائمة اليوم لتفادي المضاعفات:</p>
-                <ul style="margin-top:10px;">
-                    <li style="margin-bottom:8px;"><strong>قاعدة التوابل والمحسنات:</strong> استخدم بهارات ومنكهات من الطبع المعاكس (<strong style="color:var(--primary-color)">${opposingDiet}</strong>) عند تحضير المكونات التي ذكرتها لتكسر حدتها وتجعلها دواءً لك، حتى وإن كانت من نفس طبعك.</li>
-                    <li><strong>مثال تطبيقي:</strong> لو ذكرت 'اللحم أو البيض' ومزاجك حار، اسلقه ولا تقله لتقليل حرارته، وزد عليه الكزبرة الخضراء والخل. وإن كان مزاجك بارداً وذكرت 'بطاطس'، أضف السمن، الفلفل، والزنجبيل لرفع طاقته وضمان ألا يسبب خمولاً وغازات.</li>
-                </ul>
-            </div>
-        `;
-    }
-
-    // Process medical warnings 
-    let medicalHTML = "";
-    if (diseases.length > 0) {
-        medicalHTML = `
-            <div class="plan-section" style="background-color: #e3f2fd; border: 1px solid #64b5f6;">
-                <h4 style="color: #1565c0;"><i class="fas fa-pills"></i> تقييم الأمان والتداخلات الطبية:</h4>
-                <p><strong>لقد ذكرت حالتك الصحية/الأدوية:</strong> (${diseases})</p>
-                <p style="margin-top:10px;"><strong>تنبيه هام وموازنة:</strong> الخطة الطبائعية المذكورة هنا تعتمد على الغذاء وتعديل المزاج. نظراً لوجود حالتك الطبية المذكورة، يُرجى مراعاة الآتي بشدة:</p>
-                <ul style="margin-top:10px;">
-                    <li style="margin-bottom:8px;">تفادى الأعشاب المركزة والبهارات الحارة (كالزنجبيل والقرفة والثوم المفرط) إذا كنت تأخذ مسيلات دم أو أدوية ضغط (أعطِ الأولوية للعلاج الدوائي).</li>
-                    <li style="margin-bottom:8px;">لا توقف أدويتك أبداً، هذه الخطة الطبائعية هي <strong>نظام داعم ومهيئ للشفاء</strong> (يوازن كيمياء الدم) وليس بديلاً مفاجئاً للدواء.</li>
-                    <li>استثنِ أي مكون يمنعه طبيبك المعالج المعاصر حتى لو كان موافقاً لعلاجك الطبائعي (مثل العسل لمرضى السكري غير المنتظم).</li>
-                </ul>
-            </div>
-        `;
-    }
-
-    // Logic 2: Spiritual Treatment
-    let spiritualHTML = "";
-    if (spiritual !== 'none') {
-        let spiritualPlan = "";
-        let spiritualDiagnosis = "";
-        if (spiritual === 'magic') {
-            spiritualDiagnosis = "سحر عضوي (يولد أخلاطاً رديئة في البطن)";
-            spiritualPlan = `التشخيص المبدئي بناءً على الأعراض العضوية الغامضة والكوابيس يشير لاحتمالية أذى سحري ينعكس كمرض عضوي. 
-            <strong>التدبير الذاتي:</strong> ركز على "الاستفراغ المادي للأخلاط الرديئة". استخدم السنا المكي بكميات قليلة لتنظيف الجهاز الهضمي، مع الشرب الدائم لماء زمزم. قلل جداً من اللحوم والأجبان التي تضفي سوداوية للبدن.`;
-        } else if (spiritual === 'envy') {
-            spiritualDiagnosis = "عين حاسدة مبنية على الأعراض المذكورة";
-            spiritualPlan = `الأعراض كالتثاؤب المستمر والخمول المفاجئ والبرودة هي انعكاسات مادية دقيقة للعين الحارة الدخيلة. 
-            <strong>التدبير الذاتي:</strong> علاج العين قائم على كسر السمية. تناول 7 تمرات عجوة، والاغتسال اليومي بماء بارد (إن لم يزعج مزاجك) مضاف إليه 7 ورقات من سدر العناب. غلف منافذ الطاقة المعتدى عليها بأذكار الصباح والمساء.`;
-        } else if (spiritual === 'possession') {
-            spiritualDiagnosis = "مس خارجي ووساوس قهرية قوية";
-            spiritualPlan = `هذه الأعراض النفسية الحادة والعزلة تشير لأذى مسّي يحاول التسلط على المزاج ودفعه للسوداوية لتسهيل تحكمه وتوليد الغضب. 
-            <strong>التدبير الذاتي:</strong> العلاج الأقوى يكون بتبخير محيطك والجسد بـ "القسط الهندي أو البحري" فهو يضيق مجاري القرين، مع دهن الأطراف بالمسك الأسود قبل النوم. ابتعد تماماً عن العزلة في الظلام.`;
-        }
-
-        spiritualHTML = `
-            <div class="plan-section" style="background-color: #fce4ec; border: 1px solid #f48fb1;">
-                <h4 style="color: #c2185b;"><i class="fas fa-quran"></i> 4. التشخيص الروحي المبني على الأعراض</h4>
-                <p>النظام يشخص الأعراض التي ذكرت بأنها قد تكون: <strong style="font-size:1.1rem;">${spiritualDiagnosis}</strong>.</p>
-                <p style="margin-top:10px; line-height:1.6;">${spiritualPlan}</p>
-            </div>
-        `;
-    }
-
-    // Logic 3: Blood Type compatibility
-    let bloodAdvice = "";
-    if (blood === "O") bloodAdvice = "جهازك الهضمي كصياد (حمضة عالية): يعتمد على البروتينات القوية كاللحوم الطازجة وتجنب القمح والذرة. وفرّغ طاقتك بالرياضة القوية.";
-    else if (blood === "A") bloodAdvice = "جهازك الهضمي نباتي (حمضة منخفضة): تجنب اللحوم الحمراء المعقدة واستند على البقوليات والأسماك والرياضات الهادئة كالتأمل والمشي.";
-    else if (blood === "B") bloodAdvice = "جهازك الهضمي مرن: يهضم الألبان واللحوم المتنوعة. تجنب الدجاج فقط واستبدله بالغنم أو الأرانب أو ديك رومي.";
-    else if (blood === "AB") bloodAdvice = "مزيج غامض: وازن بين النباتات البحرية والألبان بقليل من اللحوم البيضاء وبوجبات صغيرة متقطعة.";
-
-    // Logic 4: Neurotransmitters compatibility
-    let neuroAdvice = "";
-    if (neuro === "dopamine") neuroAdvice = "النواقل العصبية (الدوبامين): أدخل في غذائك الأطعمة الغنية بالتيروزين (لوز، بيض) واستخدم أعشاب كإكليل الجبل أو فنجان قهوة لتنشيط الشغف.";
-    else if (neuro === "serotonin") neuroAdvice = "النواقل العصبية (السيروتونين): أنت بحاجة للهدوء، استخدم الكربوهيدرات المعقدة بذكاء، وتعرض للشمس باكراً. الزعفران والبابونج ممتازة لك.";
-    else if (neuro === "gaba") neuroAdvice = "النواقل العصبية (GABA): توتر عالٍ وتشنج بدني. اقطع المنبهات تماماً. الناردين والمليسة والبابونج البارد هي أصدقاؤك لإرخاء الأعصاب.";
-    else if (neuro === "adrenaline") neuroAdvice = "النواقل العصبية (الأدرينالين): غدتك الكظرية متعبة من كثرة التفكير والضغط. تناول أدابتوجينات ملائمة (كالأشواغاندا) مع استبعاد السكريات.";
-
-    // Generate HTML Result
-    resultDiv.innerHTML = `
-        <h3 style="color:var(--secondary-color); text-align:center; border-bottom: 2px solid var(--secondary-color); padding-bottom:15px; margin-bottom:25px;">
-            <i class="fas fa-clipboard-check"></i> الخطة الغذائية والعلاجية المتكاملة لحالتك الشمولية
-        </h3>
-        
-        ${rootCauseHTML}
-        ${medicalHTML}
-
-        <div class="plan-section">
-            <h4><i class="fas fa-calendar-day"></i> 1. الجدول الغذائي اليومي (بناءً على توازن الأخلاط)</h4>
-            <ul>
-                <li style="margin-bottom:12px;"><strong style="color:var(--secondary-color)"><i class="fas fa-sun"></i> الإفطار:</strong> ${dailySuggestions.breakfast}</li>
-                <li style="margin-bottom:12px;"><strong style="color:var(--secondary-color)"><i class="fas fa-utensils"></i> الغداء:</strong> ${dailySuggestions.lunch}</li>
-                <li style="margin-bottom:12px;"><strong style="color:var(--secondary-color)"><i class="fas fa-coffee"></i> قهوة المساء/تصبيرة:</strong> ${dailySuggestions.snack}</li>
-                <li style="margin-bottom:12px;"><strong style="color:var(--secondary-color)"><i class="fas fa-moon"></i> العشاء:</strong> ${dailySuggestions.dinner}</li>
-            </ul>
-        </div>
-
-        ${ingredientsHTML}
-
-        <div class="plan-section">
-            <h4><i class="fas fa-balance-scale-right"></i> 2. استراتيجية علاج الضد (قانون الشفاء)</h4>
-            <p>لأنك تعاني حالياً من هيمنة <strong>${document.getElementById('user-mizaj').options[document.getElementById('user-mizaj').selectedIndex].text}</strong>، فمفتاح المعاكسة هو الطبيعة (<strong style="color:#4ade80">${opposingDiet}</strong>).</p>
-            <p style="margin-top:10px;">• تجنب تماماً الأطعمة ذات الطبع: <strong style="color:#f87171">${forbiddenMizaj}</strong>.</p>
-        </div>
-
-        <div class="plan-section">
-            <h4><i class="fas fa-dna"></i> 3. تدعيم الخطة بفصيلة الدم والأهواء</h4>
-            <p><strong>بناء على الفصيلة (${blood}):</strong> ${bloodAdvice}</p>
-            <p style="margin-top:10px;"><strong>بناء على الصفة (${neuro !== 'none' ? document.getElementById('user-neuro').options[document.getElementById('user-neuro').selectedIndex].text : 'عام'}):</strong> ${neuroAdvice}</p>
-        </div>
-        ${spiritualHTML}
-    `;
-
-    resultDiv.classList.remove('hidden');
-    resultDiv.scrollIntoView({ behavior: 'smooth' });
-}
 
 // --- PAYWALL UI FUNCTION ---
 function showPaywall(title, message) {
@@ -1931,31 +1685,33 @@ const remedyDatabase = {
 };
 
 function generatePlan() {
-    // ... Check activation and limits logic ...
+    // --- Freemium Paywall & Premium Logic ---
+    const isPremium = checkActivation();
     const now = new Date();
-    const todayStr = now.toDateString();
-
-    // Check trial/premium status (reusing existing logic)
-    const storedStatus = localStorage.getItem('isPremium');
-    const isPremium = storedStatus === 'true';
+    const todayStr = now.toISOString().split('T')[0]; // Use YYYY-MM-DD for consistency
 
     if (!isPremium) {
         let trialStartStr = localStorage.getItem(TRIAL_START_KEY);
         let lastGenStr = localStorage.getItem(LAST_GENERATION_KEY);
+
         if (!trialStartStr) {
             trialStartStr = now.toISOString();
             localStorage.setItem(TRIAL_START_KEY, trialStartStr);
         }
+
         const trialStartDate = new Date(trialStartStr);
         const diffDays = Math.ceil(Math.abs(now - trialStartDate) / (1000 * 60 * 60 * 24));
+
         if (diffDays > MAX_FREE_DAYS) {
-            showPaywall("انتهت الفترة التجريبية!", "لقد استمتعت بتجربة 3 أيام مجاناً لمصمم البرامج.");
+            showPaywall("انتهت الفترة التجريبية!", "لقد استمتعت بتجربة 3 أيام مجاناً لمصمم البرامج. للاستمرار في التشخيص، يرجى الاشتراك.");
             return;
         }
+
         if (lastGenStr === todayStr) {
-            showPaywall("استنفدت الحد اليومي!", "في الفترة التجريبية، يُسمح بتوليد برنامج واحد فقط.");
+            showPaywall("استنفدت الحد اليومي!", "في الفترة التجريبية، يُسمح بتوليد برنامج واحد فقط يومياً.");
             return;
         }
+
         localStorage.setItem(LAST_GENERATION_KEY, todayStr);
     }
 
