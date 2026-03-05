@@ -1771,15 +1771,15 @@ function generateChildPlan() {
                 <h4><i class="fas fa-utensils"></i> تقسيم الوجبات (المطبخ المتوفر لديكِ)</h4>
                 <div class="meal-block">
                     <strong>🥗 وجبة الإفطار:</strong>
-                    <p>${generateSmartMeal('breakfast', humor, lowerKitchen, age)}</p>
+                    <p>${generateSmartMeal('breakfast', humor, lowerKitchen, age, complaint)}</p>
                 </div>
                 <div class="meal-block">
                     <strong>🍲 وجبة الغداء:</strong>
-                    <p>${generateSmartMeal('lunch', humor, lowerKitchen, age)}</p>
+                    <p>${generateSmartMeal('lunch', humor, lowerKitchen, age, complaint)}</p>
                 </div>
                 <div class="meal-block">
                     <strong>🍵 وجبة العشاء:</strong>
-                    <p>${generateSmartMeal('dinner', humor, lowerKitchen, age)}</p>
+                    <p>${generateSmartMeal('dinner', humor, lowerKitchen, age, complaint)}</p>
                 </div>
             </div>
 
@@ -1808,33 +1808,59 @@ function generateChildPlan() {
     saveTrial();
 }
 
-function generateSmartMeal(type, humor, kitchen, age) {
+function generateSmartMeal(type, humor, kitchen, age, complaint) {
     const isToddler = age < 2;
-    const hasHoney = kitchen.includes('عسل') || kitchen.includes('honey');
-    const hasDates = kitchen.includes('تمر') || kitchen.includes('dates') || kitchen.includes('زبيب');
-    const hasMeat = kitchen.includes('لحم') || kitchen.includes('دم');
-    const hasEgg = kitchen.includes('بيض') || kitchen.includes('egg');
-    const hasOlive = kitchen.includes('زيت') || kitchen.includes('olive');
+    const isDiabetic = complaint.includes('سكر') || complaint.includes('سكري') || complaint.includes('diabetes');
+    const isAnemic = complaint.includes('فقر دم') || complaint.includes('أنيميا') || complaint.includes('anemia');
+    const isBedWetting = complaint.includes('تبول') || complaint.includes('ليل');
+
+    const hasHoney = kitchen.includes('عسل');
+    const hasDates = kitchen.includes('تمر') || kitchen.includes('زبيب') || kitchen.includes('دبس');
+    const hasMeat = kitchen.includes('لحم') || kitchen.includes('كبد');
+    const hasEgg = kitchen.includes('بيض');
+    const hasOlive = kitchen.includes('زيت');
+    const hasRice = kitchen.includes('رز') || kitchen.includes('أرز');
+    const hasGrain = kitchen.includes('قمح') || kitchen.includes('شعير') || kitchen.includes('خبز');
+
+    // --- Logical Restrictions & Prioritization ---
 
     if (type === 'breakfast') {
-        if (hasHoney && age >= 1) return "ملعقة عسل مُذابة في ماء فاتر (لغسل المعدة وتنشيط الكبد).";
-        if (hasDates) return isToddler ? "تمرة واحدة مهروسة جيداً أو منقوعة في ماء دافئ." : "3 حبات تمر مع قليل من الجوز المتوفر.";
-        return isToddler ? "عصيدة قمح رقيقة مع مسحة زيت زيتون." : "خبز أسمر بمسحة زيت زيتون أو بيضة مسلوقة.";
+        if (isDiabetic) {
+            return isToddler ? "عصيدة شعير بالماء وزيت الزيتون (تجنبي العسل تماماً)." : "خبز أرغفة النخالة مع قليل من الجبن الطبيعي أو البيض المسلوق.";
+        }
+        if (isAnemic && hasDates) {
+            return isToddler ? "تمرة واحدة منقوعة ومهروسة جيداً لتنشيط الدم." : "3 حبات تمر مع ملعقة عسل في ماء فاتر (أفضل منشط دموي صباحي).";
+        }
+        if (hasHoney && age >= 1) return "ملعقة عسل مُذابة في ماء فاتر لغسل المعدة.";
+        if (hasDates) return isToddler ? "تمرة واحدة مهروسة ناعمة." : "3 حبات تمر مع الجوز.";
+        return isToddler ? "عصيدة قمح رقيقة ناعمة." : "خبز أسمر بمسحة زيت زيتون أو بيضة.";
     }
 
     if (type === 'lunch') {
-        if (hasMeat) {
-            return isToddler ? "مرق لحم (شوربة) مع خضروات مهروسة تماماً ناعمة." : "مرق لحم مطبوخ جيداً مع خضروات موسمية، مع الحرص على مضغه تماماً.";
+        if (isDiabetic) {
+            return "طبق خضروات موسمية مطبوخة (بدون بطاطس) مع قطعة بروتين مسلوقة وكمية قليلة جداً من الشعير.";
         }
-        if (kitchen.includes('قمح') || kitchen.includes('رز')) {
-            return isToddler ? "أرز أو قمح مطبوخ جيداً ومهروس مع مرق." : "طبق من حبوب (القمح أو الأرز) المطبوخة بمرق الخضار.";
+        if (isAnemic && hasMeat) {
+            return isToddler ? "شوربة كبدة أو لحم حمراء مهروسة (غنية بالحديد)." : "مرق لحم أحمر مع الخضروات الورقية (كزبرة وبقدونس) لرفع الهيموغلوبين.";
+        }
+        if (hasMeat) {
+            return isToddler ? "مرق لحم مع خضروات مهروسة ناعمة." : "مرق لحم مطبوخ جيداً مع خضروات، مع الحرص على مضغه تماماً.";
+        }
+        if (hasRice || hasGrain) {
+            return isToddler ? "أرز أو قمح مهروس تماماً مع المرق." : "طبق من الأرز أو القمح المطبوخ بمرق الخضار.";
         }
         return "شوربة دافئة من المكونات المتوفرة مع إضافة رشة ملح وكمون.";
     }
 
     if (type === 'dinner') {
-        if (humor.includes('hot')) return isToddler ? "روب (زبادي) ناعم لترطيب حرارة الطفل." : "روب (زبادي) أو فاكهة رطبة باردة لترطيب الحرارة قبل النوم.";
-        return isToddler ? "خضروات مسلوقة ومهروسة سهلة البلع." : "خضروات مسلوقة وسهلة الهضم مع شرب منقوع دافئ (يانسون أو بابونج).";
+        if (isBedWetting) {
+            return "وجبة جافة (مثل خبز بجبن أو زيتون) مع تقليل السوائل تماماً ومنع الفواكه المدرة للبول (كالبطيخ) ليلاً.";
+        }
+        if (isDiabetic) {
+            return "كوب لبن رائب (زبادي) مع القليل من بذور الكتان وقطعة خبز شعير صغيرة.";
+        }
+        if (humor.includes('hot')) return isToddler ? "روب (زبادي) ناعم لترطيب حرارة الطفل." : "روب (زبادي) أو فاكهة رطبة باردة لترطيب الحرارة.";
+        return isToddler ? "خضروات مسلوقة ومهروسة سهلة البلع." : "خضروات مسلوقة وسهلة الهضم مع شرب منقوع دافئ.";
     }
 }
 
