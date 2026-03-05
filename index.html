@@ -128,24 +128,16 @@
 
                     <!-- Step 3: Organ Analysis -->
                     <div class="wizard-step" id="wizard-step-3">
-                        <h3><i class="fas fa-vitals"></i> تحليل العضو المتضرر</h3>
+                        <h3><i class="fas fa-search-location"></i> أين تكمن الشكوى أو الألم؟</h3>
                         <div class="input-group">
-                            <label>أين تكمن الشكوى أساساً؟</label>
+                            <label>اختاري أقرب وصف لمكان العناء:</label>
                             <select id="child-organ-master">
-                                <option value="liver">الكبد (مطبخ الدم - فقر دم، صفار)</option>
-                                <option value="stomach">المعدة (الهضم - فقدان شهية، غثيان)</option>
-                                <option value="lung">الصدر والرئة (تنفس، سعال)</option>
-                                <option value="heart">القلب والروح (خوف، سرعة نبض)</option>
-                                <option value="brain">الدماغ (تركيز، ذاكرة، نوم)</option>
-                            </select>
-                        </div>
-                        <div class="input-group">
-                            <label>هل هناك عضو خادم متأثر؟</label>
-                            <select id="child-organ-servant">
-                                <option value="none">لا يوجد عضو متأثر بوضوح</option>
-                                <option value="eye">العين (ضعف نظر، جفاف)</option>
-                                <option value="skin">الجلد (شحوب، طفح)</option>
-                                <option value="nails">الأظافر والشعر (تكسر، سقوط)</option>
+                                <option value="liver">مشاكل في الدم أو الكبد (فقر دم، اصفرار)</option>
+                                <option value="stomach">مشاكل في الهضم أو البطن والشهية</option>
+                                <option value="lung">مشاكل في الصدر والتنفس أو السعال</option>
+                                <option value="heart">مشاكل في القلب أو الخوف الشديد</option>
+                                <option value="brain">مشاكل في التركيز، الذاكرة، أو النوم</option>
+                                <option value="none">خمول عام ولا يوجد ألم في عضو معين</option>
                             </select>
                         </div>
                         <div class="wizard-btns">
@@ -159,859 +151,852 @@
                     <!-- Step 4: Kitchen Ingredients -->
                     <div class="wizard-step" id="wizard-step-4">
                         <h3><i class="fas fa-utensils"></i> المطبخ الشفائي</h3>
-                        <p>اختاري المكونات المتوفرة لديكِ حالياً:</p>
-                        <div class="ingredient-grid">
-                            <label><input type="checkbox" value="honey"> عسل نحل</label>
-                            <label><input type="checkbox" value="dates"> تمر / زبيب</label>
-                            <label><input type="checkbox" value="beetroot"> شمندر</label>
-                            <label><input type="checkbox" value="oats"> شوفان / شعير</label>
-                            <label><input type="checkbox" value="olive-oil"> زيت زيتون</label>
-                            <label><input type="checkbox" value="meat"> لحم حمل لطيف</label>
-                            <label><input type="checkbox" value="herbs"> أعشاب (يانسون/بابونج)</label>
-                            <label><input type="checkbox" value="veg"> خضروات ورقية</label>
+                        <div class="input-group">
+                            <label>اكتبي ما يتوفر في مطبخك الآن (ببساطة):</label>
+                            <textarea id="child-kitchen-text" rows="4"
+                                placeholder="مثلاً: عندي عسل، تمر، زيت زيتون، بيض، قمح..."></textarea>
                         </div>
                         <div class="wizard-btns">
                             <button class="btn btn-prev" onclick="prevWizardStep(4)"><i class="fas fa-arrow-right"></i>
                                 السابق</button>
                             <button class="btn btn-generate" onclick="generateChildPlan()">صمم البرنامج الآن <i
-                                    class="fas fa-magic"></i></button>
+                                    class="fas fa-paint-brush"></i></button>
                         </div>
                     </div>
-                </div>
-
-                <!-- Plan Result Area -->
-                <div id="child-plan-result" class="plan-result-container" style="display: none;">
-                    <div id="plan-content"></div>
-                    <button class="btn btn-print" onclick="window.print()"><i class="fas fa-print"></i> طباعة
-                        البرنامج</button>
-                    <button class="btn btn-reset" onclick="resetWizard()">تصميم برنامج جديد <i
-                            class="fas fa-redo"></i></button>
-                </div>
-            </section>
-
-            <!-- القسم الجديد: سر السعادة (حكمة الغذاء) -->
-            <section id="section-happiness" class="interactive-section">
-                <div class="happiness-header">
-                    <h2><i class="fas fa-magic"></i> سر السعادة: حكمة الغذاء</h2>
-                    <p>اكتشف أسرار الطبيعة التي تجمع بين حكمة الطب القديم ودقة العلم الحديث. كل بطاقة هي كنز يوجهك لما
-                        يحتاجه بدنك.</p>
-                    <div class="scientific-note"
-                        style="background: rgba(212, 175, 55, 0.1); border-right: 4px solid var(--secondary-color); padding: 15px; border-radius: 8px; margin-top: 15px; text-align: right; max-width: 900px; margin-left: auto; margin-right: auto;">
-                        <p style="font-size: 0.95rem; color: #cbd5e1; line-height: 1.6; margin: 0;">
-                            <i class="fas fa-info-circle" style="color: var(--secondary-color);"></i> <strong>تنويه
-                                منهجي رصين:</strong>
-                            قد تجدون في بعض المراجع أو أقسام التطبيق اختلافاً طفيفاً في "درجات" الكيفية للأغذية (مثل
-                            الدرجة الثانية مقابل الثالثة)، وهذا اختلاف نادر لا يمس جوهر الكيفية التي أجمع عليها الأطباء
-                            عبر العصور.
-                            إن هذا التفاوت البسيط يعود علمياً إلى <strong>البيئة، ثقافة الري، نوع التربة،
-                                والمناخ</strong> الذي غرس فيه النبات.
-                            لذا، يظل "الأصل" والكيفية الأساسية هي المرجع المتفق عليه، وما قمنا بطرحه هو ثمرة تنقيح
-                            ومراجعة صارمة لضمان موثوقية المعلومة ودقتها العلمية.
-                        </p>
+                    <div class="wizard-btns">
+                        <button class="btn btn-prev" onclick="prevWizardStep(4)"><i class="fas fa-arrow-right"></i>
+                            السابق</button>
+                        <button class="btn btn-generate" onclick="generateChildPlan()">صمم البرنامج الآن <i
+                                class="fas fa-magic"></i></button>
                     </div>
                 </div>
+    </div>
 
-                <div class="happiness-cards-container" id="happiness-cards-grid">
-                    <!-- سيتم حقن البطاقات بواسطة JavaScript -->
-                </div>
-            </section>
+    <!-- Plan Result Area -->
+    <div id="child-plan-result" class="plan-result-container" style="display: none;">
+        <div id="plan-content"></div>
+        <button class="btn btn-print" onclick="window.print()"><i class="fas fa-print"></i> طباعة
+            البرنامج</button>
+        <button class="btn btn-reset" onclick="resetWizard()">تصميم برنامج جديد <i class="fas fa-redo"></i></button>
+    </div>
+    </section>
 
-            <!-- Section Pricing: Subscription details -->
-            <section id="section-pricing" class="interactive-section">
-                <h2>باقات الاشتراك المتاحة</h2>
+    <!-- القسم الجديد: سر السعادة (حكمة الغذاء) -->
+    <section id="section-happiness" class="interactive-section">
+        <div class="happiness-header">
+            <h2><i class="fas fa-magic"></i> سر السعادة: حكمة الغذاء</h2>
+            <p>اكتشف أسرار الطبيعة التي تجمع بين حكمة الطب القديم ودقة العلم الحديث. كل بطاقة هي كنز يوجهك لما
+                يحتاجه بدنك.</p>
+            <div class="scientific-note"
+                style="background: rgba(212, 175, 55, 0.1); border-right: 4px solid var(--secondary-color); padding: 15px; border-radius: 8px; margin-top: 15px; text-align: right; max-width: 900px; margin-left: auto; margin-right: auto;">
+                <p style="font-size: 0.95rem; color: #cbd5e1; line-height: 1.6; margin: 0;">
+                    <i class="fas fa-info-circle" style="color: var(--secondary-color);"></i> <strong>تنويه
+                        منهجي رصين:</strong>
+                    قد تجدون في بعض المراجع أو أقسام التطبيق اختلافاً طفيفاً في "درجات" الكيفية للأغذية (مثل
+                    الدرجة الثانية مقابل الثالثة)، وهذا اختلاف نادر لا يمس جوهر الكيفية التي أجمع عليها الأطباء
+                    عبر العصور.
+                    إن هذا التفاوت البسيط يعود علمياً إلى <strong>البيئة، ثقافة الري، نوع التربة،
+                        والمناخ</strong> الذي غرس فيه النبات.
+                    لذا، يظل "الأصل" والكيفية الأساسية هي المرجع المتفق عليه، وما قمنا بطرحه هو ثمرة تنقيح
+                    ومراجعة صارمة لضمان موثوقية المعلومة ودقتها العلمية.
+                </p>
+            </div>
+        </div>
+
+        <div class="happiness-cards-container" id="happiness-cards-grid">
+            <!-- سيتم حقن البطاقات بواسطة JavaScript -->
+        </div>
+    </section>
+
+    <!-- Section Pricing: Subscription details -->
+    <section id="section-pricing" class="interactive-section">
+        <h2>باقات الاشتراك المتاحة</h2>
+        <div
+            style="text-align: center; margin-bottom: 30px; color: #cbd5e1; max-width: 800px; margin-left: auto; margin-right: auto;">
+            <p style="font-size: 1.2rem; line-height: 1.6;">استمتع بفترة تجريبية مجانية لمدة <strong>3
+                    أيام</strong> (خطة واحدة يومياً). ولضمان استمرارية التطبيق ودقة النتائج لك ولعائلتك بدون
+                قيود، يرجى ترقية حسابك.</p>
+        </div>
+
+        <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 30px; margin-top: 20px;">
+            <!-- Free Plan -->
+            <div
+                style="background: rgba(11, 43, 26, 0.4); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 15px; padding: 30px; width: 300px; text-align: center; color: #e2e8f0; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
+                <h3 style="color: #cbd5e1; font-size: 1.5rem; margin-bottom: 10px;">الفترة التجريبية</h3>
+                <p style="font-size: 2rem; font-weight: bold; color: #fff; margin-bottom: 20px;">مجاني</p>
+                <ul style="list-style: none; padding: 0; text-align: right; margin-bottom: 30px; line-height: 1.8;">
+                    <li><i class="fas fa-check" style="color: #2ecc71; margin-left: 5px;"></i> توليد خطة واحدة
+                        يومياً</li>
+                    <li><i class="fas fa-check" style="color: #2ecc71; margin-left: 5px;"></i> تصفح عام للتطبيق
+                    </li>
+                    <li><i class="fas fa-times" style="color: #e74c3c; margin-left: 5px;"></i> صلاحية لمدة 3
+                        أيام فقط</li>
+                </ul>
+                <button disabled
+                    style="background: #555; color: #fff; width: 100%; border: none; padding: 12px; border-radius: 8px; font-family: inherit; font-size: 1.1rem; cursor: not-allowed;">مفعل
+                    لحسابك الآن</button>
+            </div>
+
+            <!-- Premium Plan -->
+            <div
+                style="background: rgba(11, 43, 26, 0.8); border: 2px solid var(--secondary-color); border-radius: 15px; padding: 30px; width: 320px; text-align: center; color: #e2e8f0; box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 0 20px rgba(212,175,55,0.1); transform: scale(1.05); position: relative;">
                 <div
-                    style="text-align: center; margin-bottom: 30px; color: #cbd5e1; max-width: 800px; margin-left: auto; margin-right: auto;">
-                    <p style="font-size: 1.2rem; line-height: 1.6;">استمتع بفترة تجريبية مجانية لمدة <strong>3
-                            أيام</strong> (خطة واحدة يومياً). ولضمان استمرارية التطبيق ودقة النتائج لك ولعائلتك بدون
-                        قيود، يرجى ترقية حسابك.</p>
-                </div>
+                    style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--secondary-color); color: var(--primary-color); padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 0.9rem; box-shadow: 0 5px 10px rgba(0,0,0,0.3);">
+                    الأكثر طلباً</div>
+                <i class="fas fa-crown"
+                    style="font-size: 2.5rem; color: var(--secondary-color); margin-bottom: 10px;"></i>
+                <h3 style="color: var(--secondary-color); font-size: 1.6rem; margin-bottom: 10px;">الباقة
+                    الذهبية</h3>
+                <p
+                    style="font-size: 2rem; font-weight: bold; color: #fff; margin-bottom: 5px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">
+                    1000 د.ج</p>
+                <p style="color: var(--secondary-color); margin-bottom: 20px;">/ شهرياً (أو 9$)</p>
+                <ul style="list-style: none; padding: 0; text-align: right; margin-bottom: 30px; line-height: 1.8;">
+                    <li><i class="fas fa-star" style="color: var(--secondary-color); margin-left: 5px;"></i> عدد
+                        لا محدود من الخطط الطبية</li>
+                    <li><i class="fas fa-star" style="color: var(--secondary-color); margin-left: 5px;"></i>
+                        استشارات إضافية ودعم</li>
+                    <li><i class="fas fa-star" style="color: var(--secondary-color); margin-left: 5px;"></i>
+                        طباعة الخطط بصيغة PDF</li>
+                    <li><i class="fas fa-star" style="color: var(--secondary-color); margin-left: 5px;"></i>
+                        تحديثات مستمرة للتطبيق</li>
+                </ul>
+                <button onclick="document.getElementById('payment-modal').style.display='block';"
+                    style="background: linear-gradient(135deg, var(--secondary-color), #b8982c); color: var(--primary-color); width: 100%; border: none; padding: 15px; border-radius: 30px; font-family: inherit; font-size: 1.2rem; font-weight: bold; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.5);">اشترك
+                    الآن <i class="fas fa-chevron-left" style="font-size: 0.9rem;"></i></button>
+            </div>
+        </div>
 
-                <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 30px; margin-top: 20px;">
-                    <!-- Free Plan -->
-                    <div
-                        style="background: rgba(11, 43, 26, 0.4); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 15px; padding: 30px; width: 300px; text-align: center; color: #e2e8f0; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
-                        <h3 style="color: #cbd5e1; font-size: 1.5rem; margin-bottom: 10px;">الفترة التجريبية</h3>
-                        <p style="font-size: 2rem; font-weight: bold; color: #fff; margin-bottom: 20px;">مجاني</p>
-                        <ul
-                            style="list-style: none; padding: 0; text-align: right; margin-bottom: 30px; line-height: 1.8;">
-                            <li><i class="fas fa-check" style="color: #2ecc71; margin-left: 5px;"></i> توليد خطة واحدة
-                                يومياً</li>
-                            <li><i class="fas fa-check" style="color: #2ecc71; margin-left: 5px;"></i> تصفح عام للتطبيق
-                            </li>
-                            <li><i class="fas fa-times" style="color: #e74c3c; margin-left: 5px;"></i> صلاحية لمدة 3
-                                أيام فقط</li>
-                        </ul>
-                        <button disabled
-                            style="background: #555; color: #fff; width: 100%; border: none; padding: 12px; border-radius: 8px; font-family: inherit; font-size: 1.1rem; cursor: not-allowed;">مفعل
-                            لحسابك الآن</button>
-                    </div>
+        <!-- Payment Details Modal -->
+        <div id="payment-modal" class="lightbox-modal" style="display: none; z-index: 10000; animation: fadeIn 0.3s;">
+            <div class="lightbox-content"
+                style="background:var(--bg-color); max-width:600px; padding:40px; border-radius:20px; text-align:center; border: 2px solid var(--secondary-color); box-shadow: 0 10px 40px rgba(0,0,0,0.8), inset 0 0 20px rgba(212,175,55,0.2); position: relative;">
 
-                    <!-- Premium Plan -->
-                    <div
-                        style="background: rgba(11, 43, 26, 0.8); border: 2px solid var(--secondary-color); border-radius: 15px; padding: 30px; width: 320px; text-align: center; color: #e2e8f0; box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 0 20px rgba(212,175,55,0.1); transform: scale(1.05); position: relative;">
-                        <div
-                            style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--secondary-color); color: var(--primary-color); padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 0.9rem; box-shadow: 0 5px 10px rgba(0,0,0,0.3);">
-                            الأكثر طلباً</div>
-                        <i class="fas fa-crown"
-                            style="font-size: 2.5rem; color: var(--secondary-color); margin-bottom: 10px;"></i>
-                        <h3 style="color: var(--secondary-color); font-size: 1.6rem; margin-bottom: 10px;">الباقة
-                            الذهبية</h3>
-                        <p
-                            style="font-size: 2rem; font-weight: bold; color: #fff; margin-bottom: 5px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">
-                            1000 د.ج</p>
-                        <p style="color: var(--secondary-color); margin-bottom: 20px;">/ شهرياً (أو 9$)</p>
-                        <ul
-                            style="list-style: none; padding: 0; text-align: right; margin-bottom: 30px; line-height: 1.8;">
-                            <li><i class="fas fa-star" style="color: var(--secondary-color); margin-left: 5px;"></i> عدد
-                                لا محدود من الخطط الطبية</li>
-                            <li><i class="fas fa-star" style="color: var(--secondary-color); margin-left: 5px;"></i>
-                                استشارات إضافية ودعم</li>
-                            <li><i class="fas fa-star" style="color: var(--secondary-color); margin-left: 5px;"></i>
-                                طباعة الخطط بصيغة PDF</li>
-                            <li><i class="fas fa-star" style="color: var(--secondary-color); margin-left: 5px;"></i>
-                                تحديثات مستمرة للتطبيق</li>
-                        </ul>
-                        <button onclick="document.getElementById('payment-modal').style.display='block';"
-                            style="background: linear-gradient(135deg, var(--secondary-color), #b8982c); color: var(--primary-color); width: 100%; border: none; padding: 15px; border-radius: 30px; font-family: inherit; font-size: 1.2rem; font-weight: bold; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.5);">اشترك
-                            الآن <i class="fas fa-chevron-left" style="font-size: 0.9rem;"></i></button>
-                    </div>
-                </div>
+                <span class="lightbox-close" onclick="document.getElementById('payment-modal').style.display='none';"
+                    style="position: absolute; top: 15px; right: 25px; font-size: 2rem; color: #a0aec0; cursor: pointer;">&times;</span>
 
-                <!-- Payment Details Modal -->
-                <div id="payment-modal" class="lightbox-modal"
-                    style="display: none; z-index: 10000; animation: fadeIn 0.3s;">
-                    <div class="lightbox-content"
-                        style="background:var(--bg-color); max-width:600px; padding:40px; border-radius:20px; text-align:center; border: 2px solid var(--secondary-color); box-shadow: 0 10px 40px rgba(0,0,0,0.8), inset 0 0 20px rgba(212,175,55,0.2); position: relative;">
+                <h2
+                    style="color: var(--secondary-color); margin-bottom: 30px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">
+                    <i class="fas fa-shopping-cart"></i> تفاصيل الدفع والاشتراك
+                </h2>
 
-                        <span class="lightbox-close"
-                            onclick="document.getElementById('payment-modal').style.display='none';"
-                            style="position: absolute; top: 15px; right: 25px; font-size: 2rem; color: #a0aec0; cursor: pointer;">&times;</span>
-
-                        <h2
-                            style="color: var(--secondary-color); margin-bottom: 30px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">
-                            <i class="fas fa-shopping-cart"></i> تفاصيل الدفع والاشتراك
-                        </h2>
-
-                        <!-- Activation Input Section -->
-                        <div
-                            style="background: rgba(15, 23, 42, 0.8); border: 1px dashed var(--gold); padding: 20px; border-radius: 12px; margin-bottom: 25px; text-align: center;">
-                            <p style="color: #cbd5e1; font-size: 1.1rem; margin-bottom: 15px; line-height: 1.6;">
-                                للمشتركين: يُرجى إرسال وصل الدفع مع <strong>(رمز جهازك)</strong> الظاهر بالأسفل إلى
-                                التليجرام أو الواتساب. سيتم الرد عليك بـ <strong>كود التفعيل</strong> الخاص بك فوراً.
-                            </p>
-                            <div style="margin-bottom: 15px; font-size: 1.1rem; color: #94a3b8;">
-                                رمز جهازك: <strong id="user-device-id-display"
-                                    style="color: var(--gold); user-select: all; letter-spacing: 2px; font-family: monospace; background: #000; padding: 5px 10px; border-radius: 5px;">يتم
-                                    التحميل...</strong>
-                            </div>
-                            <button onclick="activateApp()"
-                                style="background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 10px 20px; border-radius: 8px; cursor: pointer; font-family:inherit; font-size:1.1rem; font-weight: bold; transition: all 0.3s; width: 100%;">
-                                <i class="fas fa-key"></i> أدخل كود التفعيل هنا
-                            </button>
-                        </div>
-
-                        <div style="display: flex; flex-direction: column; gap: 20px; text-align: right;">
-
-                            <!-- PayPal -->
-                            <div
-                                style="background: rgba(11, 43, 26, 0.6); padding: 20px; border-radius: 12px; border: 1px solid rgba(212, 175, 55, 0.3);">
-                                <h3
-                                    style="color: #cbd5e1; font-size: 1.3rem; margin-bottom: 15px; display:flex; align-items:center; gap:10px;">
-                                    <i class="fab fa-paypal" style="color: #00457C; font-size:1.8rem;"></i> الدفع عبر
-                                    بايبال (PayPal)
-                                </h3>
-                                <p style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 10px;">للدفع بالعملة
-                                    الأجنبية (9$):</p>
-                                <div
-                                    style="background: var(--bg-color); padding: 12px; border-radius: 8px; border: 1px dashed var(--secondary-color); text-align: center;">
-                                    <strong
-                                        style="color: var(--secondary-color); font-size: 1.2rem; user-select: all;">victoryclub918@gmail.com</strong>
-                                </div>
-                            </div>
-
-                            <!-- CCP -->
-                            <div
-                                style="background: rgba(11, 43, 26, 0.6); padding: 20px; border-radius: 12px; border: 1px solid rgba(212, 175, 55, 0.3);">
-                                <h3
-                                    style="color: #cbd5e1; font-size: 1.3rem; margin-bottom: 15px; display:flex; align-items:center; gap:10px;">
-                                    <i class="fas fa-university" style="color:#d4af37; font-size:1.5rem;"></i> الحساب
-                                    البريدي الجاري (CCP)
-                                </h3>
-                                <p style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 10px;">للدفع بالدينار
-                                    الجزائري (1000 د.ج):</p>
-                                <ul
-                                    style="list-style: none; padding: 0; color: #cbd5e1; font-size: 1.1rem; line-height: 1.8;">
-                                    <li><strong>الاسم:</strong> Leila Sekkak</li>
-                                    <li><strong>العنوان:</strong> Remchi. W-Tlemcen, Alger</li>
-                                    <li><strong>رقم الحساب:</strong> <span
-                                            style="color: var(--secondary-color); font-weight: bold; user-select:all;">5396254</span>
-                                    </li>
-                                    <li><strong>المفتاح (Clé):</strong> <span
-                                            style="color: var(--secondary-color); font-weight: bold; user-select:all;">44</span>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <!-- BaridiMob -->
-                            <div
-                                style="background: rgba(11, 43, 26, 0.6); padding: 20px; border-radius: 12px; border: 1px solid rgba(212, 175, 55, 0.3);">
-                                <h3
-                                    style="color: #cbd5e1; font-size: 1.3rem; margin-bottom: 15px; display:flex; align-items:center; gap:10px;">
-                                    <i class="fas fa-mobile-alt" style="color:#d4af37; font-size:1.5rem;"></i> بريدي موب
-                                    (BaridiMob)
-                                </h3>
-                                <p style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 10px;">عبر رقم الـ RIP
-                                    (الريب):</p>
-                                <div
-                                    style="background: var(--bg-color); padding: 12px; border-radius: 8px; border: 1px dashed var(--secondary-color); text-align: center; word-break: break-all;">
-                                    <strong
-                                        style="color: var(--secondary-color); font-size: 1.2rem; user-select: all; letter-spacing: 1px;">00799999000539625465</strong>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div
-                            style="margin-top: 30px; background: rgba(212, 175, 55, 0.1); padding: 15px; border-radius: 8px; border: 1px solid var(--secondary-color);">
-                            <p style="color: #cbd5e1; font-size: 1.1rem; margin-bottom: 15px;">بعد إتمام عملية الدفع،
-                                يُرجى إرسال وصل
-                                الاستلام مع ذكر <strong>(بخصوص الاشتراك الشهري لتطبيق التشخيص الذاتي)</strong> ليتم
-                                تفعيل حسابك مباشرة عبر القنوات التالية:</p>
-
-                            <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
-                                <a href="#" onclick="openSupportLink('whatsapp', event)"
-                                    style="background: #25D366; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; font-weight: bold; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 8px;">
-                                    <i class="fab fa-whatsapp" style="font-size: 1.3rem;"></i> تواصل واتساب
-                                </a>
-                                <a href="#" onclick="openSupportLink('telegram', event)"
-                                    style="background: #0088cc; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; font-weight: bold; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 8px;">
-                                    <i class="fab fa-telegram-plane" style="font-size: 1.3rem;"></i> تواصل تليجرام
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <!-- Section 1: الأشكال المتحركة (محدث: الأخلاط) -->
-            <section id="section-1" class="interactive-section active">
-                <!-- Welcome Announcement Card -->
-                <div class="welcome-card">
-                    <div class="welcome-card-header">
-                        <i class="fas fa-bullhorn"></i>
-                        <span>تنبيه هام ومرحب بكم جميعاً</span>
-                    </div>
-                    <div class="welcome-card-body">
-                        <p>لفهم كيفية استخدام البرنامج وأقسامه الاحترافية بشكل صحيح، وكيفية إجراء التشخيص الدقيق وتصميم
-                            خطة
-                            غذائية علاجية سليمة (حمية مدروسة) دون تكاليف إضافية ودون أضرار مستقبلية؛ ندعوكم للانضمام إلى
-                            مجموعتنا التعليمية على التلغرام.</p>
-                        <p>ستجدون هناك شروحات بالفيديو لكيفية الاستخدام، بالإضافة إلى دعم فني متواصل يستجيب لاستفساراتكم
-                            بسرعة.</p>
-
-                        <div class="welcome-cta-container">
-                            <a href="https://t.me/plannutri" target="_blank" class="welcome-telegram-btn">
-                                <i class="fab fa-telegram-plane"></i> انضم للمجموعة التعليمية وشروحات الفيديو
-                            </a>
-                        </div>
-
-                        <p class="welcome-footer-note">
-                            <i class="fas fa-share-nodes"></i> ياحبذا مساهمتكم بنشر الرابط أو إدخال المهتمين للمجموعة
-                            ليحصل الجميع على الدعم والشروحات.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="intro-header">
-
-                    <h2><i class="fas fa-project-diagram"></i> الأخلاط الأربعة عند ابن سينا</h2>
-                    <p style="text-align: center; max-width: 800px; margin: 0 auto; color: #555; line-height: 1.6;">
-                        مرحباً بك! هذه الأخلاط الأربعة هي العصارات الأساسية التي يتكون منها بدن الإنسان ومفتاح فهم الصحة
-                        والمرض في الطب الأصيل.<br>
-                        <strong>اضغط على أي خلط لتعرف طبيعته، مكان تولده، وأين يستقر!</strong>
+                <!-- Activation Input Section -->
+                <div
+                    style="background: rgba(15, 23, 42, 0.8); border: 1px dashed var(--gold); padding: 20px; border-radius: 12px; margin-bottom: 25px; text-align: center;">
+                    <p style="color: #cbd5e1; font-size: 1.1rem; margin-bottom: 15px; line-height: 1.6;">
+                        للمشتركين: يُرجى إرسال وصل الدفع مع <strong>(رمز جهازك)</strong> الظاهر بالأسفل إلى
+                        التليجرام أو الواتساب. سيتم الرد عليك بـ <strong>كود التفعيل</strong> الخاص بك فوراً.
                     </p>
+                    <div style="margin-bottom: 15px; font-size: 1.1rem; color: #94a3b8;">
+                        رمز جهازك: <strong id="user-device-id-display"
+                            style="color: var(--gold); user-select: all; letter-spacing: 2px; font-family: monospace; background: #000; padding: 5px 10px; border-radius: 5px;">يتم
+                            التحميل...</strong>
+                    </div>
+                    <button onclick="activateApp()"
+                        style="background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 10px 20px; border-radius: 8px; cursor: pointer; font-family:inherit; font-size:1.1rem; font-weight: bold; transition: all 0.3s; width: 100%;">
+                        <i class="fas fa-key"></i> أدخل كود التفعيل هنا
+                    </button>
                 </div>
 
-                <div class="humors-interactive-container">
-                    <div class="humor-circle blood" onclick="showHumorInfo('blood')">
-                        <div class="humor-icon"><i class="fas fa-tint" style="color:#e74c3c;"></i></div>
-                        <span>الدم</span>
-                    </div>
-                    <div class="humor-circle yellow-bile" onclick="showHumorInfo('yellow')">
-                        <div class="humor-icon"><i class="fas fa-fire" style="color:#f1c40f;"></i></div>
-                        <span>الصفراء</span>
-                    </div>
-                    <div class="humor-circle black-bile" onclick="showHumorInfo('black')">
-                        <div class="humor-icon"><i class="fas fa-mountain" style="color:#2c3e50;"></i></div>
-                        <span>السوداء</span>
-                    </div>
-                    <div class="humor-circle phlegm" onclick="showHumorInfo('phlegm')">
-                        <div class="humor-icon"><i class="fas fa-snowflake" style="color:#3498db;"></i></div>
-                        <span>البلغم</span>
-                    </div>
-                </div>
+                <div style="display: flex; flex-direction: column; gap: 20px; text-align: right;">
 
-                <div id="humor-info-box" class="humor-info-box hidden">
-                    <!-- سيتم حقن البيانات تفاعلياً هنا -->
-                </div>
-            </section>
-
-            <!-- Section Diagnosis: التشخيص والمفاهيم التراثية -->
-            <section id="section-diag" class="interactive-section">
-                <h2>التشخيص الذاتي والمفاهيم الأصيلة</h2>
-                <div class="diagnosis-container">
-                    <div class="diagnosis-tabs">
-                        <button class="diag-tab active" onclick="showDiagTab('tab-tabe3')"><i class="fas fa-dna"></i>
-                            الطبع الجبلي</button>
-                        <button class="diag-tab" onclick="showDiagTab('tab-mizaj')"><i
-                                class="fas fa-thermometer-half"></i> المزاج</button>
-                        <button class="diag-tab" onclick="showDiagTab('tab-khilt')"><i class="fas fa-vial"></i>
-                            الأخلاط</button>
-                        <button class="diag-tab" onclick="showDiagTab('tab-manhaj')"><i
-                                class="fas fa-balance-scale"></i> المنهجية</button>
-                    </div>
-
-                    <div class="diag-content active" id="tab-tabe3">
-                        <h3>الطبع الجبلي (الخلقة الأصلية)</h3>
-                        <p class="diag-note"><i class="fas fa-exclamation-circle"></i> <strong>ملاحظة هامة:</strong>
-                            الطبع الجبلي (الخلقة الأصلية) لا يتغير أبداً، فهو ما جُبلت عليه في الأساس. لكن "المزاج
-                            والأخلاط" تتغير بفعل البيئة، الغذاء، والسن. ولذا يُفضّل <strong>إعادة تشخيص مزاجك وأخلاطك كل
-                                3 أشهر</strong>.</p>
-                        <h4>كيف تُشخّص طبعك وحالتك؟ (شرح الدلالات العشر)</h4>
-                        <div class="signs-container">
-                            <div class="sign-card hot-sign">
-                                <h5><i class="fas fa-fire"></i> علامات الحرارة</h5>
-                                <ul>
-                                    <li><strong>الملمس:</strong> حار.</li>
-                                    <li><strong>اللحم والشحم:</strong> كثرة اللحم العضلي، وقلة الشحم (الدهن).</li>
-                                    <li><strong>الشعر:</strong> سرعة نباته، كثافته، سواده، وتجعده.</li>
-                                    <li><strong>لون البدن:</strong> يميل للحمرة أو السمرة الشديدة.</li>
-                                    <li><strong>خلقة الأعضاء:</strong> سعة الصدر، وعظم النبض وبروزه.</li>
-                                    <li><strong>النوم واليقظة:</strong> الميل لقلة النوم.</li>
-                                    <li><strong>الأفعال:</strong> سرعة الاستجابة، غضب سريع، وقوة نشاط.</li>
-                                    <li><strong>أحلام النائم:</strong> رؤية النيران، والشمس، والحمامات الساخنة.</li>
-                                </ul>
-                            </div>
-                            <div class="sign-card cold-sign">
-                                <h5><i class="fas fa-snowflake"></i> علامات البرودة</h5>
-                                <ul>
-                                    <li><strong>الملمس:</strong> بارد.</li>
-                                    <li><strong>اللحم والشحم:</strong> كثرة الشحم (الدهنية)، وقلة اللحم.</li>
-                                    <li><strong>الشعر:</strong> بطء نموه، قلته، سبوطته (أملس)، ولونه الفاتح الواهن.</li>
-                                    <li><strong>لون البدن:</strong> أبيض يميل للكمودة أو الشحوب.</li>
-                                    <li><strong>خلقة الأعضاء:</strong> ضيق الصدر، وصغر النبض وضعفه.</li>
-                                    <li><strong>النوم واليقظة:</strong> الميل لكثرة النوم والنعاس.</li>
-                                    <li><strong>الأفعال:</strong> بطء الاستجابة، وضعف الهضم، برود الانفعالات.</li>
-                                    <li><strong>أحلام النائم:</strong> رؤية المياه، والثلوج، والأماكن الباردة.</li>
-                                </ul>
-                            </div>
-                            <div class="sign-card moist-sign">
-                                <h5><i class="fas fa-tint"></i> علامات الرطوبة</h5>
-                                <ul>
-                                    <li><strong>الملمس:</strong> لين ورطب ومطاطي.</li>
-                                    <li><strong>اللحم والشحم:</strong> كثرة الشحم والترهل.</li>
-                                    <li><strong>الشعر:</strong> ناعم ومسبل جداً.</li>
-                                    <li><strong>لون البدن:</strong> نضر ورطب.</li>
-                                    <li><strong>النوم واليقظة:</strong> كثرة النوم بشكل كبير وكسل.</li>
-                                    <li><strong>الفضلات:</strong> كثرة الفضلات (العرق، البول) وسيلان اللعاب.</li>
-                                    <li><strong>الانفعالات:</strong> ينسى بسرعة ويتقبل الأمور بسهولة.</li>
-                                </ul>
-                            </div>
-                            <div class="sign-card dry-sign">
-                                <h5><i class="fas fa-leaf"></i> علامات اليبوسة</h5>
-                                <ul>
-                                    <li><strong>الملمس:</strong> صلب وجاف.</li>
-                                    <li><strong>اللحم والشحم:</strong> قلة اللحم والشحم معاً (هزال).</li>
-                                    <li><strong>الشعر:</strong> مجعد خشن، وبطء في النمو.</li>
-                                    <li><strong>لون البدن:</strong> شاحب أو أسمر جاف متقشر.</li>
-                                    <li><strong>النوم واليقظة:</strong> قلة النوم جداً (أرق مستمر).</li>
-                                    <li><strong>الفضلات:</strong> قلة الفضلات وجفافها (إمساك).</li>
-                                    <li><strong>الانفعالات:</strong> ثبات على الرأي وتذكر دائم (صعوبة النسيان).</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="diag-content" id="tab-mizaj">
-                        <h3>المزاج والأخلاط (التشخيص المتغير)</h3>
-                        <p>تذكر القاعدة التراثية: <strong>"الطبع لا يتغير، لكن المزاج والخلط يتغيران"</strong>.</p>
-
-                        <div class="mizaj-interactive">
-                            <div class="mizaj-box">
-                                <h4><i class="fas fa-thermometer-three-quarters"></i> متى نعرف أن عندنا "سوء مزاج"؟</h4>
-                                <p>يحدث سوء المزاج عندما تلاحظ تغيراً مفاجئاً أو خروجاً عن حالتك الطبيعية الصِّحية
-                                    المعتادة بسبب عامل خارجي (كالشمس أو الغذاء) أو داخلي.</p>
-                                <ul>
-                                    <li><strong>سوء مزاج ساذج (بسيط):</strong> تشعر بحرارة أو برودة، لكن بدون مادة زائدة
-                                        ممرضة (مثل حرارة الوجه بعد المشي في الشمس الحارقة). علاجها سهل بمجرد تغيير الجو.
-                                    </li>
-                                    <li><strong>سوء مزاج مادي:</strong> تشعر بتغير الكيفية (كالحرارة) مع ثقل أو غثيان أو
-                                        تغير في لون الفضلات. (هنا تدخلت "الأخلاط" والمواد الفاسدة).</li>
-                                </ul>
-                            </div>
-
-                            <div class="mizaj-box bad-mizaj">
-                                <h4><i class="fas fa-vial"></i> متى يكون هناك "خلط مهيمن"؟</h4>
-                                <p>الخلط المهيمن هو عندما تظهر علامات قوية لخلط واحد يطغى على باقي الأخلاط بقوة وبشكل
-                                    مرضي:</p>
-                                <ul>
-                                    <li><strong>هيمنة الدم (الدموي):</strong> حمرة شديدة بالوجه والعينين، ثقل البدن مع
-                                        نشاط، حلاوة الريق، كثرة الرعاف، وكثرة الحبوب والدمامل.</li>
-                                    <li><strong>هيمنة الصفراء:</strong> اصفرار العين والوجه، مرارة الريق في الصباح، ضعف
-                                        الشهية الدائم، سرعة الغضب الشديد، قيء أصفر.</li>
-                                    <li><strong>هيمنة البلغم:</strong> بياض اللون بشكل غير طبيعي، كثرة النوم جداً، بلادة
-                                        الحس وضعف الذاكرة، كثرة اللعاب والبلغم البارد المنفصل.</li>
-                                    <li><strong>هيمنة السوداء:</strong> كمد اللون (يصبح داكناً)، الأرق المستمر، سيطرة
-                                        الأفكار السوداوية، القلق، جفاف الجلد ووسواس.</li>
-                                </ul>
-                            </div>
-
-                            <div class="mizaj-box complex-mizaj">
-                                <h4><i class="fas fa-puzzle-piece"></i> الخلط المركب المهيمن (اتحاد الأخلاط)</h4>
-                                <p>في كثير من الأحيان لا يمرض البدن بخلط واحد، بل تظهر لديك علامات تدل على اتحاد خلطين
-                                    أو ثلاثة معاً ضد البدن، وهنا يكون التشخيص "مُركباً":</p>
-                                <ul>
-                                    <li><strong>مركب من اثنين (مثال):</strong> كأن يجتمع عندك (اصفرار العين ومرارة الفم
-                                        بسبب الصفراء) مع (ثقل البدن وكثرة النوم بسبب البلغم). هذا يُسمى سوء مزاج
-                                        "صفراوي-بلغمي مادي". ويكون العلاج بكسر حدة كليهما معاً.</li>
-                                    <li><strong>مركب من ثلاثة أو أكثر:</strong> تظهر علامات الحرارة مع كثرة اللعاب وأرق
-                                        بالإضافة لتغير لون البول. في هذه الحالات الشائكة يتطلب العلاج التدرج وتلطيف كل
-                                        خلط على حدة بحكمة وابتعاد عن المتضادات الحادة.</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="diag-content" id="tab-khilt">
-                        <h3>الخلط (Al-Khilt)</h3>
-                        <p>هو المادة السيالة التي يستحيل إليها الغذاء في الكبد.</p>
-                        <div class="khilt-grid">
-                            <div class="khilt-card red-khilt">
-                                <i class="fas fa-tint"></i>
-                                <h4>الدم (حار رطب)</h4>
-                                <p>يغذي البدن ويولد الروح.</p>
-                                <div class="modern-eq"><strong>المقابل الطبي الحديث:</strong><br>الدم بمكوناته (الكريات
-                                    الحمراء، المغذيات، والأكسجين المحمول في الدورة الدموية).</div>
-                            </div>
-                            <div class="khilt-card yellow-khilt">
-                                <i class="fas fa-fire"></i>
-                                <h4>الصفراء (حارة يابسة)</h4>
-                                <p>تلطف الدم وتفتح السدد، وتشبه الكبد والمعدة بقوتها الهاضمة.</p>
-                                <div class="modern-eq"><strong>المقابل الطبي الحديث:</strong><br>العصارة الصفراوية
-                                    (Bile) المفرزة من الكبد والمرارة، والإنزيمات الهاضمة وحمض المعدة.</div>
-                            </div>
-                            <div class="khilt-card blue-khilt">
-                                <i class="fas fa-water"></i>
-                                <h4>البلغم (بارد رطب)</h4>
-                                <p>يشبه طبع الدماغ والرئتين والكلى.</p>
-                                <div class="modern-eq"><strong>المقابل الطبي الحديث:</strong><br>السوائل الليمفاوية،
-                                    بلازما الدم، المخاط، والجهاز المناعي المائي الواقي الداعم للترطيب.</div>
-                            </div>
-                            <div class="khilt-card black-khilt">
-                                <i class="fas fa-hill-rockslide"></i>
-                                <h4>السوداء (باردة يابسة)</h4>
-                                <p>تغذي العظام والطحال، تمنح المثانة القوة على التمدد.</p>
-                                <div class="modern-eq"><strong>المقابل الطبي الحديث:</strong><br>ترسبات الدم والخلايا
-                                    الهرمة، عوامل التخثر، والمعادن كالحديد والكالسيوم، وتصفية الطحال السليمة.</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="diag-content" id="tab-manhaj">
-                        <h3>التحليل والموازنة (منهجية العلاج)</h3>
-                        <div class="manhaj-list">
-                            <div class="manhaj-item">
-                                <div class="manhaj-icon"><i class="fas fa-search"></i></div>
-                                <div><strong>الاستدلال:</strong> معرفة المرض من أعراضه. مثال: إذا غلبت اليبوسة على
-                                    الأعصاب، ظهر "التشنج".</div>
-                            </div>
-                            <div class="manhaj-item">
-                                <div class="manhaj-icon"><i class="fas fa-balance-scale-right"></i></div>
-                                <div><strong>الموازنة (الضد):</strong> علاج سوء المزاج الحار يكون بالتبريد (كماء الشعير
-                                    والورد)، والبارد بالتسخين (كالزنجبيل).</div>
-                            </div>
-                            <div class="manhaj-item">
-                                <div class="manhaj-icon"><i class="fas fa-puzzle-piece"></i></div>
-                                <div><strong>الملائمة:</strong> اختيار الدواء ليوافق العضو؛ فلا يُعطى دواء شديد اليبوسة
-                                    لعضو يكره اليبوسة كالدماغ.</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- القسم الجديد: اختبار المفاهيم העמוقة -->
-            <section id="section-concepts" class="interactive-section">
-                <h2>اختبار المفاهيم العميقة (الفرق بين المزاج والخلط وغيرها)</h2>
-                <div class="mcq-container">
-                    <p id="concept-question" class="question-text">سؤال المفاهيم...</p>
-                    <div id="concept-options" class="options-grid"></div>
-                    <div id="concept-feedback" class="feedback"></div>
-                </div>
-            </section>
-
-            <!-- القسم الجديد: تدبير وإصلاح 100 وجبة يومية -->
-            <section id="section-meals" class="interactive-section">
-                <h2>تدبير الوجبات: إصلاح 100 وجبة من مطبخك البسيط</h2>
-                <div id="meals-trial-warning"
-                    style="display:none; background: rgba(212, 175, 55, 0.1); border: 1px solid var(--secondary-color); padding: 15px; border-radius: 10px; margin-bottom: 25px; text-align: center;">
-                    <span style="color: var(--secondary-color); font-weight: bold;"><i class="fas fa-info-circle"></i>
-                        تنويه التجربة:</span>
-                    <span style="color: #e2e8f0;">هذا القسم متاح فقط لمدة 3 أيام للمستخدمين الجدد. <a href="#"
-                            onclick="document.querySelector('[data-target=\'section-pricing\']').click(); event.preventDefault();"
-                            style="color: var(--secondary-color); text-decoration: underline;">اشترك الآن</a> لفتح كامل
-                        المزايا.</span>
-                </div>
-
-                <div class="tricky-container">
-                    <div class="bot-message"
-                        style="background:#fff; border:2px solid var(--secondary-color); color:#333;">
-                        <i class="fas fa-utensils" style="color:var(--secondary-color);"></i>
-                        <p id="meal-scenario-text" style="font-size:1.2rem; font-weight:bold;"></p>
-                    </div>
-                    <div class="bot-message"
-                        style="background:var(--secondary-color); color:#fff; border-radius:0 15px 15px 15px; margin-top:15px; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
-                        <i class="fas fa-lightbulb" style="color:#fff;"></i>
-                        <p id="meal-islaah-text" style="font-size:1.1rem; padding:5px;"></p>
-                    </div>
-                    <button class="btn btn-generate" onclick="loadRandomMeal()" style="margin-top:25px; width:100%;"><i
-                            class="fas fa-random"></i> عرض وجبة أخرى عشوائية</button>
-                </div>
-            </section>
-
-            <!-- Section 2: موسوعة الأعضاء والأعشاب المصورة -->
-            <section id="section-gallery" class="interactive-section">
-                <h2>موسوعة الأعضاء والأعشاب الطبيعية المصورة</h2>
-                <p style="text-align: center; margin-bottom: 20px; font-size: 1.1rem; color: #555;">عوضاً عن البطاقات
-                    الفردية، نقدم لك هنا خرائط مفصلة وشاملة (انقر على أي صورة لتكبيرها وقراءة تفاصيل كل عضو والأعشاب
-                    المناسبة له).</p>
-
-                <div class="infographics-gallery">
-                    <div class="gallery-item" onclick="openLightbox('images/1.jpg')">
-                        <img src="images/1.jpg" alt="خريطة المفاصل"
-                            onerror="this.src='https://via.placeholder.com/300x400?text=يرجى+إضافة+صورة+1.jpg+لمجلد+images'">
-                    </div>
-                    <div class="gallery-item" onclick="openLightbox('images/2.jpg')">
-                        <img src="images/2.jpg" alt="خريطة الرحم"
-                            onerror="this.src='https://via.placeholder.com/300x400?text=يرجى+إضافة+صورة+2.jpg+لمجلد+images'">
-                    </div>
-                    <div class="gallery-item" onclick="openLightbox('images/3.jpg')">
-                        <img src="images/3.jpg" alt="خريطة الرئتان"
-                            onerror="this.src='https://via.placeholder.com/300x400?text=يرجى+إضافة+صورة+3.jpg+لمجلد+images'">
-                    </div>
-                    <div class="gallery-item" onclick="openLightbox('images/4.jpg')">
-                        <img src="images/4.jpg" alt="خريطة الجهاز العصبي"
-                            onerror="this.src='https://via.placeholder.com/300x400?text=يرجى+إضافة+صورة+4.jpg+لمجلد+images'">
-                    </div>
-                    <div class="gallery-item" onclick="openLightbox('images/5.jpg')">
-                        <img src="images/5.jpg" alt="خريطة الكلى والمثانة"
-                            onerror="this.src='https://via.placeholder.com/300x400?text=يرجى+إضافة+صورة+5.jpg+لمجلد+images'">
-                    </div>
-                    <!-- صفحات الألبوم الإضافية -->
-                    <div class="gallery-item" onclick="openLightbox('images/page-0001.jpg')">
-                        <img src="images/page-0001.jpg" alt="ألبوم الأعشاب - صفحة 1" loading="lazy">
-                    </div>
-                    <div class="gallery-item" onclick="openLightbox('images/page-0002.jpg')">
-                        <img src="images/page-0002.jpg" alt="ألبوم الأعشاب - صفحة 2" loading="lazy">
-                    </div>
-                    <div class="gallery-item" onclick="openLightbox('images/page-0003.jpg')">
-                        <img src="images/page-0003.jpg" alt="ألبوم الأعشاب - صفحة 3" loading="lazy">
-                    </div>
-                    <div class="gallery-item" onclick="openLightbox('images/page-0004.jpg')">
-                        <img src="images/page-0004.jpg" alt="ألبوم الأعشاب - صفحة 4" loading="lazy">
-                    </div>
-                    <div class="gallery-item" onclick="openLightbox('images/page-0005.jpg')">
-                        <img src="images/page-0005.jpg" alt="ألبوم الأعشاب - صفحة 5" loading="lazy">
-                    </div>
-                    <div class="gallery-item" onclick="openLightbox('images/page-0006.jpg')">
-                        <img src="images/page-0006.jpg" alt="ألبوم الأعشاب - صفحة 6" loading="lazy">
-                    </div>
-                    <div class="gallery-item" onclick="openLightbox('images/page-0007.jpg')">
-                        <img src="images/page-0007.jpg" alt="ألبوم الأعشاب - صفحة 7" loading="lazy">
-                    </div>
-                    <div class="gallery-item" onclick="openLightbox('images/page-0008.jpg')">
-                        <img src="images/page-0008.jpg" alt="ألبوم الأعشاب - صفحة 8" loading="lazy">
-                    </div>
-                    <div class="gallery-item" onclick="openLightbox('images/page-0009.jpg')">
-                        <img src="images/page-0009.jpg" alt="ألبوم الأعشاب - صفحة 9" loading="lazy">
-                    </div>
-                    <div class="gallery-item" onclick="openLightbox('images/page-0010.jpg')">
-                        <img src="images/page-0010.jpg" alt="ألبوم الأعشاب - صفحة 10" loading="lazy">
-                    </div>
-                    <div class="gallery-item" onclick="openLightbox('images/page-0011.jpg')">
-                        <img src="images/page-0011.jpg" alt="ألبوم الأعشاب - صفحة 11" loading="lazy">
-                    </div>
-                    <div class="gallery-item" onclick="openLightbox('images/page-0012.jpg')">
-                        <img src="images/page-0012.jpg" alt="ألبوم الأعشاب - صفحة 12" loading="lazy">
-                    </div>
-                    <div class="gallery-item" onclick="openLightbox('images/page-0013.jpg')">
-                        <img src="images/page-0013.jpg" alt="ألبوم الأعشاب - صفحة 13" loading="lazy">
-                    </div>
-                </div>
-
-                <!-- Lightbox Modal -->
-                <div id="image-lightbox" class="lightbox-modal" onclick="closeLightbox(event)">
-                    <span class="lightbox-close" onclick="closeLightbox(event)">&times;</span>
-                    <img class="lightbox-content" id="lightbox-img">
-                </div>
-            </section>
-
-            <!-- Section 4: صح وخطأ -->
-            <section id="section-4" class="interactive-section">
-                <h2>تحدي صح أم خطأ</h2>
-                <div class="quiz-container" id="tf-quiz">
-                    <div class="question-box" id="tf-question">يجري التحميل...</div>
-                    <div class="buttons-row">
-                        <button class="btn btn-true" onclick="checkTF(true)"><i class="fas fa-check"></i> صح</button>
-                        <button class="btn btn-false" onclick="checkTF(false)"><i class="fas fa-times"></i> خطأ</button>
-                    </div>
-                    <div id="tf-feedback" class="feedback"></div>
-                </div>
-            </section>
-
-            <!-- Section 5: اختيار من متعدد -->
-            <section id="section-5" class="interactive-section">
-                <h2>اختبر معلوماتك</h2>
-                <div class="quiz-container" id="mcq-quiz">
-                    <div class="question-box" id="mcq-question">يجري التحميل...</div>
-                    <div class="options-grid" id="mcq-options">
-                        <!-- Options injected by JS -->
-                    </div>
-                    <div id="mcq-feedback" class="feedback"></div>
-                </div>
-            </section>
-
-            <!-- Section 6: هل الإجابة صحيحة؟ -->
-            <section id="section-6" class="interactive-section">
-                <h2>التحدي المخادع (هل أنا على صواب؟)</h2>
-                <div class="quiz-container tricky-container">
-                    <div class="bot-box">
-                        <i class="fas fa-robot fa-3x bot-icon"></i>
-                        <div class="chat-bubble" id="tricky-question">يقولون أن المعدة طبيعتها باردة يابسة كالعظام. هل
-                            هذا صحيح أم خطأ؟</div>
-                    </div>
-                    <div class="buttons-row">
-                        <button class="btn btn-true" onclick="checkTricky(true)"><i class="fas fa-thumbs-up"></i> إجابتك
-                            صحيحة</button>
-                        <button class="btn btn-false" onclick="checkTricky(false)"><i class="fas fa-thumbs-down"></i>
-                            إجابتك خاطئة</button>
-                    </div>
-                    <div id="tricky-feedback" class="feedback"></div>
-                </div>
-            </section>
-
-            <!-- Section 7: خريطة الأعضاء -->
-            <section id="section-7" class="interactive-section">
-                <h2>خريطة الأعضاء والمزاج الموائم لتغذيتها</h2>
-                <div class="organ-map">
-                    <div class="organ-selector">
-                        <button class="organ-btn" onclick="showOrganDetails('liver')">الكبد</button>
-                        <button class="organ-btn" onclick="showOrganDetails('heart')">القلب</button>
-                        <button class="organ-btn" onclick="showOrganDetails('stomach')">المعدة</button>
-                        <button class="organ-btn" onclick="showOrganDetails('brain')">الدماغ</button>
-                        <button class="organ-btn" onclick="showOrganDetails('spleen')">الطحال</button>
-                        <button class="organ-btn" onclick="showOrganDetails('lungs')">الرئتان</button>
-                        <button class="organ-btn" onclick="showOrganDetails('kidneys')">الكليتان</button>
-                        <button class="organ-btn" onclick="showOrganDetails('uterus')">الرحم والتناسلية</button>
-                        <button class="organ-btn" onclick="showOrganDetails('nerves')">الأعصاب</button>
-                        <button class="organ-btn" onclick="showOrganDetails('tissues')">الأنسجة واللحم</button>
-                    </div>
-                    <div class="organ-details glass-panel" id="organ-details">
-                        <h3>اختر عضواً لعرض تفاصيله</h3>
-                        <p>ستظهر هنا طبيعة العضو والأغذية التي تناسبه.</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Section 8: التدبير والخطة العلاجية الشاملة -->
-            <section id="section-plan" class="interactive-section">
-                <h2>مصمم البرامج الغذائية والخطط العلاجية الشاملة</h2>
-                <div class="plan-generator-container">
+                    <!-- PayPal -->
                     <div
-                        style="background: rgba(212, 175, 55, 0.1); border: 1px solid var(--secondary-color); padding: 15px; border-radius: 10px; margin-bottom: 25px; text-align: center;">
-                        <span style="color: var(--secondary-color); font-weight: bold;"><i
-                                class="fas fa-info-circle"></i> تنويه:</span>
-                        <span style="color: #e2e8f0;">أنت الآن تستخدم الفترة التجريبية (خطة واحدة يومياً لمدة 3 أيام).
-                            لرفع القيود <a href="#"
-                                onclick="document.querySelector('[data-target=&quot;section-pricing&quot;]').click(); event.preventDefault();"
-                                style="color: var(--secondary-color); text-decoration: underline;">اطلع على
-                                الباقات</a>.</span>
-                    </div>
-
-                    <div class="diagnostic-wizard" id="diagnostic-wizard">
-                        <!-- Progress Bar -->
-                        <div class="diag-progress">
-                            <div class="diag-step active" data-step="1">1. القصة</div>
-                            <div class="diag-step" data-step="2">2. العضو</div>
-                            <div class="diag-step" data-step="3">3. المصدر</div>
-                            <div class="diag-step" data-step="4">4. الخلط</div>
-                            <div class="diag-step" data-step="5">5. الوظائف</div>
-                        </div>
-
-                        <!-- Step 1: القصة المرضية -->
-                        <div class="diag-page active" id="step-1">
-                            <h3><i class="fas fa-history"></i> المرحلة 1: الاستقبال المنظم (القصة المرضية)</h3>
-                            <div class="form-group">
-                                <label>ما الذي تغيّر أولاً؟ ومتى بدأ ذلك بالتحديد؟</label>
-                                <textarea id="diag-story" rows="3"
-                                    placeholder="مثلاً: بدأ ألم المعدة قبل شهر، ثم ظهر طفح جلدي الأسبوع الماضي..."></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label>هل توجد عوامل تزيد من الألم أو تهدئه؟</label>
-                                <input type="text" id="diag-factors"
-                                    placeholder="مثلاً: يهدأ بالكمادات الدافئة، ويزداد عند المشي...">
-                            </div>
-                            <div class="wizard-nav">
-                                <button class="btn-next" onclick="nextDiagStep(2)">التالي: استنطاق العضو <i
-                                        class="fas fa-arrow-left"></i></button>
-                            </div>
-                        </div>
-
-                        <!-- Step 2: استنطاق العضو الظاهر -->
-                        <div class="diag-page" id="step-2">
-                            <h3><i class="fas fa-search-plus"></i> المرحلة 2: استنطاق العضو الشاكي</h3>
-                            <div class="form-group">
-                                <label>وصف طبيعة الألم بدقة:</label>
-                                <select id="diag-pain-type">
-                                    <option value="nerve">وخز كهربائي ممتد (عصبي)</option>
-                                    <option value="muscle">نقطة محددة داخل العضلة (عضلي)</option>
-                                    <option value="joint">ألم عميق يزيد مع الحركة (مفصلي)</option>
-                                    <option value="vascular">نبض مستمر مع حرارة (وعائي/دموي)</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>تأثير الراحة والحركة:</label>
-                                <select id="diag-movement">
-                                    <option value="inflammatory">يزداد مع الراحة وفي الصباح (التهابي)</option>
-                                    <option value="compressive">يزداد مع وضعيات معينة كالانحناء (انضغاطي)</option>
-                                    <option value="fixed">ثابت لا يتأثر بالحركة</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>هل الألم ثابت أم متنقل؟</label>
-                                <select id="diag-mobility">
-                                    <option value="fixed">ثابت في مكانه</option>
-                                    <option value="moving">ينتقل من موضع لآخر (غالباً العلة في عضو رئيس)</option>
-                                </select>
-                            </div>
-                            <div class="wizard-nav">
-                                <button class="btn-prev" onclick="nextDiagStep(1)"><i class="fas fa-arrow-right"></i>
-                                    السابق</button>
-                                <button class="btn-next" onclick="nextDiagStep(3)">التالي: البحث عن المصدر <i
-                                        class="fas fa-arrow-left"></i></button>
-                            </div>
-                        </div>
-
-                        <!-- Step 3: البحث عن العضو السيد -->
-                        <div class="diag-page" id="step-3">
-                            <h3><i class="fas fa-crown"></i> المرحلة 3: البحث عن "العضو السَّيِّد" (المصدر)</h3>
-                            <div class="diag-check-group">
-                                <h5><i class="fas fa-capsules"></i> هل ترتبط الشكوى بالكبد؟ (مصنع الأخلاط)</h5>
-                                <label><input type="checkbox" id="liver-1"> ألم يزداد بعد الأكل مباشرة وثقل</label>
-                                <label><input type="checkbox" id="liver-2"> مرارة في الفم أو لون بول غامق</label>
-                                <label><input type="checkbox" id="liver-3"> انتفاخ أو تطبل في البطن</label>
-                            </div>
-                            <div class="diag-check-group">
-                                <h5><i class="fas fa-brain"></i> هل ترتبط الشكوى بالدماغ؟ (الوزير الأول)</h5>
-                                <label><input type="checkbox" id="brain-1"> دوار، نسيان، أو اضطراب في النوم</label>
-                                <label><input type="checkbox" id="brain-2"> تنميل في الأطراف أو اضطراب بصر</label>
-                            </div>
-                            <div class="diag-check-group">
-                                <h5><i class="fas fa-heart"></i> هل ترتبط الشكوى بالقلب؟</h5>
-                                <label><input type="checkbox" id="heart-1"> ضيق تنفس أو خفقان وكرب</label>
-                            </div>
-                            <div class="wizard-nav">
-                                <button class="btn-prev" onclick="nextDiagStep(2)"><i class="fas fa-arrow-right"></i>
-                                    السابق</button>
-                                <button class="btn-next" onclick="nextDiagStep(4)">التالي: تحديد الخلط <i
-                                        class="fas fa-arrow-left"></i></button>
-                            </div>
-                        </div>
-
-                        <!-- Step 4: تحديد الخلط المهيمن -->
-                        <div class="diag-page" id="step-4">
-                            <h3><i class="fas fa-vial"></i> المرحلة 4: تحديد الخلط المهيمن</h3>
-                            <div class="form-group">
-                                <label>ما هي طبيعة أحلامك الغالبة؟</label>
-                                <select id="diag-dreams">
-                                    <option value="blood">أشياء حمراء، طيران، أصوات عالية (دموي)</option>
-                                    <option value="yellow">نيران، حرارة، صواعق، أشياء صفراء (صفراوي)</option>
-                                    <option value="phlegm">مياه، ثلوج، أمطار، برودة (بلغمي)</option>
-                                    <option value="black">مقابر، أماكن صعبة، خوف، أشياء سوداء (سوداوي)</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>العلامة الجسدية الأكثر وضوحاً:</label>
-                                <select id="diag-sign">
-                                    <option value="heat">حرارة مفرطة واحمرار وعطش (حار)</option>
-                                    <option value="heaviness">ثقل شديد وكسل وكثرة نوم (رطب/بارد)</option>
-                                    <option value="dryness">جفاف قحولة الجلد وتيبس مفاصل (يابس)</option>
-                                    <option value="obsession">وساوس فكرية واكتئاب وأرق (سوداوي)</option>
-                                </select>
-                            </div>
-                            <div class="wizard-nav">
-                                <button class="btn-prev" onclick="nextDiagStep(3)"><i class="fas fa-arrow-right"></i>
-                                    السابق</button>
-                                <button class="btn-next" onclick="nextDiagStep(5)">التالي: علامات حيوية <i
-                                        class="fas fa-arrow-left"></i></button>
-                            </div>
-                        </div>
-
-                        <!-- Step 5: الاستفراغات والبيانات الحتمية -->
-                        <div class="diag-page" id="step-5">
-                            <h3><i class="fas fa-stethoscope"></i> المرحلة 5: الاستفراغات والبيانات الختامية</h3>
-                            <div class="diag-grid-compact">
-                                <div class="form-group">
-                                    <label>فصيلة الدم:</label>
-                                    <select id="user-blood">
-                                        <option value="O">O</option>
-                                        <option value="A">A</option>
-                                        <option value="B">B</option>
-                                        <option value="AB">AB</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>المزاج الأساسي:</label>
-                                    <select id="user-mizaj">
-                                        <option value="hot-dry">صفراوي</option>
-                                        <option value="hot-moist">دموي</option>
-                                        <option value="cold-moist">بلغمي</option>
-                                        <option value="cold-dry">سوداوي</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>طبيعة البراز والبول:</label>
-                                    <input type="text" id="diag-excretion"
-                                        placeholder="مثلاً: إمساك، بول أحمر، أصفر فاقع...">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>قائمة طعامك لليوموالمكونات المتوفرة؟</label>
-                                <textarea id="user-ingredients" rows="2" placeholder="أرز، لحم، خضار..."></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label>أمراض مزمنة أو أدوية؟</label>
-                                <textarea id="user-diseases" rows="2" placeholder="ضغط، سكري، مسيلات..."></textarea>
-                            </div>
-                            <div class="wizard-nav">
-                                <button class="btn-prev" onclick="nextDiagStep(4)"><i class="fas fa-arrow-right"></i>
-                                    السابق</button>
-                                <button class="btn-generate" onclick="generatePlan()"><i class="fas fa-magic"></i> تحليل
-                                    وتوليد الخطة الشمولية</button>
-                            </div>
+                        style="background: rgba(11, 43, 26, 0.6); padding: 20px; border-radius: 12px; border: 1px solid rgba(212, 175, 55, 0.3);">
+                        <h3
+                            style="color: #cbd5e1; font-size: 1.3rem; margin-bottom: 15px; display:flex; align-items:center; gap:10px;">
+                            <i class="fab fa-paypal" style="color: #00457C; font-size:1.8rem;"></i> الدفع عبر
+                            بايبال (PayPal)
+                        </h3>
+                        <p style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 10px;">للدفع بالعملة
+                            الأجنبية (9$):</p>
+                        <div
+                            style="background: var(--bg-color); padding: 12px; border-radius: 8px; border: 1px dashed var(--secondary-color); text-align: center;">
+                            <strong
+                                style="color: var(--secondary-color); font-size: 1.2rem; user-select: all;">victoryclub918@gmail.com</strong>
                         </div>
                     </div>
 
+                    <!-- CCP -->
+                    <div
+                        style="background: rgba(11, 43, 26, 0.6); padding: 20px; border-radius: 12px; border: 1px solid rgba(212, 175, 55, 0.3);">
+                        <h3
+                            style="color: #cbd5e1; font-size: 1.3rem; margin-bottom: 15px; display:flex; align-items:center; gap:10px;">
+                            <i class="fas fa-university" style="color:#d4af37; font-size:1.5rem;"></i> الحساب
+                            البريدي الجاري (CCP)
+                        </h3>
+                        <p style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 10px;">للدفع بالدينار
+                            الجزائري (1000 د.ج):</p>
+                        <ul style="list-style: none; padding: 0; color: #cbd5e1; font-size: 1.1rem; line-height: 1.8;">
+                            <li><strong>الاسم:</strong> Leila Sekkak</li>
+                            <li><strong>العنوان:</strong> Remchi. W-Tlemcen, Alger</li>
+                            <li><strong>رقم الحساب:</strong> <span
+                                    style="color: var(--secondary-color); font-weight: bold; user-select:all;">5396254</span>
+                            </li>
+                            <li><strong>المفتاح (Clé):</strong> <span
+                                    style="color: var(--secondary-color); font-weight: bold; user-select:all;">44</span>
+                            </li>
+                        </ul>
+                    </div>
 
-                    <div id="plan-result" class="plan-result hidden">
-                        <!-- Plan generated by JS will appear here -->
+                    <!-- BaridiMob -->
+                    <div
+                        style="background: rgba(11, 43, 26, 0.6); padding: 20px; border-radius: 12px; border: 1px solid rgba(212, 175, 55, 0.3);">
+                        <h3
+                            style="color: #cbd5e1; font-size: 1.3rem; margin-bottom: 15px; display:flex; align-items:center; gap:10px;">
+                            <i class="fas fa-mobile-alt" style="color:#d4af37; font-size:1.5rem;"></i> بريدي موب
+                            (BaridiMob)
+                        </h3>
+                        <p style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 10px;">عبر رقم الـ RIP
+                            (الريب):</p>
+                        <div
+                            style="background: var(--bg-color); padding: 12px; border-radius: 8px; border: 1px dashed var(--secondary-color); text-align: center; word-break: break-all;">
+                            <strong
+                                style="color: var(--secondary-color); font-size: 1.2rem; user-select: all; letter-spacing: 1px;">00799999000539625465</strong>
+                        </div>
                     </div>
                 </div>
-            </section>
 
-        </main>
+                <div
+                    style="margin-top: 30px; background: rgba(212, 175, 55, 0.1); padding: 15px; border-radius: 8px; border: 1px solid var(--secondary-color);">
+                    <p style="color: #cbd5e1; font-size: 1.1rem; margin-bottom: 15px;">بعد إتمام عملية الدفع،
+                        يُرجى إرسال وصل
+                        الاستلام مع ذكر <strong>(بخصوص الاشتراك الشهري لتطبيق التشخيص الذاتي)</strong> ليتم
+                        تفعيل حسابك مباشرة عبر القنوات التالية:</p>
 
-        <footer class="main-footer">
-            <p>جميع الحقوق محفوظة لدى المطور د. ليلى سكاك © 2024</p>
-        </footer>
+                    <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                        <a href="#" onclick="openSupportLink('whatsapp', event)"
+                            style="background: #25D366; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; font-weight: bold; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 8px;">
+                            <i class="fab fa-whatsapp" style="font-size: 1.3rem;"></i> تواصل واتساب
+                        </a>
+                        <a href="#" onclick="openSupportLink('telegram', event)"
+                            style="background: #0088cc; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; font-weight: bold; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 8px;">
+                            <i class="fab fa-telegram-plane" style="font-size: 1.3rem;"></i> تواصل تليجرام
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Section 1: الأشكال المتحركة (محدث: الأخلاط) -->
+    <section id="section-1" class="interactive-section active">
+        <!-- Welcome Announcement Card -->
+        <div class="welcome-card">
+            <div class="welcome-card-header">
+                <i class="fas fa-bullhorn"></i>
+                <span>تنبيه هام ومرحب بكم جميعاً</span>
+            </div>
+            <div class="welcome-card-body">
+                <p>لفهم كيفية استخدام البرنامج وأقسامه الاحترافية بشكل صحيح، وكيفية إجراء التشخيص الدقيق وتصميم
+                    خطة
+                    غذائية علاجية سليمة (حمية مدروسة) دون تكاليف إضافية ودون أضرار مستقبلية؛ ندعوكم للانضمام إلى
+                    مجموعتنا التعليمية على التلغرام.</p>
+                <p>ستجدون هناك شروحات بالفيديو لكيفية الاستخدام، بالإضافة إلى دعم فني متواصل يستجيب لاستفساراتكم
+                    بسرعة.</p>
+
+                <div class="welcome-cta-container">
+                    <a href="https://t.me/plannutri" target="_blank" class="welcome-telegram-btn">
+                        <i class="fab fa-telegram-plane"></i> انضم للمجموعة التعليمية وشروحات الفيديو
+                    </a>
+                </div>
+
+                <p class="welcome-footer-note">
+                    <i class="fas fa-share-nodes"></i> ياحبذا مساهمتكم بنشر الرابط أو إدخال المهتمين للمجموعة
+                    ليحصل الجميع على الدعم والشروحات.
+                </p>
+            </div>
+        </div>
+
+        <div class="intro-header">
+
+            <h2><i class="fas fa-project-diagram"></i> الأخلاط الأربعة عند ابن سينا</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto; color: #555; line-height: 1.6;">
+                مرحباً بك! هذه الأخلاط الأربعة هي العصارات الأساسية التي يتكون منها بدن الإنسان ومفتاح فهم الصحة
+                والمرض في الطب الأصيل.<br>
+                <strong>اضغط على أي خلط لتعرف طبيعته، مكان تولده، وأين يستقر!</strong>
+            </p>
+        </div>
+
+        <div class="humors-interactive-container">
+            <div class="humor-circle blood" onclick="showHumorInfo('blood')">
+                <div class="humor-icon"><i class="fas fa-tint" style="color:#e74c3c;"></i></div>
+                <span>الدم</span>
+            </div>
+            <div class="humor-circle yellow-bile" onclick="showHumorInfo('yellow')">
+                <div class="humor-icon"><i class="fas fa-fire" style="color:#f1c40f;"></i></div>
+                <span>الصفراء</span>
+            </div>
+            <div class="humor-circle black-bile" onclick="showHumorInfo('black')">
+                <div class="humor-icon"><i class="fas fa-mountain" style="color:#2c3e50;"></i></div>
+                <span>السوداء</span>
+            </div>
+            <div class="humor-circle phlegm" onclick="showHumorInfo('phlegm')">
+                <div class="humor-icon"><i class="fas fa-snowflake" style="color:#3498db;"></i></div>
+                <span>البلغم</span>
+            </div>
+        </div>
+
+        <div id="humor-info-box" class="humor-info-box hidden">
+            <!-- سيتم حقن البيانات تفاعلياً هنا -->
+        </div>
+    </section>
+
+    <!-- Section Diagnosis: التشخيص والمفاهيم التراثية -->
+    <section id="section-diag" class="interactive-section">
+        <h2>التشخيص الذاتي والمفاهيم الأصيلة</h2>
+        <div class="diagnosis-container">
+            <div class="diagnosis-tabs">
+                <button class="diag-tab active" onclick="showDiagTab('tab-tabe3')"><i class="fas fa-dna"></i>
+                    الطبع الجبلي</button>
+                <button class="diag-tab" onclick="showDiagTab('tab-mizaj')"><i class="fas fa-thermometer-half"></i>
+                    المزاج</button>
+                <button class="diag-tab" onclick="showDiagTab('tab-khilt')"><i class="fas fa-vial"></i>
+                    الأخلاط</button>
+                <button class="diag-tab" onclick="showDiagTab('tab-manhaj')"><i class="fas fa-balance-scale"></i>
+                    المنهجية</button>
+            </div>
+
+            <div class="diag-content active" id="tab-tabe3">
+                <h3>الطبع الجبلي (الخلقة الأصلية)</h3>
+                <p class="diag-note"><i class="fas fa-exclamation-circle"></i> <strong>ملاحظة هامة:</strong>
+                    الطبع الجبلي (الخلقة الأصلية) لا يتغير أبداً، فهو ما جُبلت عليه في الأساس. لكن "المزاج
+                    والأخلاط" تتغير بفعل البيئة، الغذاء، والسن. ولذا يُفضّل <strong>إعادة تشخيص مزاجك وأخلاطك كل
+                        3 أشهر</strong>.</p>
+                <h4>كيف تُشخّص طبعك وحالتك؟ (شرح الدلالات العشر)</h4>
+                <div class="signs-container">
+                    <div class="sign-card hot-sign">
+                        <h5><i class="fas fa-fire"></i> علامات الحرارة</h5>
+                        <ul>
+                            <li><strong>الملمس:</strong> حار.</li>
+                            <li><strong>اللحم والشحم:</strong> كثرة اللحم العضلي، وقلة الشحم (الدهن).</li>
+                            <li><strong>الشعر:</strong> سرعة نباته، كثافته، سواده، وتجعده.</li>
+                            <li><strong>لون البدن:</strong> يميل للحمرة أو السمرة الشديدة.</li>
+                            <li><strong>خلقة الأعضاء:</strong> سعة الصدر، وعظم النبض وبروزه.</li>
+                            <li><strong>النوم واليقظة:</strong> الميل لقلة النوم.</li>
+                            <li><strong>الأفعال:</strong> سرعة الاستجابة، غضب سريع، وقوة نشاط.</li>
+                            <li><strong>أحلام النائم:</strong> رؤية النيران، والشمس، والحمامات الساخنة.</li>
+                        </ul>
+                    </div>
+                    <div class="sign-card cold-sign">
+                        <h5><i class="fas fa-snowflake"></i> علامات البرودة</h5>
+                        <ul>
+                            <li><strong>الملمس:</strong> بارد.</li>
+                            <li><strong>اللحم والشحم:</strong> كثرة الشحم (الدهنية)، وقلة اللحم.</li>
+                            <li><strong>الشعر:</strong> بطء نموه، قلته، سبوطته (أملس)، ولونه الفاتح الواهن.</li>
+                            <li><strong>لون البدن:</strong> أبيض يميل للكمودة أو الشحوب.</li>
+                            <li><strong>خلقة الأعضاء:</strong> ضيق الصدر، وصغر النبض وضعفه.</li>
+                            <li><strong>النوم واليقظة:</strong> الميل لكثرة النوم والنعاس.</li>
+                            <li><strong>الأفعال:</strong> بطء الاستجابة، وضعف الهضم، برود الانفعالات.</li>
+                            <li><strong>أحلام النائم:</strong> رؤية المياه، والثلوج، والأماكن الباردة.</li>
+                        </ul>
+                    </div>
+                    <div class="sign-card moist-sign">
+                        <h5><i class="fas fa-tint"></i> علامات الرطوبة</h5>
+                        <ul>
+                            <li><strong>الملمس:</strong> لين ورطب ومطاطي.</li>
+                            <li><strong>اللحم والشحم:</strong> كثرة الشحم والترهل.</li>
+                            <li><strong>الشعر:</strong> ناعم ومسبل جداً.</li>
+                            <li><strong>لون البدن:</strong> نضر ورطب.</li>
+                            <li><strong>النوم واليقظة:</strong> كثرة النوم بشكل كبير وكسل.</li>
+                            <li><strong>الفضلات:</strong> كثرة الفضلات (العرق، البول) وسيلان اللعاب.</li>
+                            <li><strong>الانفعالات:</strong> ينسى بسرعة ويتقبل الأمور بسهولة.</li>
+                        </ul>
+                    </div>
+                    <div class="sign-card dry-sign">
+                        <h5><i class="fas fa-leaf"></i> علامات اليبوسة</h5>
+                        <ul>
+                            <li><strong>الملمس:</strong> صلب وجاف.</li>
+                            <li><strong>اللحم والشحم:</strong> قلة اللحم والشحم معاً (هزال).</li>
+                            <li><strong>الشعر:</strong> مجعد خشن، وبطء في النمو.</li>
+                            <li><strong>لون البدن:</strong> شاحب أو أسمر جاف متقشر.</li>
+                            <li><strong>النوم واليقظة:</strong> قلة النوم جداً (أرق مستمر).</li>
+                            <li><strong>الفضلات:</strong> قلة الفضلات وجفافها (إمساك).</li>
+                            <li><strong>الانفعالات:</strong> ثبات على الرأي وتذكر دائم (صعوبة النسيان).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="diag-content" id="tab-mizaj">
+                <h3>المزاج والأخلاط (التشخيص المتغير)</h3>
+                <p>تذكر القاعدة التراثية: <strong>"الطبع لا يتغير، لكن المزاج والخلط يتغيران"</strong>.</p>
+
+                <div class="mizaj-interactive">
+                    <div class="mizaj-box">
+                        <h4><i class="fas fa-thermometer-three-quarters"></i> متى نعرف أن عندنا "سوء مزاج"؟</h4>
+                        <p>يحدث سوء المزاج عندما تلاحظ تغيراً مفاجئاً أو خروجاً عن حالتك الطبيعية الصِّحية
+                            المعتادة بسبب عامل خارجي (كالشمس أو الغذاء) أو داخلي.</p>
+                        <ul>
+                            <li><strong>سوء مزاج ساذج (بسيط):</strong> تشعر بحرارة أو برودة، لكن بدون مادة زائدة
+                                ممرضة (مثل حرارة الوجه بعد المشي في الشمس الحارقة). علاجها سهل بمجرد تغيير الجو.
+                            </li>
+                            <li><strong>سوء مزاج مادي:</strong> تشعر بتغير الكيفية (كالحرارة) مع ثقل أو غثيان أو
+                                تغير في لون الفضلات. (هنا تدخلت "الأخلاط" والمواد الفاسدة).</li>
+                        </ul>
+                    </div>
+
+                    <div class="mizaj-box bad-mizaj">
+                        <h4><i class="fas fa-vial"></i> متى يكون هناك "خلط مهيمن"؟</h4>
+                        <p>الخلط المهيمن هو عندما تظهر علامات قوية لخلط واحد يطغى على باقي الأخلاط بقوة وبشكل
+                            مرضي:</p>
+                        <ul>
+                            <li><strong>هيمنة الدم (الدموي):</strong> حمرة شديدة بالوجه والعينين، ثقل البدن مع
+                                نشاط، حلاوة الريق، كثرة الرعاف، وكثرة الحبوب والدمامل.</li>
+                            <li><strong>هيمنة الصفراء:</strong> اصفرار العين والوجه، مرارة الريق في الصباح، ضعف
+                                الشهية الدائم، سرعة الغضب الشديد، قيء أصفر.</li>
+                            <li><strong>هيمنة البلغم:</strong> بياض اللون بشكل غير طبيعي، كثرة النوم جداً، بلادة
+                                الحس وضعف الذاكرة، كثرة اللعاب والبلغم البارد المنفصل.</li>
+                            <li><strong>هيمنة السوداء:</strong> كمد اللون (يصبح داكناً)، الأرق المستمر، سيطرة
+                                الأفكار السوداوية، القلق، جفاف الجلد ووسواس.</li>
+                        </ul>
+                    </div>
+
+                    <div class="mizaj-box complex-mizaj">
+                        <h4><i class="fas fa-puzzle-piece"></i> الخلط المركب المهيمن (اتحاد الأخلاط)</h4>
+                        <p>في كثير من الأحيان لا يمرض البدن بخلط واحد، بل تظهر لديك علامات تدل على اتحاد خلطين
+                            أو ثلاثة معاً ضد البدن، وهنا يكون التشخيص "مُركباً":</p>
+                        <ul>
+                            <li><strong>مركب من اثنين (مثال):</strong> كأن يجتمع عندك (اصفرار العين ومرارة الفم
+                                بسبب الصفراء) مع (ثقل البدن وكثرة النوم بسبب البلغم). هذا يُسمى سوء مزاج
+                                "صفراوي-بلغمي مادي". ويكون العلاج بكسر حدة كليهما معاً.</li>
+                            <li><strong>مركب من ثلاثة أو أكثر:</strong> تظهر علامات الحرارة مع كثرة اللعاب وأرق
+                                بالإضافة لتغير لون البول. في هذه الحالات الشائكة يتطلب العلاج التدرج وتلطيف كل
+                                خلط على حدة بحكمة وابتعاد عن المتضادات الحادة.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="diag-content" id="tab-khilt">
+                <h3>الخلط (Al-Khilt)</h3>
+                <p>هو المادة السيالة التي يستحيل إليها الغذاء في الكبد.</p>
+                <div class="khilt-grid">
+                    <div class="khilt-card red-khilt">
+                        <i class="fas fa-tint"></i>
+                        <h4>الدم (حار رطب)</h4>
+                        <p>يغذي البدن ويولد الروح.</p>
+                        <div class="modern-eq"><strong>المقابل الطبي الحديث:</strong><br>الدم بمكوناته (الكريات
+                            الحمراء، المغذيات، والأكسجين المحمول في الدورة الدموية).</div>
+                    </div>
+                    <div class="khilt-card yellow-khilt">
+                        <i class="fas fa-fire"></i>
+                        <h4>الصفراء (حارة يابسة)</h4>
+                        <p>تلطف الدم وتفتح السدد، وتشبه الكبد والمعدة بقوتها الهاضمة.</p>
+                        <div class="modern-eq"><strong>المقابل الطبي الحديث:</strong><br>العصارة الصفراوية
+                            (Bile) المفرزة من الكبد والمرارة، والإنزيمات الهاضمة وحمض المعدة.</div>
+                    </div>
+                    <div class="khilt-card blue-khilt">
+                        <i class="fas fa-water"></i>
+                        <h4>البلغم (بارد رطب)</h4>
+                        <p>يشبه طبع الدماغ والرئتين والكلى.</p>
+                        <div class="modern-eq"><strong>المقابل الطبي الحديث:</strong><br>السوائل الليمفاوية،
+                            بلازما الدم، المخاط، والجهاز المناعي المائي الواقي الداعم للترطيب.</div>
+                    </div>
+                    <div class="khilt-card black-khilt">
+                        <i class="fas fa-hill-rockslide"></i>
+                        <h4>السوداء (باردة يابسة)</h4>
+                        <p>تغذي العظام والطحال، تمنح المثانة القوة على التمدد.</p>
+                        <div class="modern-eq"><strong>المقابل الطبي الحديث:</strong><br>ترسبات الدم والخلايا
+                            الهرمة، عوامل التخثر، والمعادن كالحديد والكالسيوم، وتصفية الطحال السليمة.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="diag-content" id="tab-manhaj">
+                <h3>التحليل والموازنة (منهجية العلاج)</h3>
+                <div class="manhaj-list">
+                    <div class="manhaj-item">
+                        <div class="manhaj-icon"><i class="fas fa-search"></i></div>
+                        <div><strong>الاستدلال:</strong> معرفة المرض من أعراضه. مثال: إذا غلبت اليبوسة على
+                            الأعصاب، ظهر "التشنج".</div>
+                    </div>
+                    <div class="manhaj-item">
+                        <div class="manhaj-icon"><i class="fas fa-balance-scale-right"></i></div>
+                        <div><strong>الموازنة (الضد):</strong> علاج سوء المزاج الحار يكون بالتبريد (كماء الشعير
+                            والورد)، والبارد بالتسخين (كالزنجبيل).</div>
+                    </div>
+                    <div class="manhaj-item">
+                        <div class="manhaj-icon"><i class="fas fa-puzzle-piece"></i></div>
+                        <div><strong>الملائمة:</strong> اختيار الدواء ليوافق العضو؛ فلا يُعطى دواء شديد اليبوسة
+                            لعضو يكره اليبوسة كالدماغ.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- القسم الجديد: اختبار المفاهيم העמוقة -->
+    <section id="section-concepts" class="interactive-section">
+        <h2>اختبار المفاهيم العميقة (الفرق بين المزاج والخلط وغيرها)</h2>
+        <div class="mcq-container">
+            <p id="concept-question" class="question-text">سؤال المفاهيم...</p>
+            <div id="concept-options" class="options-grid"></div>
+            <div id="concept-feedback" class="feedback"></div>
+        </div>
+    </section>
+
+    <!-- القسم الجديد: تدبير وإصلاح 100 وجبة يومية -->
+    <section id="section-meals" class="interactive-section">
+        <h2>تدبير الوجبات: إصلاح 100 وجبة من مطبخك البسيط</h2>
+        <div id="meals-trial-warning"
+            style="display:none; background: rgba(212, 175, 55, 0.1); border: 1px solid var(--secondary-color); padding: 15px; border-radius: 10px; margin-bottom: 25px; text-align: center;">
+            <span style="color: var(--secondary-color); font-weight: bold;"><i class="fas fa-info-circle"></i>
+                تنويه التجربة:</span>
+            <span style="color: #e2e8f0;">هذا القسم متاح فقط لمدة 3 أيام للمستخدمين الجدد. <a href="#"
+                    onclick="document.querySelector('[data-target=\'section-pricing\']').click(); event.preventDefault();"
+                    style="color: var(--secondary-color); text-decoration: underline;">اشترك الآن</a> لفتح كامل
+                المزايا.</span>
+        </div>
+
+        <div class="tricky-container">
+            <div class="bot-message" style="background:#fff; border:2px solid var(--secondary-color); color:#333;">
+                <i class="fas fa-utensils" style="color:var(--secondary-color);"></i>
+                <p id="meal-scenario-text" style="font-size:1.2rem; font-weight:bold;"></p>
+            </div>
+            <div class="bot-message"
+                style="background:var(--secondary-color); color:#fff; border-radius:0 15px 15px 15px; margin-top:15px; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+                <i class="fas fa-lightbulb" style="color:#fff;"></i>
+                <p id="meal-islaah-text" style="font-size:1.1rem; padding:5px;"></p>
+            </div>
+            <button class="btn btn-generate" onclick="loadRandomMeal()" style="margin-top:25px; width:100%;"><i
+                    class="fas fa-random"></i> عرض وجبة أخرى عشوائية</button>
+        </div>
+    </section>
+
+    <!-- Section 2: موسوعة الأعضاء والأعشاب المصورة -->
+    <section id="section-gallery" class="interactive-section">
+        <h2>موسوعة الأعضاء والأعشاب الطبيعية المصورة</h2>
+        <p style="text-align: center; margin-bottom: 20px; font-size: 1.1rem; color: #555;">عوضاً عن البطاقات
+            الفردية، نقدم لك هنا خرائط مفصلة وشاملة (انقر على أي صورة لتكبيرها وقراءة تفاصيل كل عضو والأعشاب
+            المناسبة له).</p>
+
+        <div class="infographics-gallery">
+            <div class="gallery-item" onclick="openLightbox('images/1.jpg')">
+                <img src="images/1.jpg" alt="خريطة المفاصل"
+                    onerror="this.src='https://via.placeholder.com/300x400?text=يرجى+إضافة+صورة+1.jpg+لمجلد+images'">
+            </div>
+            <div class="gallery-item" onclick="openLightbox('images/2.jpg')">
+                <img src="images/2.jpg" alt="خريطة الرحم"
+                    onerror="this.src='https://via.placeholder.com/300x400?text=يرجى+إضافة+صورة+2.jpg+لمجلد+images'">
+            </div>
+            <div class="gallery-item" onclick="openLightbox('images/3.jpg')">
+                <img src="images/3.jpg" alt="خريطة الرئتان"
+                    onerror="this.src='https://via.placeholder.com/300x400?text=يرجى+إضافة+صورة+3.jpg+لمجلد+images'">
+            </div>
+            <div class="gallery-item" onclick="openLightbox('images/4.jpg')">
+                <img src="images/4.jpg" alt="خريطة الجهاز العصبي"
+                    onerror="this.src='https://via.placeholder.com/300x400?text=يرجى+إضافة+صورة+4.jpg+لمجلد+images'">
+            </div>
+            <div class="gallery-item" onclick="openLightbox('images/5.jpg')">
+                <img src="images/5.jpg" alt="خريطة الكلى والمثانة"
+                    onerror="this.src='https://via.placeholder.com/300x400?text=يرجى+إضافة+صورة+5.jpg+لمجلد+images'">
+            </div>
+            <!-- صفحات الألبوم الإضافية -->
+            <div class="gallery-item" onclick="openLightbox('images/page-0001.jpg')">
+                <img src="images/page-0001.jpg" alt="ألبوم الأعشاب - صفحة 1" loading="lazy">
+            </div>
+            <div class="gallery-item" onclick="openLightbox('images/page-0002.jpg')">
+                <img src="images/page-0002.jpg" alt="ألبوم الأعشاب - صفحة 2" loading="lazy">
+            </div>
+            <div class="gallery-item" onclick="openLightbox('images/page-0003.jpg')">
+                <img src="images/page-0003.jpg" alt="ألبوم الأعشاب - صفحة 3" loading="lazy">
+            </div>
+            <div class="gallery-item" onclick="openLightbox('images/page-0004.jpg')">
+                <img src="images/page-0004.jpg" alt="ألبوم الأعشاب - صفحة 4" loading="lazy">
+            </div>
+            <div class="gallery-item" onclick="openLightbox('images/page-0005.jpg')">
+                <img src="images/page-0005.jpg" alt="ألبوم الأعشاب - صفحة 5" loading="lazy">
+            </div>
+            <div class="gallery-item" onclick="openLightbox('images/page-0006.jpg')">
+                <img src="images/page-0006.jpg" alt="ألبوم الأعشاب - صفحة 6" loading="lazy">
+            </div>
+            <div class="gallery-item" onclick="openLightbox('images/page-0007.jpg')">
+                <img src="images/page-0007.jpg" alt="ألبوم الأعشاب - صفحة 7" loading="lazy">
+            </div>
+            <div class="gallery-item" onclick="openLightbox('images/page-0008.jpg')">
+                <img src="images/page-0008.jpg" alt="ألبوم الأعشاب - صفحة 8" loading="lazy">
+            </div>
+            <div class="gallery-item" onclick="openLightbox('images/page-0009.jpg')">
+                <img src="images/page-0009.jpg" alt="ألبوم الأعشاب - صفحة 9" loading="lazy">
+            </div>
+            <div class="gallery-item" onclick="openLightbox('images/page-0010.jpg')">
+                <img src="images/page-0010.jpg" alt="ألبوم الأعشاب - صفحة 10" loading="lazy">
+            </div>
+            <div class="gallery-item" onclick="openLightbox('images/page-0011.jpg')">
+                <img src="images/page-0011.jpg" alt="ألبوم الأعشاب - صفحة 11" loading="lazy">
+            </div>
+            <div class="gallery-item" onclick="openLightbox('images/page-0012.jpg')">
+                <img src="images/page-0012.jpg" alt="ألبوم الأعشاب - صفحة 12" loading="lazy">
+            </div>
+            <div class="gallery-item" onclick="openLightbox('images/page-0013.jpg')">
+                <img src="images/page-0013.jpg" alt="ألبوم الأعشاب - صفحة 13" loading="lazy">
+            </div>
+        </div>
+
+        <!-- Lightbox Modal -->
+        <div id="image-lightbox" class="lightbox-modal" onclick="closeLightbox(event)">
+            <span class="lightbox-close" onclick="closeLightbox(event)">&times;</span>
+            <img class="lightbox-content" id="lightbox-img">
+        </div>
+    </section>
+
+    <!-- Section 4: صح وخطأ -->
+    <section id="section-4" class="interactive-section">
+        <h2>تحدي صح أم خطأ</h2>
+        <div class="quiz-container" id="tf-quiz">
+            <div class="question-box" id="tf-question">يجري التحميل...</div>
+            <div class="buttons-row">
+                <button class="btn btn-true" onclick="checkTF(true)"><i class="fas fa-check"></i> صح</button>
+                <button class="btn btn-false" onclick="checkTF(false)"><i class="fas fa-times"></i> خطأ</button>
+            </div>
+            <div id="tf-feedback" class="feedback"></div>
+        </div>
+    </section>
+
+    <!-- Section 5: اختيار من متعدد -->
+    <section id="section-5" class="interactive-section">
+        <h2>اختبر معلوماتك</h2>
+        <div class="quiz-container" id="mcq-quiz">
+            <div class="question-box" id="mcq-question">يجري التحميل...</div>
+            <div class="options-grid" id="mcq-options">
+                <!-- Options injected by JS -->
+            </div>
+            <div id="mcq-feedback" class="feedback"></div>
+        </div>
+    </section>
+
+    <!-- Section 6: هل الإجابة صحيحة؟ -->
+    <section id="section-6" class="interactive-section">
+        <h2>التحدي المخادع (هل أنا على صواب؟)</h2>
+        <div class="quiz-container tricky-container">
+            <div class="bot-box">
+                <i class="fas fa-robot fa-3x bot-icon"></i>
+                <div class="chat-bubble" id="tricky-question">يقولون أن المعدة طبيعتها باردة يابسة كالعظام. هل
+                    هذا صحيح أم خطأ؟</div>
+            </div>
+            <div class="buttons-row">
+                <button class="btn btn-true" onclick="checkTricky(true)"><i class="fas fa-thumbs-up"></i> إجابتك
+                    صحيحة</button>
+                <button class="btn btn-false" onclick="checkTricky(false)"><i class="fas fa-thumbs-down"></i>
+                    إجابتك خاطئة</button>
+            </div>
+            <div id="tricky-feedback" class="feedback"></div>
+        </div>
+    </section>
+
+    <!-- Section 7: خريطة الأعضاء -->
+    <section id="section-7" class="interactive-section">
+        <h2>خريطة الأعضاء والمزاج الموائم لتغذيتها</h2>
+        <div class="organ-map">
+            <div class="organ-selector">
+                <button class="organ-btn" onclick="showOrganDetails('liver')">الكبد</button>
+                <button class="organ-btn" onclick="showOrganDetails('heart')">القلب</button>
+                <button class="organ-btn" onclick="showOrganDetails('stomach')">المعدة</button>
+                <button class="organ-btn" onclick="showOrganDetails('brain')">الدماغ</button>
+                <button class="organ-btn" onclick="showOrganDetails('spleen')">الطحال</button>
+                <button class="organ-btn" onclick="showOrganDetails('lungs')">الرئتان</button>
+                <button class="organ-btn" onclick="showOrganDetails('kidneys')">الكليتان</button>
+                <button class="organ-btn" onclick="showOrganDetails('uterus')">الرحم والتناسلية</button>
+                <button class="organ-btn" onclick="showOrganDetails('nerves')">الأعصاب</button>
+                <button class="organ-btn" onclick="showOrganDetails('tissues')">الأنسجة واللحم</button>
+            </div>
+            <div class="organ-details glass-panel" id="organ-details">
+                <h3>اختر عضواً لعرض تفاصيله</h3>
+                <p>ستظهر هنا طبيعة العضو والأغذية التي تناسبه.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 8: التدبير والخطة العلاجية الشاملة -->
+    <section id="section-plan" class="interactive-section">
+        <h2>مصمم البرامج الغذائية والخطط العلاجية الشاملة</h2>
+        <div class="plan-generator-container">
+            <div
+                style="background: rgba(212, 175, 55, 0.1); border: 1px solid var(--secondary-color); padding: 15px; border-radius: 10px; margin-bottom: 25px; text-align: center;">
+                <span style="color: var(--secondary-color); font-weight: bold;"><i class="fas fa-info-circle"></i>
+                    تنويه:</span>
+                <span style="color: #e2e8f0;">أنت الآن تستخدم الفترة التجريبية (خطة واحدة يومياً لمدة 3 أيام).
+                    لرفع القيود <a href="#"
+                        onclick="document.querySelector('[data-target=&quot;section-pricing&quot;]').click(); event.preventDefault();"
+                        style="color: var(--secondary-color); text-decoration: underline;">اطلع على
+                        الباقات</a>.</span>
+            </div>
+
+            <div class="diagnostic-wizard" id="diagnostic-wizard">
+                <!-- Progress Bar -->
+                <div class="diag-progress">
+                    <div class="diag-step active" data-step="1">1. القصة</div>
+                    <div class="diag-step" data-step="2">2. العضو</div>
+                    <div class="diag-step" data-step="3">3. المصدر</div>
+                    <div class="diag-step" data-step="4">4. الخلط</div>
+                    <div class="diag-step" data-step="5">5. الوظائف</div>
+                </div>
+
+                <!-- Step 1: القصة المرضية -->
+                <div class="diag-page active" id="step-1">
+                    <h3><i class="fas fa-history"></i> المرحلة 1: الاستقبال المنظم (القصة المرضية)</h3>
+                    <div class="form-group">
+                        <label>ما الذي تغيّر أولاً؟ ومتى بدأ ذلك بالتحديد؟</label>
+                        <textarea id="diag-story" rows="3"
+                            placeholder="مثلاً: بدأ ألم المعدة قبل شهر، ثم ظهر طفح جلدي الأسبوع الماضي..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>هل توجد عوامل تزيد من الألم أو تهدئه؟</label>
+                        <input type="text" id="diag-factors"
+                            placeholder="مثلاً: يهدأ بالكمادات الدافئة، ويزداد عند المشي...">
+                    </div>
+                    <div class="wizard-nav">
+                        <button class="btn-next" onclick="nextDiagStep(2)">التالي: استنطاق العضو <i
+                                class="fas fa-arrow-left"></i></button>
+                    </div>
+                </div>
+
+                <!-- Step 2: استنطاق العضو الظاهر -->
+                <div class="diag-page" id="step-2">
+                    <h3><i class="fas fa-search-plus"></i> المرحلة 2: استنطاق العضو الشاكي</h3>
+                    <div class="form-group">
+                        <label>وصف طبيعة الألم بدقة:</label>
+                        <select id="diag-pain-type">
+                            <option value="nerve">وخز كهربائي ممتد (عصبي)</option>
+                            <option value="muscle">نقطة محددة داخل العضلة (عضلي)</option>
+                            <option value="joint">ألم عميق يزيد مع الحركة (مفصلي)</option>
+                            <option value="vascular">نبض مستمر مع حرارة (وعائي/دموي)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>تأثير الراحة والحركة:</label>
+                        <select id="diag-movement">
+                            <option value="inflammatory">يزداد مع الراحة وفي الصباح (التهابي)</option>
+                            <option value="compressive">يزداد مع وضعيات معينة كالانحناء (انضغاطي)</option>
+                            <option value="fixed">ثابت لا يتأثر بالحركة</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>هل الألم ثابت أم متنقل؟</label>
+                        <select id="diag-mobility">
+                            <option value="fixed">ثابت في مكانه</option>
+                            <option value="moving">ينتقل من موضع لآخر (غالباً العلة في عضو رئيس)</option>
+                        </select>
+                    </div>
+                    <div class="wizard-nav">
+                        <button class="btn-prev" onclick="nextDiagStep(1)"><i class="fas fa-arrow-right"></i>
+                            السابق</button>
+                        <button class="btn-next" onclick="nextDiagStep(3)">التالي: البحث عن المصدر <i
+                                class="fas fa-arrow-left"></i></button>
+                    </div>
+                </div>
+
+                <!-- Step 3: البحث عن العضو السيد -->
+                <div class="diag-page" id="step-3">
+                    <h3><i class="fas fa-crown"></i> المرحلة 3: البحث عن "العضو السَّيِّد" (المصدر)</h3>
+                    <div class="diag-check-group">
+                        <h5><i class="fas fa-capsules"></i> هل ترتبط الشكوى بالكبد؟ (مصنع الأخلاط)</h5>
+                        <label><input type="checkbox" id="liver-1"> ألم يزداد بعد الأكل مباشرة وثقل</label>
+                        <label><input type="checkbox" id="liver-2"> مرارة في الفم أو لون بول غامق</label>
+                        <label><input type="checkbox" id="liver-3"> انتفاخ أو تطبل في البطن</label>
+                    </div>
+                    <div class="diag-check-group">
+                        <h5><i class="fas fa-brain"></i> هل ترتبط الشكوى بالدماغ؟ (الوزير الأول)</h5>
+                        <label><input type="checkbox" id="brain-1"> دوار، نسيان، أو اضطراب في النوم</label>
+                        <label><input type="checkbox" id="brain-2"> تنميل في الأطراف أو اضطراب بصر</label>
+                    </div>
+                    <div class="diag-check-group">
+                        <h5><i class="fas fa-heart"></i> هل ترتبط الشكوى بالقلب؟</h5>
+                        <label><input type="checkbox" id="heart-1"> ضيق تنفس أو خفقان وكرب</label>
+                    </div>
+                    <div class="wizard-nav">
+                        <button class="btn-prev" onclick="nextDiagStep(2)"><i class="fas fa-arrow-right"></i>
+                            السابق</button>
+                        <button class="btn-next" onclick="nextDiagStep(4)">التالي: تحديد الخلط <i
+                                class="fas fa-arrow-left"></i></button>
+                    </div>
+                </div>
+
+                <!-- Step 4: تحديد الخلط المهيمن -->
+                <div class="diag-page" id="step-4">
+                    <h3><i class="fas fa-vial"></i> المرحلة 4: تحديد الخلط المهيمن</h3>
+                    <div class="form-group">
+                        <label>ما هي طبيعة أحلامك الغالبة؟</label>
+                        <select id="diag-dreams">
+                            <option value="blood">أشياء حمراء، طيران، أصوات عالية (دموي)</option>
+                            <option value="yellow">نيران، حرارة، صواعق، أشياء صفراء (صفراوي)</option>
+                            <option value="phlegm">مياه، ثلوج، أمطار، برودة (بلغمي)</option>
+                            <option value="black">مقابر، أماكن صعبة، خوف، أشياء سوداء (سوداوي)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>العلامة الجسدية الأكثر وضوحاً:</label>
+                        <select id="diag-sign">
+                            <option value="heat">حرارة مفرطة واحمرار وعطش (حار)</option>
+                            <option value="heaviness">ثقل شديد وكسل وكثرة نوم (رطب/بارد)</option>
+                            <option value="dryness">جفاف قحولة الجلد وتيبس مفاصل (يابس)</option>
+                            <option value="obsession">وساوس فكرية واكتئاب وأرق (سوداوي)</option>
+                        </select>
+                    </div>
+                    <div class="wizard-nav">
+                        <button class="btn-prev" onclick="nextDiagStep(3)"><i class="fas fa-arrow-right"></i>
+                            السابق</button>
+                        <button class="btn-next" onclick="nextDiagStep(5)">التالي: علامات حيوية <i
+                                class="fas fa-arrow-left"></i></button>
+                    </div>
+                </div>
+
+                <!-- Step 5: الاستفراغات والبيانات الحتمية -->
+                <div class="diag-page" id="step-5">
+                    <h3><i class="fas fa-stethoscope"></i> المرحلة 5: الاستفراغات والبيانات الختامية</h3>
+                    <div class="diag-grid-compact">
+                        <div class="form-group">
+                            <label>فصيلة الدم:</label>
+                            <select id="user-blood">
+                                <option value="O">O</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="AB">AB</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>المزاج الأساسي:</label>
+                            <select id="user-mizaj">
+                                <option value="hot-dry">صفراوي</option>
+                                <option value="hot-moist">دموي</option>
+                                <option value="cold-moist">بلغمي</option>
+                                <option value="cold-dry">سوداوي</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>طبيعة البراز والبول:</label>
+                            <input type="text" id="diag-excretion" placeholder="مثلاً: إمساك، بول أحمر، أصفر فاقع...">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>قائمة طعامك لليوموالمكونات المتوفرة؟</label>
+                        <textarea id="user-ingredients" rows="2" placeholder="أرز، لحم، خضار..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>أمراض مزمنة أو أدوية؟</label>
+                        <textarea id="user-diseases" rows="2" placeholder="ضغط، سكري، مسيلات..."></textarea>
+                    </div>
+                    <div class="wizard-nav">
+                        <button class="btn-prev" onclick="nextDiagStep(4)"><i class="fas fa-arrow-right"></i>
+                            السابق</button>
+                        <button class="btn-generate" onclick="generatePlan()"><i class="fas fa-magic"></i> تحليل
+                            وتوليد الخطة الشمولية</button>
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="plan-result" class="plan-result hidden">
+                <!-- Plan generated by JS will appear here -->
+            </div>
+        </div>
+    </section>
+
+    </main>
+
+    <footer class="main-footer">
+        <p>جميع الحقوق محفوظة لدى المطور د. ليلى سكاك © 2024</p>
+    </footer>
     </div>
     <div id="toast" class="toast-msg"></div>
     <script src="script.js?v=7"></script>

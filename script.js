@@ -1746,51 +1746,50 @@ function generateChildPlan() {
     const severity = document.getElementById('child-severity').value;
     const humor = document.getElementById('child-humor-sign').value;
     const masterOrgan = document.getElementById('child-organ-master').value;
-    const servantOrgan = document.getElementById('child-organ-servant').value;
+    const kitchenText = document.getElementById('child-kitchen-text').value;
 
-    const ingredients = Array.from(document.querySelectorAll('#wizard-step-4 input[type="checkbox"]:checked')).map(cb => cb.value);
+    const lowerKitchen = kitchenText.toLowerCase();
 
-    // Logic for Plan Extraction & Analysis
+    // Analysis Logic
     let planHTML = `
         <div class="final-plan-card">
             <div class="plan-header">
-                <h3><i class="fas fa-file-medical"></i> البرنامج الغذائي الشامل للطفل</h3>
-                <p>بناءً على تشخيص: <strong>${complaint}</strong> | السن: <strong>${age} سنوات</strong></p>
+                <h3><i class="fas fa-magic"></i> برنامج طفلك الشفائي المدروس</h3>
+                <p>بناءً على شكوى: <strong>${complaint}</strong> | السن: <strong>${age} سنوات</strong></p>
             </div>
             
             <div class="plan-analysis">
-                <h4><i class="fas fa-microscope"></i> التحليل الاستنباطي (مختبر ابن سينا والرازي)</h4>
+                <h4><i class="fas fa-stethoscope"></i> رؤية "طبيبك الذكي" للحالة</h4>
                 <ul>
-                    <li><strong>تحديد الخلط:</strong> يظهر ميل الطفل نحو <span>${getHumorText(humor)}</span>.</li>
-                    <li><strong>درجة العلة:</strong> الحالة مصنفة كـ <span>${getSeverityText(severity)}</span>.</li>
-                    <li><strong>ارتباط الأعضاء:</strong> العضو المتضرر الرئيسي هو <span>${getOrganText(masterOrgan)}</span> والعضو الخادم هو <span>${getOrganText(servantOrgan)}</span>.</li>
+                    <li><strong>المزاج الغالب:</strong> يميل حالياً نحو <span style="color:#d4af37">${getHumorText(humor)}</span>.</li>
+                    <li><strong>تأثر الأعضاء:</strong> العضو الذي يحتاج حماية هو <strong>${getOrganText(masterOrgan)}</strong>.</li>
+                    <li><strong>التصنيف:</strong> الحالة تعتبر <strong>${getSeverityText(severity)}</strong> وتتطلب صبراً وتدرجاً.</li>
                 </ul>
             </div>
 
             <div class="day-meals">
-                <h4><i class="fas fa-utensils"></i> تصميم الوجبات لليوم الكامل</h4>
+                <h4><i class="fas fa-utensils"></i> تقسيم الوجبات (المطبخ المتوفر لديكِ)</h4>
                 <div class="meal-block">
-                    <strong>🥗 الإفطار:</strong>
-                    <p>${generateMeal('breakfast', humor, ingredients)}</p>
+                    <strong>🥗 وجبة الإفطار:</strong>
+                    <p>${generateSmartMeal('breakfast', humor, lowerKitchen)}</p>
                 </div>
                 <div class="meal-block">
-                    <strong>🍲 الغداء:</strong>
-                    <p>${generateMeal('lunch', humor, ingredients)}</p>
+                    <strong>🍲 وجبة الغداء:</strong>
+                    <p>${generateSmartMeal('lunch', humor, lowerKitchen)}</p>
                 </div>
                 <div class="meal-block">
-                    <strong>🍵 العشاء:</strong>
-                    <p>${generateMeal('dinner', humor, ingredients)}</p>
+                    <strong>🍵 وجبة العشاء:</strong>
+                    <p>${generateSmartMeal('dinner', humor, lowerKitchen)}</p>
                 </div>
-            </div>
-
-            <div class="duration-box">
-                <h4><i class="fas fa-calendar-alt"></i> الميقات والمدة الزمنية</h4>
-                <p>يستمر هذا البرنامج لمدة <strong>${age > 10 ? '21 يوماً' : '15 يوماً'}</strong> مع ضرورة الالتزام بقانون التدرج (نصف الكمية في الـ 3 أيام الأولى).</p>
             </div>
 
             <div class="medical-rules">
-                <h4><i class="fas fa-balance-scale"></i> قوانين الإصلاح والموازنة</h4>
-                <p>هذا البرنامج مصمم لموازنة الكيفيات (الحرارة والرطوبة) وتغذية العضو الخادم لخدمة العضو الرئيس.</p>
+                <h4><i class="fas fa-pills"></i> المصلحات والتعليمات الهامة</h4>
+                <ul>
+                    ${getCorrectors(humor, lowerKitchen)}
+                    <li>يجب تقسيم الوجبات إلى كميات صغيرة (قاعدة الرازي: الهضم الجيد خير من الأكل الكثير).</li>
+                    <li><strong>المدة المقترحة:</strong> استمري على هذا النظام لمدة <strong>${age > 7 ? '21 يوماً' : '15 يوماً'}</strong> ليرتاح البدن.</li>
+                </ul>
             </div>
         </div>
     `;
@@ -1800,6 +1799,46 @@ function generateChildPlan() {
     document.getElementById('child-plan-result').style.display = 'block';
 
     saveTrial();
+}
+
+function generateSmartMeal(type, humor, kitchen) {
+    const hasHoney = kitchen.includes('عسل') || kitchen.includes('honey');
+    const hasDates = kitchen.includes('تمر') || kitchen.includes('dates') || kitchen.includes('زبيب');
+    const hasMeat = kitchen.includes('لحم') || kitchen.includes('دم');
+    const hasEgg = kitchen.includes('بيض') || kitchen.includes('egg');
+    const hasOlive = kitchen.includes('زيت') || kitchen.includes('olive');
+
+    if (type === 'breakfast') {
+        if (hasHoney) return "كوب ماء فاتر مذاب فيه ملعقة عسل (لغسل المعدة وتنشيط الكبد).";
+        if (hasDates) return "3 حبات تمر مع قليل من الجوز أو السمسم المتوفر.";
+        return "خبز أسمر بمسحة زيت زيتون أو بيضة مسلوقة جيداً.";
+    }
+
+    if (type === 'lunch') {
+        if (hasMeat) return "مرق لحم مطبوخ جيداً مع خضروات موسمية، مع الحرص على مضغه تماماً.";
+        if (kitchen.includes('قمح') || kitchen.includes('رز')) return "طبق صغير من حبوب (القمح أو الأرز) المطبوخة بمرق الخضار.";
+        return "شوربة دافئة من المكونات المتوفرة مع إضافة رشة ملح وكمون.";
+    }
+
+    if (type === 'dinner') {
+        if (humor.includes('hot')) return "روب (زبادي) أو فاكهة رطبة باردة لترطيب حرارة الطفل قبل النوم.";
+        return "خضروات مسلوقة وسهلة الهضم مع شرب منقوع دافئ (يانسون أو بابونج).";
+    }
+}
+
+function getCorrectors(humor, kitchen) {
+    let html = "";
+    if (kitchen.includes('بقوليات') || kitchen.includes('عدس')) {
+        html += "<li><strong>مصلح البقوليات:</strong> أضيفي الكمون والزنجبيل دائماً لتجنب الغازات والنفخة.</li>";
+    }
+    if (humor === 'cold-wet') {
+        html += "<li><strong>تنبيه للمزاج البارد:</strong> قللي من الألبان والماء البارد، وركزي على تسخين الطعام جيداً.</li>";
+    }
+    if (humor === 'hot-dry') {
+        html += "<li><strong>تنبيه للمزاج اليابس:</strong> رطبي جسم الطفل بدهن زيت اللوز أو زيت الزيتون خارجياً وداخلياً.</li>";
+    }
+    if (html === "") html = "<li>التزمي بالهدوء النفسي أثناء إطعام الطفل، فالقلق يفسد الهضم.</li>";
+    return html;
 }
 
 function getHumorText(h) {
@@ -1813,24 +1852,7 @@ function getSeverityText(s) {
 }
 
 function getOrganText(o) {
-    const hints = { 'liver': 'الكبد', 'stomach': 'المعدة', 'lung': 'الصدر', 'heart': 'القلب', 'brain': 'الدماغ', 'eye': 'العين', 'skin': 'الجلد', 'nails': 'الأظافر/الشعر', 'none': 'غير محدد' };
+    const hints = { 'liver': 'الكبد', 'stomach': 'المعدة وباطن العضو', 'lung': 'الصدر والرئة', 'heart': 'القلب', 'brain': 'الرأس والدماغ', 'none': 'بدن الطفل عامة' };
     return hints[o] || o;
-}
-
-function generateMeal(type, humor, ingredients) {
-    if (type === 'breakfast') {
-        if (ingredients.includes('honey') || ingredients.includes('dates')) return "ملعقة عسل نحل مذابة في ماء فاتر مع 3 حبات زبيب (لتقوية الكبد والدم).";
-        return "خبز شعير بمسحة زيت زيتون مع كوب حليب دافئ (إذا لم يكن هناك بلغم).";
-    }
-    if (type === 'lunch') {
-        if (ingredients.includes('meat') && ingredients.includes('beetroot')) return "مرق لحم حمل مطبوخ ببطء مع قطع الشمندر المسلوق (لتحفيز إنتاج الدم وبناء العضلات).";
-        if (ingredients.includes('oats')) return "شوربة شوفان بالخضروات الورقية وزيت الزيتون.";
-        return "وجبة متوازنة من المكونات المتوفرة مع التركيز على سهولة الهضم.";
-    }
-    if (type === 'dinner') {
-        if (ingredients.includes('herbs')) return "منقوع اليانسون الدافئ مع قطعة خبز صغيرة (لتهدئة الأعصاب وسكون الخلط قبل النوم).";
-        return "فاكهة رطبة (مثل التفاح) أو لبن رائب لترطيب المعدة.";
-    }
-    return "وجبة خفيفة موافقة لمزاج الطفل.";
 }
 

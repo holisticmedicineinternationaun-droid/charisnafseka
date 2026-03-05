@@ -2109,205 +2109,211 @@ h2::after {
     }
 }
 
-/* --- Child Health Academy CSS --- */
+/* --- Child Health Academy CSS (Premium Mobile-First) --- */
 #section-child-academy {
-    max-width: 1000px;
+    max-width: 900px;
     margin: 0 auto;
+    padding: 10px;
 }
 
 .academy-intro {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 25px;
+}
+
+.academy-intro h2 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
 }
 
 .wizard-container {
-    background: var(--glass-bg);
-    border: 2px solid var(--glass-border);
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: var(--shadow);
+    background: linear-gradient(165deg, rgba(11, 43, 26, 0.95), rgba(4, 14, 8, 0.98));
+    border: 1px solid var(--secondary-color);
+    border-radius: 25px;
+    padding: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
     position: relative;
-    overflow: hidden;
+    min-height: 400px;
 }
 
 .wizard-progress {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 40px;
-    position: relative;
-}
-
-.progress-step {
-    flex: 1;
-    text-align: center;
-    font-size: 0.9rem;
-    color: #94a3b8;
-    position: relative;
+    justify-content: space-around;
+    margin-bottom: 30px;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
     padding-bottom: 15px;
 }
 
-.progress-step::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.1);
+.progress-step {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    position: relative;
     transition: all 0.3s;
+    opacity: 0.5;
 }
 
 .progress-step.active {
     color: var(--secondary-color);
     font-weight: bold;
+    opacity: 1;
+    transform: scale(1.1);
 }
 
 .progress-step.active::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 0;
+    width: 100%;
+    height: 3px;
     background: var(--gold-gradient);
-    box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+    border-radius: 10px;
 }
 
 .wizard-step {
-    display: none;
-    animation: fadeIn 0.5s ease-out;
+    display: none !important;
+    /* Force hide by default */
 }
 
 .wizard-step.active {
-    display: block;
+    display: block !important;
+    animation: fadeInSlide 0.4s ease-out;
+}
+
+@keyframes fadeInSlide {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .wizard-step h3 {
     color: var(--secondary-color);
-    margin-bottom: 25px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    text-align: right;
 }
 
 .input-group {
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     text-align: right;
 }
 
 .input-group label {
     display: block;
-    margin-bottom: 10px;
-    color: #e2e8f0;
+    margin-bottom: 8px;
+    color: var(--secondary-color);
+    font-size: 1rem;
     font-weight: bold;
 }
 
 .input-group input,
-.input-group select {
+.input-group select,
+.input-group textarea {
     width: 100%;
-    padding: 12px 15px;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(212, 175, 55, 0.3);
-    border-radius: 10px;
+    padding: 14px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    border-radius: 12px;
     color: white;
     font-family: inherit;
     font-size: 1rem;
+    outline: none;
+    transition: all 0.3s;
 }
 
-.ingredient-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 15px;
-    margin: 20px 0;
-    text-align: right;
-}
-
-.ingredient-grid label {
-    background: rgba(11, 43, 26, 0.4);
-    padding: 12px;
-    border-radius: 10px;
-    cursor: pointer;
-    border: 1px solid transparent;
-    transition: 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.ingredient-grid label:hover {
+.input-group input:focus,
+.input-group select:focus,
+.input-group textarea:focus {
     border-color: var(--secondary-color);
-    background: rgba(11, 43, 26, 0.8);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+    background: rgba(0, 0, 0, 0.6);
 }
 
 .wizard-btns {
     display: flex;
     justify-content: space-between;
+    gap: 15px;
     margin-top: 30px;
 }
 
-/* Plan Card Results */
-.final-plan-card {
-    background: linear-gradient(135deg, rgba(11, 43, 26, 0.95), rgba(2, 11, 8, 0.98));
-    border: 2px solid var(--secondary-color);
-    border-radius: 20px;
-    padding: 40px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-    position: relative;
-    text-align: right;
-    color: #e2e8f0;
+.wizard-btns .btn {
+    flex: 1;
+    padding: 12px;
+    font-size: 1rem;
 }
 
-.plan-header {
-    border-bottom: 2px solid var(--secondary-color);
-    padding-bottom: 20px;
-    margin-bottom: 30px;
+.btn-next {
+    background: var(--gold-gradient);
+    color: var(--primary-color) !important;
+}
+
+.btn-prev {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+/* Final Plan Luxury Card */
+.final-plan-card {
+    background: linear-gradient(135deg, rgba(11, 43, 26, 0.98), rgba(2, 6, 4, 1));
+    border: 2px solid var(--secondary-color);
+    padding: 25px;
+    border-radius: 20px;
+    text-align: right;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9);
 }
 
 .plan-header h3 {
-    font-size: 2rem;
     color: var(--secondary-color);
+    font-size: 1.6rem;
+    margin-bottom: 10px;
 }
 
 .plan-analysis h4,
 .day-meals h4,
-.duration-box h4,
-.medical-rules h4 {
+.duration-box h4 {
     color: var(--secondary-color);
-    margin-bottom: 15px;
+    font-size: 1.2rem;
     border-right: 4px solid var(--secondary-color);
-    padding-right: 15px;
+    padding-right: 12px;
+    margin: 25px 0 15px;
 }
 
 .meal-block {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 20px;
+    background: rgba(212, 175, 55, 0.05);
+    padding: 15px;
     border-radius: 15px;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     border: 1px solid rgba(212, 175, 55, 0.1);
 }
 
 .meal-block strong {
     color: var(--secondary-color);
     display: block;
-    margin-bottom: 8px;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
 }
 
-.plan-analysis span {
-    color: var(--accent-color);
-    font-weight: bold;
-}
+@media (max-width: 600px) {
+    #section-child-academy {
+        padding: 5px;
+    }
 
-.btn-print,
-.btn-reset {
-    margin-top: 20px;
-    margin-left: 10px;
-}
+    .wizard-container {
+        padding: 15px;
+        border-radius: 20px;
+    }
 
-.btn-generate {
-    background: var(--gold-gradient);
-    color: var(--primary-color) !important;
-    padding: 15px 30px;
-    font-size: 1.2rem;
-    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
-}
+    .progress-step {
+        font-size: 0.65rem;
+    }
 
-@media (max-width: 768px) {
-    .wizard-progress {
-        font-size: 0.7rem;
+    .wizard-step h3 {
+        font-size: 1.1rem;
     }
 }
