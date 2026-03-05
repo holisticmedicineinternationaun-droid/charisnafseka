@@ -1692,9 +1692,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function nextWizardStep(currentStep) {
     if (currentStep === 1) {
-        const age = document.getElementById('child-age').value;
+        const ageYears = document.getElementById('child-age').value;
+        const ageMonths = document.getElementById('child-age-months').value;
         const complaint = document.getElementById('child-complaint').value;
-        if (!age || !complaint) {
+        if ((ageYears === "" && ageMonths === "") || !complaint) {
             showToast("الرجاء إكمال البيانات الأساسية أولاً");
             return;
         }
@@ -1763,7 +1764,12 @@ function saveTrial() {
 function generateChildPlan() {
     if (!checkTrialLimit()) return;
 
-    const age = document.getElementById('child-age').value;
+    const ageYears = parseInt(document.getElementById('child-age').value) || 0;
+    const ageMonths = parseInt(document.getElementById('child-age-months').value) || 0;
+    const totalAge = ageYears + (ageMonths / 12);
+
+    const ageDisplay = ageYears > 0 ? `${ageYears} سنة ${ageMonths > 0 ? `و ${ageMonths} شهر` : ''}` : `${ageMonths} شهر`;
+
     const complaint = document.getElementById('child-complaint').value;
     const severity = document.getElementById('child-severity').value;
     const humor = document.getElementById('child-humor-sign').value;
@@ -1782,7 +1788,7 @@ function generateChildPlan() {
         <div class="final-plan-card">
             <div class="plan-header">
                 <h3><i class="fas fa-magic"></i> برنامج طفلك الشفائي المدروس (الموسوعة الشاملة)</h3>
-                <p>بناءً على شكوى: <strong>${complaint}</strong> | السن: <strong>${age} سنوات</strong></p>
+                <p>بناءً على شكوى: <strong>${complaint}</strong> | السن: <strong>${ageDisplay}</strong></p>
                 ${matchedDisease ? `<div style="background:rgba(212,175,55,0.1); border:1px solid var(--secondary-color); padding:5px 10px; border-radius:15px; display:inline-block; margin-top:10px; font-size:0.9rem;">تم التعرف على المرض في موسوعة "المغنى" بنجاح</div>` : ''}
             </div>
             
@@ -1799,15 +1805,15 @@ function generateChildPlan() {
                 <h4><i class="fas fa-utensils"></i> تقسيم الوجبات (المطبخ المتوفر لديكِ)</h4>
                 <div class="meal-block">
                     <strong>🥗 وجبة الإفطار:</strong>
-                    <p>${generateSmartMeal('breakfast', finalNature, lowerKitchen, age, complaint)}</p>
+                    <p>${generateSmartMeal('breakfast', finalNature, lowerKitchen, totalAge, complaint)}</p>
                 </div>
                 <div class="meal-block">
                     <strong>🍲 وجبة الغداء:</strong>
-                    <p>${generateSmartMeal('lunch', finalNature, lowerKitchen, age, complaint)}</p>
+                    <p>${generateSmartMeal('lunch', finalNature, lowerKitchen, totalAge, complaint)}</p>
                 </div>
                 <div class="meal-block">
                     <strong>🍵 وجبة العشاء:</strong>
-                    <p>${generateSmartMeal('dinner', finalNature, lowerKitchen, age, complaint)}</p>
+                    <p>${generateSmartMeal('dinner', finalNature, lowerKitchen, totalAge, complaint)}</p>
                 </div>
             </div>
 
@@ -1815,7 +1821,7 @@ function generateChildPlan() {
                 <h4><i class="fas fa-hand-holding-heart"></i> نصائح للقضاء على أصل العلة</h4>
                 <ul style="color: #e2e8f0; font-size: 0.95rem; line-height: 1.6;">
                     ${matchedDisease ? `<li><strong>نصيحة الموسوعة:</strong> ${matchedDisease.tip}</li>` : ''}
-                    ${getHealingTips(finalNature, finalOrgan, age)}
+                    ${getHealingTips(finalNature, finalOrgan, totalAge)}
                 </ul>
             </div>
 
@@ -1824,7 +1830,7 @@ function generateChildPlan() {
                 <ul>
                     ${getCorrectors(finalNature, lowerKitchen)}
                     <li>يجب تقسيم الوجبات إلى كميات صغيرة (قاعدة الرازي: الهضم الجيد خير من الأكل الكثير).</li>
-                    <li><strong>المدة المقترحة:</strong> استمري على هذا "النهج العلاجي" لمدة <strong>${age > 7 ? '21 يوماً' : '15 يوماً'}</strong>. وفي حال نفاد بعض المكونات، انتقلي لقسم <strong>"سر السعادة"</strong> بالبرنامج لتحصلي على قائمة الأغذية الموافقة لخلط ابنك (أو ابنتك) والبدائل المتاحة لضمان استمرار التعافي.</li>
+                    <li><strong>المدة المقترحة:</strong> استمري على هذا "النهج العلاجي" لمدة <strong>${totalAge > 7 ? '21 يوماً' : '15 يوماً'}</strong>. وفي حال نفاد بعض المكونات، انتقلي لقسم <strong>"سر السعادة"</strong> بالبرنامج لتحصلي على قائمة الأغذية الموافقة لخلط ابنك (أو ابنتك) والبدائل المتاحة لضمان استمرار التعافي.</li>
                 </ul>
             </div>
         </div>
