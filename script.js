@@ -1707,7 +1707,7 @@ function checkTrialLimit() {
     let trialData = JSON.parse(localStorage.getItem('childAcademyTrial')) || { days: [], lastTrialDate: '' };
 
     // Check if user is premium
-    const isPremium = localStorage.getItem('isPremiumUser') === 'true';
+    const isPremium = checkActivation();
     if (isPremium) return true;
 
     // Daily limit: 1 time per day
