@@ -57,9 +57,6 @@
                 <button class="nav-btn" data-target="section-child-academy">
                     <i class="fas fa-child"></i> أكاديمية صحة الطفل (تشخيص وغذاء)
                 </button>
-                <button id="emergency-btn-trigger" class="nav-btn emergency-btn">
-                    <i class="fas fa-exclamation-triangle"></i> زر الطوارئ - أسعفني الآن
-                </button>
                 <button class="nav-btn" data-target="section-meal-analyzer">
                     <i class="fas fa-pie-chart"></i> محلل الوجبة الأخيرة
                 </button>
@@ -1153,63 +1150,9 @@
             <p>جميع الحقوق محفوظة لدى المطور د. ليلى سكاك © 2024</p>
         </footer>
     </div>
-    <!-- نافذة الطوارئ المنبثقة -->
-    <div id="emergency-modal" class="step-modal-container"
-        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 999999; justify-content: center; align-items: center;">
-        <div class="emergency-content"
-            style="background: var(--bg-color); border: 2px solid #c0392b; padding: 30px; border-radius: 20px; max-width: 500px; width: 90%; position: relative; margin: 10vh auto; text-align: center;">
-            <button onclick="closeEmergencyModal()"
-                style="position: absolute; top: 15px; left: 15px; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer;">&times;</button>
-            <h2 class="emergency-title">إسعاف فوري</h2>
-            <p class="emergency-subtitle">أجب بسرعة لنحدد التدبير المناسب</p>
-
-            <div id="e-step-1" class="emergency-step active">
-                <h4>1. ما هو لون اللسان الآن؟</h4>
-                <div class="options-grid">
-                    <button class="btn-option" onclick="selectEmergencyOption('tongue', 'white')">أبيض شاحب /
-                        رطب</button>
-                    <button class="btn-option" onclick="selectEmergencyOption('tongue', 'red')">أحمر فاقع</button>
-                    <button class="btn-option" onclick="selectEmergencyOption('tongue', 'yellow')">أصفر</button>
-                    <button class="btn-option" onclick="selectEmergencyOption('tongue', 'dark')">كمد / داكن</button>
-                </div>
-            </div>
-
-            <div id="e-step-2" class="emergency-step">
-                <h4>2. كيف هو ملمس جلدك؟</h4>
-                <div class="options-grid">
-                    <button class="btn-option" onclick="selectEmergencyOption('skin', 'hot-dry')">حار جاف</button>
-                    <button class="btn-option" onclick="selectEmergencyOption('skin', 'cold-wet')">بارد رطب</button>
-                    <button class="btn-option" onclick="selectEmergencyOption('skin', 'hot-wet')">حار رطب</button>
-                    <button class="btn-option" onclick="selectEmergencyOption('skin', 'cold-dry')">بارد جاف</button>
-                </div>
-            </div>
-
-            <div id="e-step-3" class="emergency-step">
-                <h4>3. ما طبيعة الألم؟</h4>
-                <div class="options-grid">
-                    <button class="btn-option" onclick="selectEmergencyOption('pain', 'fixed')">ثابت وواخز</button>
-                    <button class="btn-option" onclick="selectEmergencyOption('pain', 'moving')">متنقل وضاغط</button>
-                </div>
-            </div>
-
-            <div id="e-step-result" class="emergency-step">
-                <div id="emergency-result-content"></div>
-                <button class="btn btn-reset" onclick="resetEmergency()" style="margin-top:20px;">بدء من جديد</button>
-            </div>
-        </div>
-    </div>
 
     <div id="toast" class="toast-msg"></div>
-    <script src="script.js?v=11"></script>
-    <style>
-        .emergency-step {
-            display: none;
-        }
-
-        .emergency-step.active {
-            display: block;
-        }
-    </style>
+    <script src="script.js?v=12"></script>
 </body>
 
 </html>

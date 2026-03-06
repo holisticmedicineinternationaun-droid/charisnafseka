@@ -2345,36 +2345,6 @@ h2::after {
     text-align: right;
 }
 
-.emergency-content {
-    max-width: 650px !important;
-    background: var(--bg-color) !important;
-    border: 3px solid #c0392b !important;
-    padding: 40px !important;
-    border-radius: 30px !important;
-    box-shadow: 0 0 100px rgba(192, 57, 43, 0.3) !important;
-}
-
-.emergency-title {
-    color: #e74c3c;
-    text-align: center;
-    font-size: 2rem;
-    margin-bottom: 10px;
-    text-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
-}
-
-.emergency-subtitle {
-    text-align: center;
-    color: #94a3b8;
-    margin-bottom: 35px;
-    font-size: 1.1rem;
-}
-
-.emergency-step h4 {
-    color: var(--secondary-color);
-    margin-bottom: 25px;
-    font-size: 1.3rem;
-    text-align: center;
-}
 
 /* --- Meal Analyzer Premium Styles (Mobile Optimized) --- */
 .meal-analyzer-container {

@@ -1,61 +1,3 @@
-// --- 1. Global Module Functions (Moved to top for reliability) ---
-let emergencyData = { tongue: '', skin: '', pain: '' };
-function openEmergencyModal() {
-    const modal = document.getElementById('emergency-modal');
-    if (modal) {
-        modal.style.display = 'block';
-        resetEmergency();
-    }
-}
-function closeEmergencyModal() {
-    const modal = document.getElementById('emergency-modal');
-    if (modal) modal.style.display = 'none';
-}
-function selectEmergencyOption(step, value) {
-    emergencyData[step] = value;
-    let currentStepNum = step === 'tongue' ? 1 : (step === 'skin' ? 2 : 3);
-    const currStepEl = document.getElementById(`e-step-${currentStepNum}`);
-    if (currStepEl) currStepEl.classList.remove('active');
-
-    if (currentStepNum < 3) {
-        const nextStepEl = document.getElementById(`e-step-${currentStepNum + 1}`);
-        if (nextStepEl) nextStepEl.classList.add('active');
-    } else {
-        showEmergencyResult();
-    }
-}
-function showEmergencyResult() {
-    const resDiv = document.getElementById('emergency-result-content');
-    if (!resDiv) return;
-    let resultHTML = "<h3><i class='fas fa-check-circle'></i> البروتوكول الإسعافي المقترح:</h3>";
-
-    if (emergencyData.tongue === 'white' || emergencyData.skin === 'cold-wet') {
-        resultHTML += `<p><strong>الحالة:</strong> نوبة بلغمية (برودة ورطوبة).</p>
-                       <div class='fix-suggestion'>تناول كوب زنجبيل دافئ فوراً، وقم بتدفئة أطرافك. تجنب الماء البارد تماماً.</div>`;
-    } else if (emergencyData.tongue === 'yellow' || emergencyData.skin === 'hot-dry') {
-        resultHTML += `<p><strong>الحالة:</strong> فوران صفراوي (حرارة ويبوسة).</p>
-                       <div class='fix-suggestion'>استخدم "مستحلب الكزبرة" أو استنشق ماء الورد البارد. اغسل وجهك بماء فاتر مائل للبرودة.</div>`;
-    } else if (emergencyData.tongue === 'red' || emergencyData.skin === 'hot-wet') {
-        resultHTML += `<p><strong>الحالة:</strong> هيجان دموي (حرارة ورطوبة).</p>
-                       <div class='fix-suggestion'>اشرب ماءً فاترًا ببطء، ضع كمادة باردة على خلف الرقبة، ومارس "التنفس التفريغي" (شهيق قصير زفير طويل).</div>`;
-    } else if (emergencyData.tongue === 'dark' || emergencyData.skin === 'cold-dry') {
-        resultHTML += `<p><strong>الحالة:</strong> تشنج سوداوي (برودة ويبوسة).</p>
-                       <div class='fix-suggestion'>اشرب منقوع البابونج الدافئ، وقم بتدليك باطن القدم بزيت زيتون دافئ. ابتعد عن الضوضاء.</div>`;
-    } else {
-        resultHTML += `<p>حالتك تتطلب موازنة لطيفة. ابدأ بشرب كوب ماء فاتر مع ملعقة عسل صغيرة لتعزيز القوة الغريزية.</p>`;
-    }
-
-    resultHTML += `<p style="margin-top:15px; font-size:0.9rem;">هذا التدبير لتسكين العرض فقط، يرجى إتمام التشخيص المعمق عبر القائمة الرئيسية.</p>`;
-    resDiv.innerHTML = resultHTML;
-    const resStep = document.getElementById('e-step-result');
-    if (resStep) resStep.classList.add('active');
-}
-function resetEmergency() {
-    emergencyData = { tongue: '', skin: '', pain: '' };
-    document.querySelectorAll('.emergency-step').forEach(s => s.classList.remove('active'));
-    const step1 = document.getElementById('e-step-1');
-    if (step1) step1.classList.add('active');
-}
 
 function translateSymptom() {
     const inputEl = document.getElementById('modern-disease-input');
@@ -73,8 +15,7 @@ function translateSymptom() {
                     <button class="btn-option" onclick="finalizeTranslation('colon', 'bile')">يزداد الألم عند الغضب أو الحرارة (هيجان صفراوي)</button>
                     <button class="btn-option" onclick="finalizeTranslation('colon', 'black')">يزداد مع التفكير وكثرة الهم والبرد (غلبة سوداوية)</button>
                 </div>
-            </div>
-        `;
+            </div>`;
     } else if (input.includes("شقيقة") || input.includes("صداع")) {
         responseHTML = `
             <div class="translator-step">
@@ -83,8 +24,7 @@ function translateSymptom() {
                     <button class="btn-option" onclick="finalizeTranslation('headache', 'hot')">نبض حار وضربات قوية (هيجان دموي/صفراوي)</button>
                     <button class="btn-option" onclick="finalizeTranslation('headache', 'cold')">ثقل بارد وكأن الرأس مكبل (مادة بلغمية)</button>
                 </div>
-            </div>
-        `;
+            </div>`;
     } else if (input.includes("مفاصل") || input.includes("روماتيزم")) {
         responseHTML = `
             <div class="translator-step">
@@ -93,10 +33,36 @@ function translateSymptom() {
                     <button class="btn-option" onclick="finalizeTranslation('joints', 'cold')">يزداد بالبرد والرطوبة ويتحسن بالتدفئة (بلغمي)</button>
                     <button class="btn-option" onclick="finalizeTranslation('joints', 'hot')">احمرار، تورم، وحرارة موضعية (دموي/صفراوي)</button>
                 </div>
-            </div>
-        `;
+            </div>`;
+    } else if (input.includes("صدفية") || input.includes("صدفيه")) {
+        responseHTML = `
+            <div class="translator-step">
+                <p><strong>الصدفية</strong> في الطب الأصيل هي اندفاع للأخلاط الغليظة. لنحدد النوع:</p>
+                <div class="options-grid" style="margin-top:15px;">
+                    <button class="btn-option" onclick="finalizeTranslation('psoriasis', 'burnt')">قشور فضية يابسة جداً مع حكة شديدة (سوداء محترقة)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('psoriasis', 'salty')">قشور تميل للرطوبة أو الصفار (بلغم مالح/صفراء)</button>
+                </div>
+            </div>`;
+    } else if (input.includes("اكزيما") || input.includes("إكزيما")) {
+        responseHTML = `
+            <div class="translator-step">
+                <p><strong>الاكزيما</strong> تختلف حسب الكيفية المادية. كيف تبدو؟</p>
+                <div class="options-grid" style="margin-top:15px;">
+                    <button class="btn-option" onclick="finalizeTranslation('eczema', 'wet')">رطبة، تخرج سائلاً، وبها احمرار (هيجان دموي)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('eczema', 'dry')">جافة، متشققة، وتنزف أحياناً (سوداوية يابسة)</button>
+                </div>
+            </div>`;
+    } else if (input.includes("تبول") || input.includes("لاارادي") || input.includes("لا إرادي")) {
+        responseHTML = `
+            <div class="translator-step">
+                <p><strong>التبول اللاإرادي</strong> يعود لضعف القوة الماسكة. لنحدد السبب:</p>
+                <div class="options-grid" style="margin-top:15px;">
+                    <button class="btn-option" onclick="finalizeTranslation('bedwetting', 'cold')">نوم عميق جداً وبرودة في الأطراف (برودة ورخاوة)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('bedwetting', 'fear')">يحدث بعد فزع أو توتر عصبي (يُبوسة وتقلص عصب)</button>
+                </div>
+            </div>`;
     } else {
-        responseHTML = `<p>عذراً، هذا المرض يحتاج لتدقيق أعمق. يرجى استخدام <strong>"أكاديمية صحة الطفل"</strong> أو <strong>"مصمم البرامج"</strong>.</p>`;
+        responseHTML = `<p>عذراً، هذا المرض يحتاج لتدقيق أعمق عبر <strong>أكاديمية صحة الطفل</strong> أو <strong>مصمم البرامج</strong> لتحديد الخلط الغالب بدقة.</p>`;
     }
     responseDiv.innerHTML = responseHTML;
     responseDiv.classList.remove('hidden');
@@ -105,15 +71,33 @@ function translateSymptom() {
 function finalizeTranslation(type, origin) {
     const responseDiv = document.getElementById('translator-response');
     if (!responseDiv) return;
-    let finalMsg = "";
+    let finalCode = "";
+
+    const medicalStyle = `style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border-right: 3px solid #d4af37; margin-top:15px; font-size: 0.95rem; line-height:1.7;"`;
+
     if (type === 'colon') {
-        finalMsg = origin === 'bile' ? "التشخيص: <strong>هيجان صفراوي</strong>. الحل: تبريد وترطيب (كزبرة، خيار)." : "التشخيص: <strong>غلبة سوداوية</strong>. الحل: ترطيب وتدفئة (يانسون، بابونج).";
+        const text = origin === 'bile' ? "هيجان صفراوي حار" : "غلبة سوداوية باردة";
+        const fix = origin === 'bile' ? "تبريد وترطيب (كزبرة، خيار)." : "ترطيب وتتدفئة (يانسون، بابونج).";
+        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}>هذا الاضطراب يحدث بسبب خلل في كيمياء الأمعاء وتراكم الأبخرة. <br><strong>الإصلاح:</strong> ${fix}</div>`;
     } else if (type === 'headache') {
-        finalMsg = origin === 'hot' ? "التشخيص: <strong>هيجان حار</strong>. الحل: تنفس عميق وشموم بارد." : "التشخيص: <strong>امتلاء بلغمي</strong>. الحل: مسخنات (زنجبيل، قرفة).";
-    } else if (type === 'joints') {
-        finalMsg = origin === 'cold' ? "التشخيص: <strong>رطوبة بلغمية</strong>. الحل: تجفيف وتدفئة (زيت حرمل)." : "التشخيص: <strong>هياج مادي حار</strong>. الحل: تبريد موضعي بخل ورد.";
+        const text = origin === 'hot' ? "هيجان حار (دموي/صفراوي)" : "امتلاء بلغمي بارد";
+        const fix = origin === 'hot' ? "شهيق عميق، شم ماء ورد، وتجنب الحار." : "مسخنات (زنجبيل، قرفة) وتدفئة الرأس.";
+        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}>الرأس مرآة المعدة؛ لذا الصداع غالباً ما يكون صعوداً لأبخرة الأخلاط المختلة. <br><strong>الإصلاح:</strong> ${fix}</div>`;
+    } else if (type === 'psoriasis') {
+        const text = origin === 'burnt' ? "سوداء محترقة (جفاف شديد)" : "بلغم مالح (رطوبة مختلة)";
+        const fix = origin === 'burnt' ? "دهن بزيت القسط البحري، شرب منقوع الهندباء، ومنع اليوابس (عدس، باذنجان)." : "تنشيف الجلد بماء الشعير والمرة، وتنقية البلغم بالهليلج.";
+        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}>قال الرازي: الصدفية هي محاولة الجسم طرد خلط غليظ نحو الجلد. <br><strong>الإصلاح:</strong> ${fix}</div>`;
+    } else if (type === 'eczema') {
+        const text = origin === 'wet' ? "هيجان دموي حاد (رطوبة حارة)" : "غلظ سوداوي يابس (يبوسة باردة)";
+        const fix = origin === 'wet' ? "تبريد الدم (عناب، خل ورد)، منع المقليات تماماً." : "ترطيب دهني مكثف (فازلين طبيعي، زيت لوز)، شرب المليسا.";
+        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}>الجلد يتنفس، وعندما يفسد الدم يظهر أثره في مسامه. <br><strong>الإصلاح:</strong> ${fix}</div>`;
+    } else if (type === 'bedwetting') {
+        const text = origin === 'cold' ? "برودة ورخاوة المثانة" : "يبوسة وتقلص عصبي";
+        const fix = origin === 'cold' ? "تدفئة المثانة بزيت زيتون، تناول عسل وجوز، منع السوائل ليلاً." : "ترطيب الأعصاب (بابونج)، منع التوتر، تدليك الظهر بزيت بنفسج.";
+        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}>استناداً لابن سينا: التبول اللاإرادي عجز من القوة الماسكة عن مدافعة القوة الدافعة بسبب البرد. <br><strong>الإصلاح:</strong> ${fix}</div>`;
     }
-    responseDiv.innerHTML = `<p class="fade-in">${finalMsg}</p>`;
+
+    responseDiv.innerHTML = `<div class="fade-in">${finalCode}</div>`;
 }
 
 function analyzeLastMeal() {
@@ -220,16 +204,7 @@ function initAppNavigation() {
         });
     });
 
-    // Special handler for Emergency Button by ID
-    const emergencyBtn = document.getElementById('emergency-btn-trigger');
-    if (emergencyBtn) {
-        emergencyBtn.addEventListener('click', function (e) {
-            e.preventDefault();
-            if (typeof openEmergencyModal === 'function') {
-                openEmergencyModal();
-            }
-        });
-    }
+    // Special handler for Emergency Button by ID (Removed as requested)
 }
 initAppNavigation();
 
