@@ -1,14 +1,23 @@
 // Navigation logic
 document.querySelectorAll('.nav-btn').forEach(button => {
     button.addEventListener('click', () => {
-        // Remove active class from all buttons and sections
-        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('.interactive-section').forEach(sec => sec.classList.remove('active'));
-
-        // Add active class to clicked button and target section
-        button.classList.add('active');
         const targetId = button.getAttribute('data-target');
-        document.getElementById(targetId).classList.add('active');
+
+        // Only switch sections if a target exists (prevents crash for non-target buttons like Emergency)
+        if (targetId) {
+            // Remove active class from all buttons and sections
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.interactive-section').forEach(sec => sec.classList.remove('active'));
+
+            // Add active class to clicked button and target section
+            button.classList.add('active');
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+                targetElement.classList.add('active');
+                // Scroll to top of section for better mobile experience
+                window.scrollTo({ top: targetElement.offsetTop - 100, behavior: 'smooth' });
+            }
+        }
     });
 });
 
