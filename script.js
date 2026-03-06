@@ -1,4 +1,4 @@
-
+// Last Updated: 2026-03-06 - Humoral Logic Enhanced
 function translateSymptom() {
     const inputEl = document.getElementById('modern-disease-input');
     const responseDiv = document.getElementById('translator-response');
