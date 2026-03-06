@@ -2240,9 +2240,15 @@ h2::after {
 
 /* تحسين الأداء العام للجوال */
 @media (max-width: 768px) {
-    .app-container {
-        backdrop-filter: none;
+
+    .app-container,
+    .lightbox-modal {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
         /* تعطيل الفلتر الثقيل على الجوال لزيادة السلاسة */
+    }
+
+    .app-container {
         background: rgba(11, 43, 26, 0.98);
     }
 }
@@ -2323,6 +2329,30 @@ h2::after {
     border-radius: 20px;
     animation: slideUp 0.4s ease-out;
     text-align: right;
+}
+
+@media (max-width: 768px) {
+    .symptom-translator-card {
+        padding: 15px;
+        margin: 10px auto;
+        width: 95%;
+        box-sizing: border-box;
+    }
+
+    .translator-input-group {
+        padding: 5px;
+        gap: 5px;
+    }
+
+    .translator-input-group input {
+        padding: 10px 15px;
+        font-size: 1rem;
+    }
+
+    .translator-input-group button {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
 }
 
 
