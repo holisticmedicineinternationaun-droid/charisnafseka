@@ -780,50 +780,7 @@
 
                 <!-- Lightbox Modal -->
                 <!-- Emergency Modal -->
-                <div id="emergency-modal" class="lightbox-modal" style="display: none; z-index: 100000;">
-                    <div class="lightbox-content emergency-content">
-                        <span class="lightbox-close" onclick="closeEmergencyModal()">&times;</span>
-                        <h2 class="emergency-title"><i class="fas fa-bolt"></i> خلية الإسعاف الاستدلالي الفوري</h2>
-                        <p class="emergency-subtitle">أجب بدقة لنتدارك ثوران الأخلاط الآن</p>
 
-                        <div id="emergency-wizard">
-                            <!-- Step 1: Tongue -->
-                            <div class="emergency-step active" id="e-step-1">
-                                <h4><i class="fas fa-comment-dots"></i> 1. ما هو لون اللسان الآن؟</h4>
-                                <div class="options-grid">
-                                    <button onclick="selectEmergencyOption('tongue', 'white')">أبيض باهت</button>
-                                    <button onclick="selectEmergencyOption('tongue', 'red')">أحمر قانٍ</button>
-                                    <button onclick="selectEmergencyOption('tongue', 'yellow')">أصفر</button>
-                                    <button onclick="selectEmergencyOption('tongue', 'dark')">مائل للسواد</button>
-                                </div>
-                            </div>
-                            <!-- Step 2: Skin -->
-                            <div class="emergency-step" id="e-step-2">
-                                <h4><i class="fas fa-hand-holding"></i> 2. كيف هو ملمس جلدك؟</h4>
-                                <div class="options-grid">
-                                    <button onclick="selectEmergencyOption('skin', 'hot-dry')">حار جاف</button>
-                                    <button onclick="selectEmergencyOption('skin', 'cold-wet')">بارد رطب</button>
-                                    <button onclick="selectEmergencyOption('skin', 'hot-wet')">حار رطب</button>
-                                    <button onclick="selectEmergencyOption('skin', 'cold-dry')">بارد جاف</button>
-                                </div>
-                            </div>
-                            <!-- Step 3: Pain -->
-                            <div class="emergency-step" id="e-step-3">
-                                <h4><i class="fas fa-wave-square"></i> 3. ما هي طبيعة الألم؟</h4>
-                                <div class="options-grid">
-                                    <button onclick="selectEmergencyOption('pain', 'fixed')">ثابت ووخزي</button>
-                                    <button onclick="selectEmergencyOption('pain', 'moving')">متنقل وضاغط</button>
-                                </div>
-                            </div>
-                            <!-- Result -->
-                            <div class="emergency-step" id="e-step-result">
-                                <div id="emergency-result-content"></div>
-                                <button class="btn btn-reset" onclick="resetEmergency()"
-                                    style="margin-top:20px; width:100%;">فتح تشخيص جديد</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <div id="image-lightbox" class="lightbox-modal" onclick="closeLightbox(event)">
                     <span class="lightbox-close" onclick="closeLightbox(event)">&times;</span>

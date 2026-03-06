@@ -6,6 +6,9 @@ function translateSymptom() {
     const input = inputEl.value.trim().toLowerCase();
     if (!input) return;
 
+    // Check Trail Limit for Freemium
+    if (!checkGlobalTrialLimit('symptom_translator')) return;
+
     let responseHTML = "";
     if (input.includes("قولون")) {
         responseHTML = `
@@ -98,7 +101,7 @@ function translateSymptom() {
                 </div>
             </div>`;
     } else {
-        responseHTML = `<p>هذه العلة مسجلة تحت باب "نوادر الأخلاط". يرجى تحديد العرض الأوضح لنربطه بمنهج <strong>ابن سينا</strong> أو <strong>د. عبد الباسط</strong> بدقة.</p>`;
+        responseHTML = `<p>هذه العلة مسجلة تحت باب "نوادر الأخلاط". يرجى تحديد العرض الأوضح لنربطه بمنهج <strong>مدرستنا</strong> بدقة.</p>`;
     }
     responseDiv.innerHTML = responseHTML;
     responseDiv.classList.remove('hidden');
@@ -158,6 +161,9 @@ function analyzeLastMeal() {
     if (!inputEl || !resultDiv) return;
     const meal = inputEl.value.trim().toLowerCase();
     if (!meal) return;
+
+    // Check Trail Limit for Freemium
+    if (!checkGlobalTrialLimit('meal_analyzer')) return;
 
     // Check if user is typing a disease instead of a meal (variations like شقيقة/شقيقه)
     if (meal.includes("شقيقة") || meal.includes("شقيقه") || meal.includes("صداع") || meal.includes("قولون") || meal.includes("مفاصل") || meal.includes("اكزيما")) {
@@ -1249,6 +1255,39 @@ function openSupportLink(platform, event) {
     }
 }
 
+// --- GLOBAL TRIAL LIMIT CHECKER ---
+function checkGlobalTrialLimit(moduleName) {
+    const isPremium = checkActivation();
+    if (isPremium) return true;
+
+    const now = new Date();
+    const todayStr = now.toISOString().split('T')[0];
+
+    // Total Days Check
+    let trialStartStr = localStorage.getItem(TRIAL_START_KEY);
+    if (!trialStartStr) {
+        trialStartStr = now.toISOString();
+        localStorage.setItem(TRIAL_START_KEY, trialStartStr);
+    }
+    const trialStartDate = new Date(trialStartStr);
+    const diffDays = Math.ceil(Math.abs(now - trialStartDate) / (1000 * 60 * 60 * 24));
+
+    if (diffDays > MAX_FREE_DAYS) {
+        showPaywall("انتهت الفترة التجريبية!", "لقد استمتعت بتجربة 3 أيام مجاناً للتطبيق. للاستمرار في استخدام ميزات التشخيص والتحليل، يرجى الاشتراك.");
+        return false;
+    }
+
+    // Daily Limit Check per Module
+    const limitKey = `lastGen_${moduleName}_${todayStr}`;
+    if (localStorage.getItem(limitKey)) {
+        showPaywall("استنفدت الحد اليومي!", "في الفترة التجريبية، يُسمح باستخدام هذا المحلل مرة واحدة فقط يومياً لضمان التركيز.");
+        return false;
+    }
+
+    localStorage.setItem(limitKey, 'true');
+    return true;
+}
+
 // Same hash function as admin generator for validation
 function hashCode(str) {
     let hash = 0;
@@ -1948,37 +1987,10 @@ const remedyDatabase = {
 };
 
 function generatePlan() {
-    // --- Freemium Paywall & Premium Logic ---
-    const isPremium = checkActivation();
-    const now = new Date();
-    const todayStr = now.toISOString().split('T')[0]; // Use YYYY-MM-DD for consistency
+    // Check Global Trial Limit for Freemium
+    if (!checkGlobalTrialLimit('clinical_plan')) return;
 
-    if (!isPremium) {
-        let trialStartStr = localStorage.getItem(TRIAL_START_KEY);
-        let lastGenStr = localStorage.getItem(LAST_GENERATION_KEY);
-
-        if (!trialStartStr) {
-            trialStartStr = now.toISOString();
-            localStorage.setItem(TRIAL_START_KEY, trialStartStr);
-        }
-
-        const trialStartDate = new Date(trialStartStr);
-        const diffDays = Math.ceil(Math.abs(now - trialStartDate) / (1000 * 60 * 60 * 24));
-
-        if (diffDays > MAX_FREE_DAYS) {
-            showPaywall("انتهت الفترة التجريبية!", "لقد استمتعت بتجربة 3 أيام مجاناً لمصمم البرامج. للاستمرار في التشخيص، يرجى الاشتراك.");
-            return;
-        }
-
-        if (lastGenStr === todayStr) {
-            showPaywall("استنفدت الحد اليومي!", "في الفترة التجريبية، يُسمح بتوليد برنامج واحد فقط يومياً.");
-            return;
-        }
-
-        localStorage.setItem(LAST_GENERATION_KEY, todayStr);
-    }
-
-    // --- Collect Diagnostic Data ---
+    // Proceed with plan generation logic
     const mizajSelection = document.getElementById('user-mizaj');
     const mizaj = mizajSelection.value;
     const blood = document.getElementById('user-blood').value;
