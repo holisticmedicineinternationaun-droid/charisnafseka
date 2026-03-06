@@ -61,8 +61,44 @@ function translateSymptom() {
                     <button class="btn-option" onclick="finalizeTranslation('bedwetting', 'fear')">يحدث بعد فزع أو توتر عصبي (يُبوسة وتقلص عصب)</button>
                 </div>
             </div>`;
+    } else if (input.includes("رعشة") || input.includes("رعشه") || input.includes("باركنسون")) {
+        responseHTML = `
+            <div class="translator-step">
+                <p><strong>الرعشة</strong> في كتب التراث هي خلل في "القوة المحركة" للأعصاب. لنحدد نوعها:</p>
+                <div class="options-grid" style="margin-top:15px;">
+                    <button class="btn-option" onclick="finalizeTranslation('tremor', 'cold')">رعشة تزداد مع البرد والراحة (برودة وبلغم غليظ)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('tremor', 'dry')">رعشة مستمرة مع جفاف في الجلد والريق (يُبوسة سوداوية)</button>
+                </div>
+            </div>`;
+    } else if (input.includes("شباب") || input.includes("بثور")) {
+        responseHTML = `
+            <div class="translator-step">
+                <p><strong>حب الشباب</strong> هو فوران للمادة الفضلية تحت الجلد. صف هذه البثور:</p>
+                <div class="options-grid" style="margin-top:15px;">
+                    <button class="btn-option" onclick="finalizeTranslation('acne', 'hot')">بثور حمراء مؤلمة وكبيرة (هيجان المادة الدموية)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('acne', 'white')">رؤوس بيضاء صلبة ومستمرة (غلظ في المادة البلغمية)</button>
+                </div>
+            </div>`;
+    } else if (input.includes("شعر") || input.includes("تساقط")) {
+        responseHTML = `
+            <div class="translator-step">
+                <p><strong>سقوط الشعر</strong> يعتمد على "تغذية المنبت" وفق منهج د. عبد الباسط:</p>
+                <div class="options-grid" style="margin-top:15px;">
+                    <button class="btn-option" onclick="finalizeTranslation('hairloss', 'dry')">شعر جاف، باهت، ويسقط بسهولة (يبوسة مفرطة)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('hairloss', 'weak')">شعر دهني لكنه ضعيف المنبت (رطوبة مرخية للمسام)</button>
+                </div>
+            </div>`;
+    } else if (input.includes("أرق") || input.includes("ارق") || input.includes("نوم")) {
+        responseHTML = `
+            <div class="translator-step">
+                <p><strong>الأرق</strong> هو غلبة اليبوسة على الدماغ. كيف تشعر قبل النوم؟</p>
+                <div class="options-grid" style="margin-top:15px;">
+                    <button class="btn-option" onclick="finalizeTranslation('insomnia', 'dry')">تفكير مفرط وجفاف في العين والأنف (يبوسة سوداوية)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('insomnia', 'hot')">قلق، كوابيس، وحرارة في الرأس (هيجان صفراوي)</button>
+                </div>
+            </div>`;
     } else {
-        responseHTML = `<p>عذراً، هذا المرض يحتاج لتدقيق أعمق عبر <strong>أكاديمية صحة الطفل</strong> أو <strong>مصمم البرامج</strong> لتحديد الخلط الغالب بدقة.</p>`;
+        responseHTML = `<p>هذه العلة مسجلة تحت باب "نوادر الأخلاط". يرجى تحديد العرض الأوضح لنربطه بمنهج <strong>ابن سينا</strong> أو <strong>د. عبد الباسط</strong> بدقة.</p>`;
     }
     responseDiv.innerHTML = responseHTML;
     responseDiv.classList.remove('hidden');
@@ -95,6 +131,22 @@ function finalizeTranslation(type, origin) {
         const text = origin === 'cold' ? "برودة ورخاوة المثانة" : "يبوسة وتقلص عصبي";
         const fix = origin === 'cold' ? "تدفئة المثانة بزيت زيتون، تناول عسل وجوز، منع السوائل ليلاً." : "ترطيب الأعصاب (بابونج)، منع التوتر، تدليك الظهر بزيت بنفسج.";
         finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}>استناداً لابن سينا: التبول اللاإرادي عجز من القوة الماسكة عن مدافعة القوة الدافعة بسبب البرد. <br><strong>الإصلاح:</strong> ${fix}</div>`;
+    } else if (type === 'tremor') {
+        const text = origin === 'cold' ? "رعشة بلغمية باردة" : "رعشة سوداوية يابسة";
+        const fix = origin === 'cold' ? "تحمية الأعصاب (زنجبيل، خردل)، منع الألبان والبارد." : "ترطيب الجهاز العصبي (أوميقا 3 طبيعي، دهن الظهر بزيت كتان)، منع الحوامض والمنبهات.";
+        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}>الرعشة هي اضطراب في الروح الحيوانية الحاملة للحركة بسبب غلظ المادة أو شدة اليبوسة (ابن سينا). <br><strong>الإصلاح:</strong> ${fix}</div>`;
+    } else if (type === 'acne') {
+        const text = origin === 'hot' ? "اندفاع دموي حار" : "بثور بلغمية غليظة";
+        const fix = origin === 'hot' ? "تنقية الدم (عشبة الهندباء، شرب السنا والسنوت شهرياً)، منع الحلاوة." : "تنشيف الجلد (ماء المرة)، تقليل النشويات والدهون المهدرجة.";
+        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}>حب الشباب علامة على امتلاء الكبد بفضول الأخلاط التي لم تجد مخرجاً إلا مسام الجلد. <br><strong>الإصلاح:</strong> ${fix}</div>`;
+    } else if (type === 'hairloss') {
+        const text = origin === 'dry' ? "يبوسة منبت (نقص تغذية)" : "رطوبة مرخية للمسام";
+        const fix = origin === 'dry' ? "ترطيب داخلي (زيت زيتون)، دهن الرأس بزيوت حارة (جرجير). كورس د. عبد الباسط: (أملج وكاموميل)." : "تنشيف الرطوبة الفضلية (رشة سدر)، منع غسل الشعر بماء حار جداً.";
+        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}>الشعر في الطب الأصيل دخان الأخلاط؛ بقاؤه يعتمد على اعتدال رطوبة الجلد وتغذية الدم. <br><strong>الإصلاح:</strong> ${fix}</div>`;
+    } else if (type === 'insomnia') {
+        const text = origin === 'dry' ? "يبوسة دماغية سوداوية" : "حدة صفراوية قلقة";
+        const fix = origin === 'dry' ? "ترطيب الأنف بزيت بنفسج، شرب حليب دافئ بملعقة عسل." : "تبريد الكبد (بريد الأعصاب بشم الورد)، منع السهر أمام الشاشات.";
+        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}>النوم رطوبة في الدماغ، واليقظة المفرطة يبوسة تستهلك الروح الغريزي. <br><strong>الإصلاح:</strong> ${fix}</div>`;
     }
 
     responseDiv.innerHTML = `<div class="fade-in">${finalCode}</div>`;
