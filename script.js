@@ -1067,13 +1067,7 @@ function activateApp() {
     }
 }
 
-// Populate Device ID on Load
-document.addEventListener('DOMContentLoaded', () => {
-    const devIdDisplay = document.getElementById('user-device-id-display');
-    if (devIdDisplay) {
-        devIdDisplay.innerText = getDeviceID();
-    }
-});
+// Device ID population handled in main initializer below.
 
 // --- DIAGNOSTIC WIZARD NAVIGATION ---
 function nextDiagStep(step) {
@@ -1427,6 +1421,12 @@ function renderHappinessCards() {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
+    // Populate Device ID
+    const devIdDisplay = document.getElementById('user-device-id-display');
+    if (devIdDisplay) {
+        devIdDisplay.innerText = getDeviceID();
+    }
+
     // Other initializations...
     renderHappinessCards();
     loadTF();
@@ -1434,9 +1434,23 @@ document.addEventListener('DOMContentLoaded', () => {
     loadTricky();
     renderAllGrids();
 
-    // Auto-scroll to top on tab change
+    // Tab Switching Logic (Fixes the "frozen" UI)
     document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', function () {
+            const targetId = this.getAttribute('data-target');
+            if (!targetId) return;
+
+            // Remove active class from all buttons and sections
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.interactive-section').forEach(s => s.classList.remove('active'));
+
+            // Activate clicked button and target section
+            this.classList.add('active');
+            const targetSection = document.getElementById(targetId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     });
@@ -1678,7 +1692,7 @@ const remedyDatabase = {
         blood: { herb: "الحجامة النبوية (التنقية الدموية)", prep: "تتم عند معالج خبير في الأيام (17، 19، 21) من الشهر الهجري.", dose: "جلسة واحدة في السنة أو عند هياج الدم الشديد.", duration: "تكرر حسب الحاجة الطبية والمزاجية." }
     },
     local: {
-        reducers: { items: ["أضمدة من الطين الأرمني"، "دهن الورد القابض"، "عنب الثعلب"], prep: "يُخلط الطين بالخل ودهن الورد حتى يصبح كالعجين اللين.", dose: "يُطلى به الموضع المتضرر (يُوضع بارلاً لردع المادة).", duration: "يُترك 4-6 ساعات في بداية طور الصعود." },
+        reducers: { items: ["أضمدة من الطين الأرمني", "دهن الورد القابض", "عنب الثعلب"], prep: "يُخلط الطين بالخل ودهن الورد حتى يصبح كالعجين اللين.", dose: "يُطلى به الموضع المتضرر (يُوضع بارداً لردع المادة).", duration: "يُترك 4-6 ساعات في بداية طور الصعود." },
         sedatives: { items: ["ضماد البابونج وبزر الكتان", "دهن اللوز الحلو والنيلوفر"], prep: "تُسخن بذور الكتان المهروسة مع قليل من دهن اللوز الساخن.", dose: "توضع دافئة (كمادة) على مكان الألم والالتهاب المستقر.", duration: "كل ليلة قبل النوم حتى سكون الألم." },
         anesthetics: { items: ["قشور الخشخاش وبزر البنج الموضعي", "الأفيون الخام (للطلاء)"], prep: "يُغلى قشر الخشخاش غلياً مركزاً حتى يسود لونه.", dose: "يُمسح به الموضع المتضرر مسحاً سطحياً (تحذير: سام عند الشرب).", duration: "للحالات القصوى من الألم غير المحتمل فقط." },
         liniments: { items: ["دهن القسط والسذاب والحرمل", "الزيت العتيق (القديم)"], prep: "تُنقع الأعشاب في زيت زيتون قديم لمدة 40 يوماً في الشمس.", dose: "دلك دائري لطيف للعضو فجراً قبل الحركة.", duration: "يومياً لمدة 21 يوماً لفتح السدد العصبية." }
