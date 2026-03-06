@@ -155,88 +155,127 @@ function finalizeTranslation(type, origin) {
     responseDiv.innerHTML = `<div class="fade-in">${finalCode}</div>`;
 }
 
+const mealKnowledgeBase = {
+    hot: {
+        score: 0,
+        keywords: ["بيتزا", "ببتزا", "مقليات", "زيت", "بطاطا", "شاورما", "برجر", "فلفل", "توابل", "ثوم", "بصل", "لحم", "دجاج", "سمك", "بيض", "تمر", "عسل", "سكر", "حلويات", "كيك", "قهوة", "شاي"],
+        note: "ترفع الحرارة الغريزية وتولد خلطاً حاراً (دموي أو صفراوي)."
+    },
+    cold: {
+        score: 0,
+        keywords: ["لبن", "زبادي", "حليب", "جبن", "خيار", "خس", "ليمون", "حامض", "برتقال", "فواكه", "عصير", "ماء", "باذنجان", "عدس"],
+        note: "تخفض الحرارة وتولد خلطاً بارداً (بلغمي أو سوداوي)."
+    },
+    dry: {
+        score: 0,
+        keywords: ["خبز", "معجنات", "عجين", "مكرونة", "ارز", "أرز", "بطاطس", "مقرمشات", "موالح", "خل", "سمك", "قهوة", "شاي", "عدس"],
+        note: "تنشف الرطوبات وتزيد من يبوسة الأخلاط والأنسجة."
+    },
+    wet: {
+        score: 0,
+        keywords: ["حليب", "زبادي", "قشطة", "زبدة", "مرق", "سوائل", "بطيخ", "قرع", "كوسا"],
+        note: "تزيد الرطوبة وتلين الطبيعة وتولد البلغم."
+    }
+};
+
 function analyzeLastMeal() {
     const inputEl = document.getElementById('last-meal-input');
     const resultDiv = document.getElementById('meal-analysis-result');
     if (!inputEl || !resultDiv) return;
-    const meal = inputEl.value.trim().toLowerCase();
-    if (!meal) return;
+    const mealText = inputEl.value.trim().toLowerCase();
+    if (!mealText) return;
 
-    // Check Trail Limit for Freemium
     if (!checkGlobalTrialLimit('meal_analyzer')) return;
 
-    // Check if user is typing a disease instead of a meal (variations like شقيقة/شقيقه)
-    if (meal.includes("شقيقة") || meal.includes("شقيقه") || meal.includes("صداع") || meal.includes("قولون") || meal.includes("مفاصل") || meal.includes("اكزيما")) {
+    // Check for disease names redirect
+    if (mealText.match(/شقيقة|صداع|قولون|مفاصل|اكزيما|صدفية|رعشة/)) {
         resultDiv.innerHTML = `
             <div class="meal-analysis-card">
-                <p style="color:#f87171; font-weight:bold;"><i class="fas fa-info-circle"></i> تنبيه نظام الاستدلال:</p>
-                <p>لقد كتبت اسماً لمرض أو عَرَض طبي. هذا القسم مخصص لـ <strong>"تحليل الكيمياء الحرارية للأكل"</strong> فقط.</p>
-                <p>فضلاً استخدم قسم <strong>"المترجم الفوري للأعراض"</strong> بالأسفل أو <strong>"أكاديمية صحة الطفل"</strong> لتشخيص الأمراض.</p>
+                <p style="color:#f87171; font-weight:bold;"><i class="fas fa-info-circle"></i> تنبيه المحرك الذكي:</p>
+                <p>يبدو أنك أدخلت اسماً لمرض. هذا القسم مخصص لـ <strong>"الكيمياء الحرارية للأغذية"</strong>.</p>
+                <p>يرجى استخدام <strong>"المترجم الفوري"</strong> بالأسفل للحصول على التشخيص الدقيق.</p>
             </div>`;
         resultDiv.classList.remove('hidden');
-        resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         return;
     }
 
-    let res = { q: "", bc: "", a: "", r: "", f: "" };
+    // --- The Smart Inference Engine ---
+    let stats = { hot: 0, cold: 0, dry: 0, wet: 0 };
+    let matchingFound = false;
+    let detectedComponents = [];
 
-    if (meal.includes("لبن") || meal.includes("زبادي") || meal.includes("حليب") || meal.includes("جبن")) {
-        res = {
-            q: "بارد رطب", bc: "quality-cold",
-            a: "الألبان ومشتقاتها تزيد من رطوبة المعدة وتولد البلغم خاصة إذا أُخذت باردة.",
-            r: "التعليل: المواد اللبنية بطبيعتها مائية (رطبة) وبطيئة الاستحالة (باردة).",
-            f: "أضف 'الكمون' أو تناول 3 تمرات لكسر بردتها."
-        };
-    } else if (meal.includes("بيتزا") || meal.includes("ببتزا") || meal.includes("مقليات") || meal.includes("زيت") || meal.includes("بطاطا") || meal.includes("شاورما") || meal.includes("برجر")) {
-        res = {
-            q: "حار يابس (محتسف)", bc: "quality-hot",
-            a: "الوجبات السريعة والمقليات تولد خلطاً صفراوياً حاداً يسبب العطش وفوران الدم.",
-            r: "التعليل: الزيت المعرض للنار المستمرة يفقد رطوبته ويصبح 'ناراً سائلة' ترفع حرارة الكبد.",
-            f: "تناول 'الخس' أو 'الخيار' فوراً لإطفاء هذا اللهيب."
-        };
-    } else if (meal.includes("معجنات") || meal.includes("خبز") || meal.includes("فطائر") || meal.includes("مكرونة") || meal.includes("ارز") || meal.includes("أرز") || meal.includes("عجين")) {
-        res = {
-            q: "ثقيل يابس", bc: "quality-dry",
-            a: "النشويات والعجين يثقل حركة الأمعاء وقد يسبب سدداً كبدية.",
-            r: "التعليل: العجين مادة غروية ثقيلة (للطف)، وميله لليبوسة يعجز الأمعاء عن تحريكه.",
-            f: "المشي قليلاً، وتناول ملعقة 'زيت زيتون' لتليين الطبيعة."
-        };
-    } else if (meal.includes("لحم") || meal.includes("دجاج") || meal.includes("بروتين") || meal.includes("سمك")) {
-        res = {
-            q: "حار رطب", bc: "quality-wet",
-            a: "البروتينات الحيوانية تولد دماً نقيّاً، لكن الإفراط فيها يسبب عفونة وامتلاء.",
-            r: "التعليل: اللحوم توافق طبيعة الدم (حار رطب)، لذا ترفع ضغط الأخلاط في العروق.",
-            f: "اعصر 'قطرات ليمون' على المرق، واشرب الكمون بعد الوجبة."
-        };
-    } else if (meal.includes("تمر") || meal.includes("حلويات") || meal.includes("سكر") || meal.includes("كيك")) {
-        res = {
-            q: "شديد الحرارة", bc: "quality-hot",
-            a: "سكريات الحلويات ترفع الحرارة الغريزية بسرعة فائقة وقد تسبب صداعاً.",
-            r: "التعليل: الحلاوة هي أسرع الكيفيات وصولاً للكبد وتسبب فوران الخلط قبل نضجه.",
-            f: "اشرب 'الماء الفاتر' ببطء، أو تناول شيئاً حامضاً لكسر حدتها."
-        };
-    } else if (meal.includes("قهوة") || meal.includes("شاي") || meal.includes("منبهات")) {
-        res = {
-            q: "بارد يابس", bc: "quality-cold-dry",
-            a: "المنبهات تجفف رطوبة الدماغ اللطيفة وتورث الأرق واليبوسة.",
-            r: "التعليل: العفوصة (المرارة) في الشاي والقهوة تقبض المسام وتجفف المواد.",
-            f: "اشرب كوب 'حليب دافئ' لترطيب الدماغ وتعويض السوائل."
-        };
+    // Scoring system
+    for (const [quality, data] of Object.entries(mealKnowledgeBase)) {
+        data.keywords.forEach(word => {
+            if (mealText.includes(word)) {
+                stats[quality]++;
+                matchingFound = true;
+                if (!detectedComponents.includes(word)) detectedComponents.push(word);
+            }
+        });
     }
 
-    if (res.q) {
+    if (!matchingFound) {
         resultDiv.innerHTML = `
             <div class="meal-analysis-card">
-                <span class="meal-quality-badge ${res.bc}">${res.q}</span>
-                <p><strong><i class="fas fa-microscope"></i> التحليل:</strong> ${res.a}</p>
-                <p style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; font-size: 0.9rem; border-right: 3px solid #d4af37;">
-                    <strong><i class="fas fa-scroll"></i> التعليل الطبي:</strong> ${res.r}
-                </p>
-                <div class="fix-suggestion"><strong><i class="fas fa-magic"></i> الإصلاح:</strong> ${res.f}</div>
+                <p><strong><i class="fas fa-brain"></i> تحليل ذكاء الوجبة:</strong></p>
+                <p>هذه الوجبة لم أتعرف على مكوناتها الدقيقة تماماً، لكن القاعدة الكلية لمدرستنا:</p>
+                <p style="font-style: italic; color: #d4af37;">"كل ما هو مصنّع أو مطبوخ بالزيت فهو يميل للحرارة واليبوسة، وكل ما هو طازج أو أبيض فهو يميل للبرودة والرطوبة."</p>
+                <div class="fix-suggestion"><strong>توجيه عام:</strong> وازن وجبتك دائماً بالضد؛ فاللحم يحتاج لليمون، والعجين يحتاج لمشي.</div>
             </div>`;
-    } else {
-        resultDiv.innerHTML = `<div class="meal-analysis-card"><p>الوجبة غير مسجلة بالتحديد، لكن القاعدة: <strong>كل ثقيل يحتاج لمسخن، وكل حار يحتاج لمبرد.</strong></strong></div>`;
+        resultDiv.classList.remove('hidden');
+        return;
     }
+
+    // Determine Resultant Temperament
+    let finalQ = "";
+    let finalBC = "";
+    let reason = "";
+    let fix = "";
+    let analysis = "";
+
+    // Calculation Logic
+    const netHeat = stats.hot - stats.cold;
+    const netMoist = stats.wet - stats.dry;
+
+    if (netHeat > 0 && netMoist >= 0) {
+        finalQ = "حار رطب (دموي)"; finalBC = "quality-wet";
+        analysis = "هذه الوجبة تولد دماً غزيراً وقد تسبب فوراناً إذا لم تُصلح.";
+        reason = "غلبت عليها المكونات التي ترفع الحرارة وتحفظ الرطوبة (مثل اللحوم والسمن).";
+        fix = "أضف الحوامض أو اشرب الكمون لكسر فضل الرطوبة.";
+    } else if (netHeat > 0 && netMoist < 0) {
+        finalQ = "حار يابس (صفراوي)"; finalBC = "quality-hot";
+        analysis = "وجبة نارية محترقة ترفع حرارة الكبد وتجفف رطوبة الأمعاء.";
+        reason = "وجود زيوت أو مكونات معالجة بالنار المستمرة (مثل المقليات أو البيتزا أو الشاورما).";
+        fix = "تناول الخس أو الخيار أو اشرب ماء الشعير فوراً لإطفاء اللهيب.";
+    } else if (netHeat < 0 && netMoist > 0) {
+        finalQ = "بارد رطب (بلغمي)"; finalBC = "quality-cold";
+        analysis = "وجبة بلغمية تزيد من رطوبة المعدة وتبطئ الهضم.";
+        reason = "تأثير مكونات الألبان أو السوائل الباردة التي تثقل الروح (مثل الزبادي أو الحليب).";
+        fix = "أضف الكمون أو الزنجبيل أو تناول 3 تمرات لرفع حرارتها.";
+    } else if (netHeat <= 0 && netMoist < 0) {
+        finalQ = "بارد يابس (سوداوي)"; finalBC = "quality-cold-dry";
+        analysis = "وجبة سوداوية تجفف البدن وتورث الفكر والهم.";
+        reason = "غلبت عليها المكونات القابضة أو الحامضة أو المجففة (مثل الباذنجان أو العدس أو المنبهات).";
+        fix = "دهن البدن بزيت الزيتون وتناول السكريات الطبيعية (عسل/تمر) للترطيب.";
+    } else {
+        finalQ = "معتدل (مشترك)"; finalBC = "quality-hot";
+        analysis = "الوجبة متوازنة في مكوناتها أو مجهولة المحصلة الدقيقة.";
+        reason = "تساوي القوى المبردة والمسخنة في مدخلات الوجبة.";
+        fix = "الاعتدال دائماً هو سيد الأحكام، استمر بصحة وعافية.";
+    }
+
+    resultDiv.innerHTML = `
+        <div class="meal-analysis-card slide-up">
+            <span class="meal-quality-badge ${finalBC}">${finalQ}</span>
+            <p><strong><i class="fas fa-microscope"></i> التحليل الحركي:</strong> ${analysis}</p>
+            <p style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; font-size: 0.9rem; border-right: 3px solid #d4af37;">
+                <strong><i class="fas fa-scroll"></i> الاستناد للمنهج:</strong> ${reason} 
+                <br><small style="color:#d4af37;">تم رصد مكونات: [${detectedComponents.join(' - ')}]</small>
+            </p>
+            <div class="fix-suggestion"><strong><i class="fas fa-magic"></i> قاعدة الإصلاح:</strong> ${fix}</div>
+        </div>`;
+
     resultDiv.classList.remove('hidden');
     resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
