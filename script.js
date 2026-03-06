@@ -2093,3 +2093,162 @@ function getOrganText(o) {
     return hints[o] || o;
 }
 
+// --- 1. Symptom Translator Logic ---
+function translateSymptom() {
+    const input = document.getElementById('modern-disease-input').value.trim().toLowerCase();
+    const responseDiv = document.getElementById('translator-response');
+
+    if (!input) return;
+
+    let responseHTML = "";
+    if (input.includes("قولون")) {
+        responseHTML = `
+            <div class="translator-step">
+                <p><strong>القولون</strong> له أصول مختلفة في الطب الأصيل. لنحدد أصل علتك:</p>
+                <div class="options-grid" style="margin-top:15px;">
+                    <button class="btn-option" onclick="finalizeTranslation('colon', 'bile')">يزداد الألم عند الغضب أو الحرارة (هيجان صفراوي)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('colon', 'black')">يزداد مع التفكير وكثرة الهم والبرد (غلبة سوداوية)</button>
+                </div>
+            </div>
+        `;
+    } else if (input.includes("شقيقة") || input.includes("صداع")) {
+        responseHTML = `
+            <div class="translator-step">
+                <p><strong>الصداع/الشقيقة</strong> تختلف باختلاف المادة. كيف تشعر برأسك؟</p>
+                <div class="options-grid" style="margin-top:15px;">
+                    <button class="btn-option" onclick="finalizeTranslation('headache', 'hot')">نبض حار وضربات قوية (هيجان دموي/صفراوي)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('headache', 'cold')">ثقل بارد وكأن الرأس مكبل (مادة بلغمية)</button>
+                </div>
+            </div>
+        `;
+    } else if (input.includes("مفاصل") || input.includes("روماتيزم")) {
+        responseHTML = `
+            <div class="translator-step">
+                <p><strong>آلام المفاصل</strong> تعتمد على الكيفية الغالبة. صف موضع الألم:</p>
+                <div class="options-grid" style="margin-top:15px;">
+                    <button class="btn-option" onclick="finalizeTranslation('joints', 'cold')">يزداد بالبرد والرطوبة ويتحسن بالتدفئة (بلغمي)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('joints', 'hot')">احمرار، تورم، وحرارة موضعية (دموي/صفراوي)</button>
+                </div>
+            </div>
+        `;
+    } else {
+        responseHTML = `<p>عذراً، هذا المرض يحتاج لتدقيق أعمق. يرجى استخدام <strong>"أكاديمية صحة الطفل"</strong> أو <strong>"مصمم البرامج"</strong> للتشخيص الشامل بناءً على العلامات العشر.</p>`;
+    }
+
+    responseDiv.innerHTML = responseHTML;
+    responseDiv.classList.remove('hidden');
+}
+
+function finalizeTranslation(type, origin) {
+    const responseDiv = document.getElementById('translator-response');
+    let finalMsg = "";
+
+    if (type === 'colon') {
+        finalMsg = origin === 'bile' ?
+            "التشخيص: <strong>هيجان صفراوي</strong>. الحل المبدئي: تبريد وترطيب (كزبرة، خيار) وتجنب المقليات." :
+            "التشخيص: <strong>غلبة سوداوية</strong>. الحل المبدئي: ترطيب وتدفئة (يانسون، بابونج) والابتعاد عن الهموم.";
+    } else if (type === 'headache') {
+        finalMsg = origin === 'hot' ?
+            "التشخيص: <strong>هيجان حار / دموي</strong>. الحل المبدئي: تنفس عميق، حجامة (عند الحاجة)، وشموم بارد (ورد/بنفسج)." :
+            "التشخيص: <strong>امتلاء بلغمي</strong>. الحل المبدئي: مسخنات (زنجبيل، قرفة) وتجنب الألبان والأسماك فوراً.";
+    } else if (type === 'joints') {
+        finalMsg = origin === 'cold' ?
+            "التشخيص: <strong>رطوبة بلغمية</strong>. الحل المبدئي: تجفيف وتدفئة (تدليك بزيت الحرمل أو القسط) وتجنب النوم في مكان بارد." :
+            "التشخيص: <strong>هياج مادي حار</strong>. الحل المبدئي: تبريد موضعي بخل ورد، وتقليل اللحوم الحمراء.";
+    }
+
+    responseDiv.innerHTML = `<p class="fade-in">${finalMsg}</p><p style="font-size:0.9rem; margin-top:10px; color:#a0aec0;">وجهتك الآن هي: "مصمم البرامج" لتثبيت خطة علاجية شاملة.</p>`;
+}
+
+// --- 2. Emergency Button Logic ---
+let emergencyData = { tongue: '', skin: '', pain: '' };
+function openEmergencyModal() {
+    document.getElementById('emergency-modal').style.display = 'block';
+    resetEmergency();
+}
+function closeEmergencyModal() { document.getElementById('emergency-modal').style.display = 'none'; }
+function selectEmergencyOption(step, value) {
+    emergencyData[step] = value;
+    let currentStepNum = step === 'tongue' ? 1 : (step === 'skin' ? 2 : 3);
+    document.getElementById(`e-step-${currentStepNum}`).classList.remove('active');
+
+    if (currentStepNum < 3) {
+        document.getElementById(`e-step-${currentStepNum + 1}`).classList.add('active');
+    } else {
+        showEmergencyResult();
+    }
+}
+function showEmergencyResult() {
+    const resDiv = document.getElementById('emergency-result-content');
+    let resultHTML = "<h3><i class='fas fa-check-circle'></i> البروتوكول الإسعافي المقترح:</h3>";
+
+    if (emergencyData.tongue === 'white' || emergencyData.skin === 'cold-wet') {
+        resultHTML += `<p><strong>الحالة:</strong> نوبة بلغمية (برودة ورطوبة).</p>
+                       <div class='fix-suggestion'>تناول كوب زنجبيل دافئ فوراً، وقم بتدفئة أطرافك. تجنب الماء البارد تماماً.</div>`;
+    } else if (emergencyData.tongue === 'yellow' || emergencyData.skin === 'hot-dry') {
+        resultHTML += `<p><strong>الحالة:</strong> فوران صفراوي (حرارة ويبوسة).</p>
+                       <div class='fix-suggestion'>استخدم "مستحلب الكزبرة" أو استنشق ماء الورد البارد. اغسل وجهك بماء فاتر مائل للبرودة.</div>`;
+    } else if (emergencyData.tongue === 'red' || emergencyData.skin === 'hot-wet') {
+        resultHTML += `<p><strong>الحالة:</strong> هيجان دموي (حرارة ورطوبة).</p>
+                       <div class='fix-suggestion'>اشرب ماءً فاترًا ببطء، ضع كمادة باردة على خلف الرقبة، ومارس "التنفس التفريغي" (شهيق قصير زفير طويل).</div>`;
+    } else if (emergencyData.tongue === 'dark' || emergencyData.skin === 'cold-dry') {
+        resultHTML += `<p><strong>الحالة:</strong> تشنج سوداوي (برودة ويبوسة).</p>
+                       <div class='fix-suggestion'>اشرب منقوع البابونج الدافئ، وقم بتدليك باطن القدم بزيت زيتون دافئ. ابتعد عن الضوضاء.</div>`;
+    } else {
+        resultHTML += `<p>حالتك تتطلب موازنة لطيفة. ابدأ بشرب كوب ماء فاتر مع ملعقة عسل صغيرة لتعزيز القوة الغريزية.</p>`;
+    }
+
+    resultHTML += `<p style="margin-top:15px; font-size:0.9rem;">هذا التدبير لتسكين العرض فقط، يرجى إتمام التشخيص المعمق عبر القائمة الرئيسية.</p>`;
+    resDiv.innerHTML = resultHTML;
+    document.getElementById('e-step-result').classList.add('active');
+}
+function resetEmergency() {
+    emergencyData = { tongue: '', skin: '', pain: '' };
+    document.querySelectorAll('.emergency-step').forEach(s => s.classList.remove('active'));
+    document.getElementById('e-step-1').classList.add('active');
+}
+
+// --- 3. Meal Analyzer Logic ---
+function analyzeLastMeal() {
+    const meal = document.getElementById('last-meal-input').value.trim().toLowerCase();
+    const resultDiv = document.getElementById('meal-analysis-result');
+
+    if (!meal) return;
+
+    let analysis = "";
+    if (meal.includes("لبن") || meal.includes("زبادي") || meal.includes("حليب") || meal.includes("جبن")) {
+        analysis = `
+            <div class="meal-analysis-header"><i class="fas fa-snowflake"></i> <h4>تحليل الألبان</h4></div>
+            <span class="meal-quality-badge quality-cold">بارد رطب</span>
+            <p>الألبان تزيد من رطوبة المعدة وتبطئ الهضم إذا أُخذت وحدها.</p>
+            <div class="fix-suggestion"><strong>الإصلاح الفوري:</strong> أضف "الكمون" أو "الزعتر" أو تناول "تمرات" بعدها لكسر برودتها وتنشيط الهضم.</div>
+        `;
+    } else if (meal.includes("مقليات") || meal.includes("بطاطا") || meal.includes("زيت")) {
+        analysis = `
+            <div class="meal-analysis-header"><i class="fas fa-fire"></i> <h4>تحليل المقليات</h4></div>
+            <span class="meal-quality-badge quality-hot">حار يابس</span>
+            <p>المقليات تولد أخلاطاً حادة وتسبب العطش وحرقة المعدة.</p>
+            <div class="fix-suggestion"><strong>الإصلاح الفوري:</strong> تناول "الخس" أو "الخيار" أو اشرب "ماء الشعير" لإطفاء لهيب الزيوت المحروقة.</div>
+        `;
+    } else if (meal.includes("معجنات") || meal.includes("خبز") || meal.includes("فطائر")) {
+        analysis = `
+            <div class="meal-analysis-header"><i class="fas fa-mountain"></i> <h4>تحليل المعجنات</h4></div>
+            <span class="meal-quality-badge quality-dry">ثقيل يابس</span>
+            <p>العجين الثقيل يسبب سدداً في المسام ويثقل الرأس.</p>
+            <div class="fix-suggestion"><strong>الإصلاح الفوري:</strong> المشي قليلاً بعد الوجبة، وتناول ملعقة "زيت زيتون" لتليين الطبيعة ومنع الامساك.</div>
+        `;
+    } else if (meal.includes("حلويات") || meal.includes("سكر") || meal.includes("كيك")) {
+        analysis = `
+            <div class="meal-analysis-header"><i class="fas fa-tint"></i> <h4>تحليل الحلويات</h4></div>
+            <span class="meal-quality-badge quality-hot">مركز حار رطب</span>
+            <p>السكريات المركزة تفور بالدم وتسبب ثقلاً وبلادة.</p>
+            <div class="fix-suggestion"><strong>الإصلاح الفوري:</strong> اشرب ماءً مضافاً إليه "قطرات ليمون" لكسر حدة الحلاوة وتصفية الكبد.</div>
+        `;
+    } else {
+        analysis = `<p>الوجبة غير مسجلة في "كيميائي الوجبات" السريع، لكن القاعدة تقول: <strong>كل ثقيل يحتاج لمسخن، وكل حار يحتاج لمبرد.</strong> حاول موازنة وجبتك بالضد.</p>`;
+    }
+
+    resultDiv.innerHTML = analysis;
+    resultDiv.classList.remove('hidden');
+}
+

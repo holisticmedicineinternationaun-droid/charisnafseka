@@ -57,6 +57,12 @@
                 <button class="nav-btn" data-target="section-child-academy">
                     <i class="fas fa-child"></i> أكاديمية صحة الطفل (تشخيص وغذاء)
                 </button>
+                <button class="nav-btn emergency-btn" onclick="openEmergencyModal()">
+                    <i class="fas fa-exclamation-triangle"></i> زر الطوارئ - أسعفني الآن
+                </button>
+                <button class="nav-btn" data-target="section-meal-analyzer">
+                    <i class="fas fa-pie-chart"></i> محلل الوجبة الأخيرة
+                </button>
                 <button class="nav-btn" data-target="section-pricing"
                     style="background: linear-gradient(135deg, #d4af37, #b8982c); color: var(--primary-color); border: 1px solid #fff;"><i
                         class="fas fa-crown"></i> الباقات والاشتراك</button>
@@ -413,6 +419,18 @@
                     </div>
                 </div>
 
+                <!-- وحدة المترجم الفوري للأعراض -->
+                <div class="symptom-translator-card">
+                    <h3><i class="fas fa-stethoscope"></i> المترجم الفوري للأعراض (التشخيص الاستدلالي)</h3>
+                    <p>أدخل اسم المرض الحديث الذي تعاني منه لنردك إلى أصله الخلطي.</p>
+                    <div class="translator-input-group">
+                        <input type="text" id="modern-disease-input"
+                            placeholder="ماذا تعاني؟ اكتب مرضك هنا (مثلاً: قولون، شقيقة، مفاصل)...">
+                        <button onclick="translateSymptom()"><i class="fas fa-magic"></i> ترجم الآن</button>
+                    </div>
+                    <div id="translator-response" class="translator-response hidden"></div>
+                </div>
+
                 <div class="intro-header">
 
                     <h2><i class="fas fa-project-diagram"></i> الأخلاط الأربعة عند ابن سينا</h2>
@@ -643,6 +661,26 @@
                 </div>
             </section>
 
+            <!-- القسم الجديد: محلل الوجبة الأخيرة -->
+            <section id="section-meal-analyzer" class="interactive-section">
+                <div class="academy-intro">
+                    <h2><i class="fas fa-utensils"></i> كيميائي الوجبة الأخيرة</h2>
+                    <p>أحلل لك ما أكلت للتو وأخبرك كيف توازن أثره على بدنك فوراً.</p>
+                </div>
+                <div class="tricky-container">
+                    <div class="input-group">
+                        <label>ماذا أكلت مؤخراً؟ (اكتب صنفاً واحداً أو وجبة كاملة):</label>
+                        <div style="display:flex; gap:10px;">
+                            <input type="text" id="last-meal-input" placeholder="مثلاً: لبن، مقليات، معجنات، حلويات..."
+                                style="flex:1;">
+                            <button class="btn btn-generate" onclick="analyzeLastMeal()"><i
+                                    class="fas fa-search-plus"></i> تحليل الوجبة</button>
+                        </div>
+                    </div>
+                    <div id="meal-analysis-result" class="meal-analysis-card hidden"></div>
+                </div>
+            </section>
+
             <!-- القسم الجديد: تدبير وإصلاح 100 وجبة يومية -->
             <section id="section-meals" class="interactive-section">
                 <h2>تدبير الوجبات: إصلاح 100 وجبة من مطبخك البسيط</h2>
@@ -743,6 +781,52 @@
                 </div>
 
                 <!-- Lightbox Modal -->
+                <!-- Emergency Modal -->
+                <div id="emergency-modal" class="lightbox-modal" style="display: none; z-index: 100000;">
+                    <div class="lightbox-content emergency-content">
+                        <span class="lightbox-close" onclick="closeEmergencyModal()">&times;</span>
+                        <h2 class="emergency-title"><i class="fas fa-bolt"></i> خلية الإسعاف الاستدلالي الفوري</h2>
+                        <p class="emergency-subtitle">أجب بدقة لنتدارك ثوران الأخلاط الآن</p>
+
+                        <div id="emergency-wizard">
+                            <!-- Step 1: Tongue -->
+                            <div class="emergency-step active" id="e-step-1">
+                                <h4><i class="fas fa-comment-dots"></i> 1. ما هو لون اللسان الآن؟</h4>
+                                <div class="options-grid">
+                                    <button onclick="selectEmergencyOption('tongue', 'white')">أبيض باهت</button>
+                                    <button onclick="selectEmergencyOption('tongue', 'red')">أحمر قانٍ</button>
+                                    <button onclick="selectEmergencyOption('tongue', 'yellow')">أصفر</button>
+                                    <button onclick="selectEmergencyOption('tongue', 'dark')">مائل للسواد</button>
+                                </div>
+                            </div>
+                            <!-- Step 2: Skin -->
+                            <div class="emergency-step" id="e-step-2">
+                                <h4><i class="fas fa-hand-holding"></i> 2. كيف هو ملمس جلدك؟</h4>
+                                <div class="options-grid">
+                                    <button onclick="selectEmergencyOption('skin', 'hot-dry')">حار جاف</button>
+                                    <button onclick="selectEmergencyOption('skin', 'cold-wet')">بارد رطب</button>
+                                    <button onclick="selectEmergencyOption('skin', 'hot-wet')">حار رطب</button>
+                                    <button onclick="selectEmergencyOption('skin', 'cold-dry')">بارد جاف</button>
+                                </div>
+                            </div>
+                            <!-- Step 3: Pain -->
+                            <div class="emergency-step" id="e-step-3">
+                                <h4><i class="fas fa-wave-square"></i> 3. ما هي طبيعة الألم؟</h4>
+                                <div class="options-grid">
+                                    <button onclick="selectEmergencyOption('pain', 'fixed')">ثابت ووخزي</button>
+                                    <button onclick="selectEmergencyOption('pain', 'moving')">متنقل وضاغط</button>
+                                </div>
+                            </div>
+                            <!-- Result -->
+                            <div class="emergency-step" id="e-step-result">
+                                <div id="emergency-result-content"></div>
+                                <button class="btn btn-reset" onclick="resetEmergency()"
+                                    style="margin-top:20px; width:100%;">فتح تشخيص جديد</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div id="image-lightbox" class="lightbox-modal" onclick="closeLightbox(event)">
                     <span class="lightbox-close" onclick="closeLightbox(event)">&times;</span>
                     <img class="lightbox-content" id="lightbox-img">
