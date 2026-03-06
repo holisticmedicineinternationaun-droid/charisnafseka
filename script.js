@@ -123,80 +123,73 @@ function analyzeLastMeal() {
     const meal = inputEl.value.trim().toLowerCase();
     if (!meal) return;
 
+    // Check if user is typing a disease instead of a meal
+    if (meal.includes("شقيقة") || meal.includes("صداع") || meal.includes("قولون") || meal.includes("مفاصل")) {
+        resultDiv.innerHTML = `<p style="color:#f87171;"><i class="fas fa-info-circle"></i> يبدو أنك كتبت اسماً لمرض. فضلاً استخدم <strong>"المترجم الفوري"</strong> بالأسفل لهذا الغرض.</p>`;
+        resultDiv.classList.remove('hidden');
+        return;
+    }
+
     let analysis = "";
     if (meal.includes("لبن") || meal.includes("زبادي") || meal.includes("حليب") || meal.includes("جبن")) {
         analysis = `
             <span class="meal-quality-badge quality-cold">بارد رطب</span>
-            <p><strong>التحليل:</strong> الألبان ومشتقاتها تزيد من رطوبة المعدة وتولد البلغم إذا أُخذت باردة.</p>
-            <div class="fix-suggestion"><strong>الإصلاح:</strong> أضف "الكمون" أو "الزعتر" أو تناول 3 تمرات لكسر برودتها وتنشيط الهضم.</div>
+            <p><strong>التحليل:</strong> الألبان تزيد رطوبة المعدة وتولد البلغم. <strong>الإصلاح:</strong> أضف "الكمون" أو تناول 3 تمرات.</p>
         `;
-    } else if (meal.includes("مقليات") || meal.includes("زيت") || meal.includes("بطاطا")) {
+    } else if (meal.includes("مقليات") || meal.includes("زيت") || meal.includes("بطاطا") || meal.includes("بيتزا") || meal.includes("شاورما") || meal.includes("برجر")) {
         analysis = `
-            <span class="meal-quality-badge quality-hot">حار يابس</span>
-            <p><strong>التحليل:</strong> الزيوت المحروقة تولد خلطاً صفراوياً حاداً يسبب العطش وحرقة الصدر.</p>
-            <div class="fix-suggestion"><strong>الإصلاح:</strong> تناول "الخس" أو "الخيار" أو اشرب "ماء الشعير" المبرد فوراً لإطفاء لهيبها.</div>
+            <span class="meal-quality-badge quality-hot">حار يابس (ثقيل)</span>
+            <p><strong>التحليل:</strong> المقليات والوجبات السريعة (مثل البيتزا) تولد خلطاً صفراوياً حاداً. <strong>الإصلاح:</strong> تناول "الخس" أو "الخيار" فوراً.</p>
         `;
-    } else if (meal.includes("معجنات") || meal.includes("خبز") || meal.includes("فطائر")) {
+    } else if (meal.includes("معجنات") || meal.includes("خبز") || meal.includes("فطائر") || meal.includes("مكرونة") || meal.includes("ارز") || meal.includes("أرز") || meal.includes("عجين")) {
         analysis = `
             <span class="meal-quality-badge quality-dry">ثقيل يابس</span>
-            <p><strong>التحليل:</strong> العجين المركز يسبب سدداً في مسام الكبد ويثقل حركة الأمعاء.</p>
-            <div class="fix-suggestion"><strong>الإصلاح:</strong> المشي قليلاً، وتناول ملعقة "زيت زيتون" لتليين الطبيعة ومنع الامساك السددي.</div>
+            <p><strong>التحليل:</strong> النشويات والعجين تسبب سدداً في المسالك. <strong>الإصلاح:</strong> ملعقة "زيت زيتون" وحركة خفيفة.</p>
         `;
-    } else if (meal.includes("لحم") || meal.includes("دجاج") || meal.includes("بروتين")) {
+    } else if (meal.includes("لحم") || meal.includes("دجاج") || meal.includes("بروتين") || meal.includes("سمك")) {
         analysis = `
-            <span class="meal-quality-badge quality-hot">حار رطب (غالباً)</span>
-            <p><strong>التحليل:</strong> اللحوم تولد دماً نقياً لكن كثرتها تفور بالبدن وتورث الثقل.</p>
-            <div class="fix-suggestion"><strong>الإصلاح:</strong> اعصر "قطرات ليمون" على المرق، واشرب الكمون بعد الوجبة لتهدئة الرياح.</div>
+            <span class="meal-quality-badge quality-hot">حار رطب</span>
+            <p><strong>التحليل:</strong> البروتينات تغذي الدم ولكن كثرتها تورث الثقل. <strong>الإصلاح:</strong> رشة كمون وقطرات ليمون.</p>
         `;
-    } else if (meal.includes("تمر") || meal.includes("حلويات") || meal.includes("سكر")) {
+    } else if (meal.includes("تمر") || meal.includes("حلويات") || meal.includes("سكر") || meal.includes("فواكه")) {
         analysis = `
-            <span class="meal-quality-badge quality-hot">شديد الحرارة</span>
-            <p><strong>التحليل:</strong> الحلاوة ترفع الحرارة الغريزية بسرعة وقد تسبب صداعاً أو فوراناً في الدم.</p>
-            <div class="fix-suggestion"><strong>الإصلاح:</strong> اشرب "الماء الفاتر" ببطء، أو تناول شيئاً حامضاً (خل أو ليمون) لكسر حدتها.</div>
+            <span class="meal-quality-badge quality-hot">حار رطب (مركز)</span>
+            <p><strong>التحليل:</strong> السكريات تفور بالدم وترفع الحرارة الغريزية. <strong>الإصلاح:</strong> اشرب ماءً فاتراً لكسر حدة الحلاوة.</p>
         `;
     } else if (meal.includes("قهوة") || meal.includes("شاي") || meal.includes("منبهات")) {
         analysis = `
             <span class="meal-quality-badge quality-cold-dry">بارد يابس</span>
-            <p><strong>التحليل:</strong> القهوة والشاي يجففان رطوبة الدماغ ويورثان الأرق واليبوسة.</p>
-            <div class="fix-suggestion"><strong>الإصلاح:</strong> اشرب "الحليب الدافئ" أو مرق الدجاج لترطيب الدماغ وتعويض السوائل.</div>
+            <p><strong>التحليل:</strong> المنبهات تجفف رطوبة الدماغ وتورث الأرق. <strong>الإصلاح:</strong> اشرب كوب حليب دافئ لترطيب الدماغ.</p>
         `;
     } else {
-        analysis = `<p>الوجبة غير مسجلة في "كيميائي الوجبات" السريع، لكن القاعدة الذهبية تقول: <strong>كل ثقيل يحتاج لمسخن، وكل حار يحتاج لمبرد.</strong> حاول دائماً موازنة وجبتك بما يضادها من كيفيات.</p>`;
+        analysis = `<p>الوجبة غير مسجلة بالتحديد، لكن القاعدة: <strong>كل ثقيل يحتاج لمسخن، وكل حار يحتاج لمبرد.</strong> حاول موازنة أثرها فوراً.</p>`;
     }
+
     resultDiv.innerHTML = analysis;
     resultDiv.classList.remove('hidden');
     resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 // --- Navigation Logic (Simplified and Optimized) ---
-document.addEventListener('click', function (e) {
-    const btn = e.target.closest('.nav-btn');
-    if (!btn) return;
+document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', function (e) {
+        const targetId = this.getAttribute('data-target');
 
-    // Check if it's the emergency button (which has no data-target)
-    const targetId = btn.getAttribute('data-target');
-    if (!targetId) {
-        // If it's a button with an onclick (like emergency), we don't preventDefault
-        // This ensures the inline onclick="openEmergencyModal()" fires correctly.
-        return;
-    }
+        // If button has data-target, handle section switching
+        if (targetId) {
+            e.preventDefault();
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.interactive-section').forEach(s => s.classList.remove('active'));
 
-    e.preventDefault();
-
-    // Remove active state
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.interactive-section').forEach(s => s.classList.remove('active'));
-
-    // Set active state
-    btn.classList.add('active');
-    const targetEl = document.getElementById(targetId);
-    if (targetEl) {
-        targetEl.classList.add('active');
-        // Simple scroll for maximum compatibility
-        const yOffset = -100;
-        const y = targetEl.getBoundingClientRect().top + window.pageYOffset + yOffset;
-        window.scrollTo({ top: y, behavior: 'smooth' });
-    }
+            this.classList.add('active');
+            const targetEl = document.getElementById(targetId);
+            if (targetEl) {
+                targetEl.classList.add('active');
+                window.scrollTo({ top: targetEl.offsetTop - 100, behavior: 'smooth' });
+            }
+        }
+        // If NO data-target (like Emergency), do NOT preventDefault, let onclick work naturally.
+    });
 });
 
 // --- HUMORS MAP LOGIC ---
