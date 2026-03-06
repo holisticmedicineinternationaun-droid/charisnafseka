@@ -667,14 +667,15 @@
                     <h2><i class="fas fa-utensils"></i> كيميائي الوجبة الأخيرة</h2>
                     <p>أحلل لك ما أكلت للتو وأخبرك كيف توازن أثره على بدنك فوراً.</p>
                 </div>
-                <div class="tricky-container">
-                    <div class="input-group">
-                        <label>ماذا أكلت مؤخراً؟ (اكتب صنفاً واحداً أو وجبة كاملة):</label>
-                        <div style="display:flex; gap:10px;">
-                            <input type="text" id="last-meal-input" placeholder="مثلاً: لبن، مقليات، معجنات، حلويات..."
-                                style="flex:1;">
-                            <button class="btn btn-generate" onclick="analyzeLastMeal()"><i
-                                    class="fas fa-search-plus"></i> تحليل الوجبة</button>
+                <div class="meal-analyzer-container">
+                    <div class="input-group-premium">
+                        <label><i class="fas fa-edit"></i> ماذا أكلت في آخر وجبة؟</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="last-meal-input" class="premium-input"
+                                placeholder="مثلاً: مقليات مع زبادي، أو معجنات وشاي...">
+                            <button class="btn-analyze" onclick="analyzeLastMeal()">
+                                <i class="fas fa-microscope"></i> حلل وجبتي
+                            </button>
                         </div>
                     </div>
                     <div id="meal-analysis-result" class="meal-analysis-card hidden"></div>
@@ -1173,7 +1174,7 @@
                 </div>
             </div>
 
-            <div id="e-step-2" class="emergency-step" style="display: none;">
+            <div id="e-step-2" class="emergency-step">
                 <h4>2. كيف هو ملمس جلدك؟</h4>
                 <div class="options-grid">
                     <button class="btn-option" onclick="selectEmergencyOption('skin', 'hot-dry')">حار جاف</button>
@@ -1183,7 +1184,7 @@
                 </div>
             </div>
 
-            <div id="e-step-3" class="emergency-step" style="display: none;">
+            <div id="e-step-3" class="emergency-step">
                 <h4>3. ما طبيعة الألم؟</h4>
                 <div class="options-grid">
                     <button class="btn-option" onclick="selectEmergencyOption('pain', 'fixed')">ثابت وواخز</button>
@@ -1191,7 +1192,7 @@
                 </div>
             </div>
 
-            <div id="e-step-result" class="emergency-step" style="display: none;">
+            <div id="e-step-result" class="emergency-step">
                 <div id="emergency-result-content"></div>
                 <button class="btn btn-reset" onclick="resetEmergency()" style="margin-top:20px;">بدء من جديد</button>
             </div>

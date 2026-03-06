@@ -124,17 +124,48 @@ function analyzeLastMeal() {
     if (!meal) return;
 
     let analysis = "";
-    if (meal.includes("لبن") || meal.includes("زبادي") || meal.includes("حليب")) {
-        analysis = `<span class="meal-quality-badge quality-cold">بارد رطب</span><p>الألبان تزيد الرطوبة. <strong>الإصلاح:</strong> أضف الكمون أو تناول تمرات بعها.</p>`;
-    } else if (meal.includes("مقليات") || meal.includes("زيت")) {
-        analysis = `<span class="meal-quality-badge quality-hot">حار يابس</span><p>المقليات تولد أخلاطاً حادة. <strong>الإصلاح:</strong> تناول الخس أو الخيار بعدها.</p>`;
-    } else if (meal.includes("معجنات") || meal.includes("خبز")) {
-        analysis = `<span class="meal-quality-badge quality-dry">ثقيل يابس</span><p>العجين يسبب سدداً. <strong>الإصلاح:</strong> ملعقة زيت زيتون ومشية خفيفة.</p>`;
+    if (meal.includes("لبن") || meal.includes("زبادي") || meal.includes("حليب") || meal.includes("جبن")) {
+        analysis = `
+            <span class="meal-quality-badge quality-cold">بارد رطب</span>
+            <p><strong>التحليل:</strong> الألبان ومشتقاتها تزيد من رطوبة المعدة وتولد البلغم إذا أُخذت باردة.</p>
+            <div class="fix-suggestion"><strong>الإصلاح:</strong> أضف "الكمون" أو "الزعتر" أو تناول 3 تمرات لكسر برودتها وتنشيط الهضم.</div>
+        `;
+    } else if (meal.includes("مقليات") || meal.includes("زيت") || meal.includes("بطاطا")) {
+        analysis = `
+            <span class="meal-quality-badge quality-hot">حار يابس</span>
+            <p><strong>التحليل:</strong> الزيوت المحروقة تولد خلطاً صفراوياً حاداً يسبب العطش وحرقة الصدر.</p>
+            <div class="fix-suggestion"><strong>الإصلاح:</strong> تناول "الخس" أو "الخيار" أو اشرب "ماء الشعير" المبرد فوراً لإطفاء لهيبها.</div>
+        `;
+    } else if (meal.includes("معجنات") || meal.includes("خبز") || meal.includes("فطائر")) {
+        analysis = `
+            <span class="meal-quality-badge quality-dry">ثقيل يابس</span>
+            <p><strong>التحليل:</strong> العجين المركز يسبب سدداً في مسام الكبد ويثقل حركة الأمعاء.</p>
+            <div class="fix-suggestion"><strong>الإصلاح:</strong> المشي قليلاً، وتناول ملعقة "زيت زيتون" لتليين الطبيعة ومنع الامساك السددي.</div>
+        `;
+    } else if (meal.includes("لحم") || meal.includes("دجاج") || meal.includes("بروتين")) {
+        analysis = `
+            <span class="meal-quality-badge quality-hot">حار رطب (غالباً)</span>
+            <p><strong>التحليل:</strong> اللحوم تولد دماً نقياً لكن كثرتها تفور بالبدن وتورث الثقل.</p>
+            <div class="fix-suggestion"><strong>الإصلاح:</strong> اعصر "قطرات ليمون" على المرق، واشرب الكمون بعد الوجبة لتهدئة الرياح.</div>
+        `;
+    } else if (meal.includes("تمر") || meal.includes("حلويات") || meal.includes("سكر")) {
+        analysis = `
+            <span class="meal-quality-badge quality-hot">شديد الحرارة</span>
+            <p><strong>التحليل:</strong> الحلاوة ترفع الحرارة الغريزية بسرعة وقد تسبب صداعاً أو فوراناً في الدم.</p>
+            <div class="fix-suggestion"><strong>الإصلاح:</strong> اشرب "الماء الفاتر" ببطء، أو تناول شيئاً حامضاً (خل أو ليمون) لكسر حدتها.</div>
+        `;
+    } else if (meal.includes("قهوة") || meal.includes("شاي") || meal.includes("منبهات")) {
+        analysis = `
+            <span class="meal-quality-badge quality-cold-dry">بارد يابس</span>
+            <p><strong>التحليل:</strong> القهوة والشاي يجففان رطوبة الدماغ ويورثان الأرق واليبوسة.</p>
+            <div class="fix-suggestion"><strong>الإصلاح:</strong> اشرب "الحليب الدافئ" أو مرق الدجاج لترطيب الدماغ وتعويض السوائل.</div>
+        `;
     } else {
-        analysis = `<p>الوجبة غير مسجلة، لكن القاعدة: <strong>كل ثقيل يحتاج لمسخن، وكل حار يحتاج لمبرد.</strong></p>`;
+        analysis = `<p>الوجبة غير مسجلة في "كيميائي الوجبات" السريع، لكن القاعدة الذهبية تقول: <strong>كل ثقيل يحتاج لمسخن، وكل حار يحتاج لمبرد.</strong> حاول دائماً موازنة وجبتك بما يضادها من كيفيات.</p>`;
     }
     resultDiv.innerHTML = analysis;
     resultDiv.classList.remove('hidden');
+    resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 // --- Navigation Logic (Simplified and Optimized) ---
@@ -142,8 +173,13 @@ document.addEventListener('click', function (e) {
     const btn = e.target.closest('.nav-btn');
     if (!btn) return;
 
+    // Check if it's the emergency button (which has no data-target)
     const targetId = btn.getAttribute('data-target');
-    if (!targetId) return; // Let onclick handlers (Emergency) work naturally
+    if (!targetId) {
+        // If it's a button with an onclick (like emergency), we don't preventDefault
+        // This ensures the inline onclick="openEmergencyModal()" fires correctly.
+        return;
+    }
 
     e.preventDefault();
 
