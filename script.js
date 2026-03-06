@@ -219,9 +219,13 @@ function analyzeLastMeal() {
         resultDiv.innerHTML = `
             <div class="meal-analysis-card">
                 <p><strong><i class="fas fa-brain"></i> تحليل ذكاء الوجبة:</strong></p>
-                <p>هذه الوجبة لم أتعرف على مكوناتها الدقيقة تماماً، لكن القاعدة الكلية لمدرستنا:</p>
-                <p style="font-style: italic; color: #d4af37;">"كل ما هو مصنّع أو مطبوخ بالزيت فهو يميل للحرارة واليبوسة، وكل ما هو طازج أو أبيض فهو يميل للبرودة والرطوبة."</p>
-                <div class="fix-suggestion"><strong>توجيه عام:</strong> وازن وجبتك دائماً بالضد؛ فاللحم يحتاج لليمون، والعجين يحتاج لمشي.</div>
+                <p>لم أتعرف على تفاصيل هذه الوجبة في قاعدة الكلمات الحالية، لكن استناداً لقاعدة <strong>كليات الطب (ابن سينا، الأنطاكي، د. عبد الباسط السيد)</strong>:</p>
+                <p style="font-style: italic; color: #d4af37; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px;">
+                    "كل ما غلبت عليه النار بالتصنيع أو القلي فهو حار يابس، وكل ما غلبت عليه الطبيعة بالرطوبة كالأبيض والبارد فهو بارد رطب."
+                </p>
+                <p style="margin-top: 15px; color: #f1c40f; font-weight: bold;">
+                    <i class="fas fa-edit"></i> فضلاً، أعد كتابة "المكونات الأساسية" للوجبة (مثلاً: أرز، خضار، لحم، زيت) لأعطيك التحليل الحراري الدقيق الآن.
+                </p>
             </div>`;
         resultDiv.classList.remove('hidden');
         return;
