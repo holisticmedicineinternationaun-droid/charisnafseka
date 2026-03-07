@@ -181,10 +181,20 @@ function translateSymptom() {
             <div class="translator-step fade-in">
                 <p><strong>الحمى</strong> (منهاج القانون والمغنى). أي العلامات تظهر مع الارتفاع؟</p>
                 <div class="options-grid" style="margin-top:15px;">
-                    <button class="btn-option" onclick="finalizeTranslation('fever', 'blood')">حمرة الوجه، نبض ممتلئ، وحرارة شديدة (دموية)</button>
-                    <button class="btn-option" onclick="finalizeTranslation('fever', 'bile')">مرارة الفم، عطش حارق، ولهيب في الجلد (صفراوية)</button>
-                    <button class="btn-option" onclick="finalizeTranslation('fever', 'phlegm')">نافض (رجفة برد) تسبق الحرارة، وخمول (بلغمية)</button>
-                    <button class="btn-option" onclick="finalizeTranslation('fever', 'hectm')">ذبول البدن، حرارة تزداد بعد الأكل، وسعال (دق/سل)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('fever', 'blood')">حمرة الوجه, نبض ممتلئ, وحرارة شديدة (دموية)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('fever', 'bile')">مرارة الفم, عطش حارق, ولهيب في الجلد (صفراوية)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('fever', 'phlegm')">نافض (رجفة برد) تسبق الحرارة, وخمول (بلغمية)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('fever', 'hectm')">ذبول البدن, حرارة تزداد بعد الأكل, وسعال (دق/سل)</button>
+                </div>
+            </div>`;
+    } else if (input.includes("كيس") || input.includes("أكياس")) {
+        responseHTML = `
+            <div class="translator-step fade-in">
+                <p><strong>أنواع الأكياس الجلدية والعقد</strong>. حدد طبيعة الكيس بدقة:</p>
+                <div class="options-grid" style="margin-top:15px;">
+                    <button class="btn-option" onclick="finalizeTranslation('cysts', 'fatty')">كيس دهني (جامد, لا يؤلم غالباً, يتحرك قليلاً تحت الجلد)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('cysts', 'blood')">كيس دموي (يميل للون الداكن أو الأحمر, مؤلم عند الضغط, محتقن)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('cysts', 'water')">كيس مائي أو انتفاخ لين (ليونة زائدة, يظهر فجأة, بارد الملمس)</button>
                 </div>
             </div>`;
     }
@@ -334,10 +344,23 @@ function finalizeTranslation(type, origin) {
     } else if (type === 'spiritual') {
         const text = origin === 'touch' ? "مس أو أذى جني" : "مس الوسواس (عارض روحي)";
         const fix = origin === 'touch' ? "المسح بالمسك الأسود، الحجامة النبوية، وسماع رقية الحرق والتعذيب." : "تقوية القلب بالذكر، عدم الالتفات للأفكار، والتحصين بالمعوذات والآذان.";
-        finalCode = `< strong > الحالة: ${text}</strong > <div ${medicalStyle}><div class="ref-badge"><i class="fas fa-vial"></i> المرجع: منهاج الرقية الشرعية الموثق</div><strong>البرنامج المقترح:</strong> ${fix}</div>`;
+        finalCode = `<strong>الحالة: ${text}</strong> <div ${medicalStyle}><div class="ref-badge"><i class="fas fa-vial"></i> المرجع: منهاج الرقية الشرعية الموثق</div><strong>البرنامج المقترح:</strong> ${fix}</div>`;
+    } else if (type === 'cysts') {
+        let text = ""; let fix = ""; let ref = "كتاب القانون (ابن سينا) والمغنى (الجراحات)";
+        if (origin === 'fatty') {
+            text = "كيس دهني (ثرية/ورم شحمي)";
+            fix = "تحليل المادة بطلاء الكبريت مع الخل، ومنع الدسم والحلويات، والحجامة التحليلية في الموضع.";
+        } else if (origin === 'blood') {
+            text = "كيس دموي (احتقان عروق)";
+            fix = "تبريد الموضع بالخل والورد لمنع التزيّد، ثم استخدام المرخيات لفتح السدد، وتجنب الحرارة المباشرة.";
+        } else {
+            text = "كيس مائي (تجمع رطوبات)";
+            fix = "تنشيف الموضع بطلاء الملح والرماد (أو النورة بحذر)، وتنشيط الكلى بالمدرات الطبيعية لتصريف الفضول.";
+        }
+        finalCode = `<strong>التشخيص الاستدلالي: ${text}</strong> <div ${medicalStyle}><div class="ref-badge"><i class="fas fa-microscope"></i> المرجع: ${ref}</div>الأكياس دليل على عجز القوة الدافعة عن طرد الفضلات للخارج. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
     }
 
-    responseDiv.innerHTML = `< div class="fade-in" > ${finalCode}</div > `;
+    responseDiv.innerHTML = `<div class="fade-in">${finalCode}</div>`;
 }
 
 const mealKnowledgeBase = {
@@ -2199,6 +2222,9 @@ const diseaseRegistry = {
     "حرقة البول": { nature: "hot-dry", organ: "none", tip: "تبريد مجرى البول باللعابات (بزر قطونا بماء فاتر) وشرب ماء الشعير." },
     "سلس بول": { nature: "cold-moist", organ: "none", tip: "تحتاج لشد عضلات المثانة بالمسخنات المجففة وقشور الرمان." },
     "تكيس": { nature: "cold-moist", organ: "none", tip: "تنقية الرطوبات الغليظة بالبردقوش والقسط الهندي ومنع السكريات." },
+    "كيس دهني": { nature: "cold-moist", organ: "none", tip: "تحليل المادة بطلاء الكبريت مع الخل، ومنع الدسم والحلويات، والحجامة التحليلية." },
+    "كيس دموي": { nature: "hot-moist", organ: "none", tip: "تبريد الموضع أولاً لمنع التزيد، ثم تحليل الاحتقان بالمرخيات اللطيفة." },
+    "كيس مائي": { nature: "cold-moist", organ: "none", tip: "تنشيف الفضول بالملح والرماد موضعياً مع شرب المدرات كالبقدونس." },
     "بطانة الرحم": { nature: "cold-dry", organ: "none", tip: "موازنة اليبوسة السوداوية بالمرطبات المسخنة (يانسون) والتدليك بدهن الورد." },
     "اضطرابات الدورة": { nature: "cold-moist", organ: "none", tip: "تنظيم الهرمونات بالأعشاب الأنثوية (كف مريم، شاي المرامية) والابتعاد عن البارد." },
     "الفشل الكلوي": { nature: "cold-dry", organ: "none", tip: "تحتاج لتدقيق في السوائل؛ استخدام ماء الشعير والصموغ العربية." },
