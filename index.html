@@ -57,6 +57,9 @@
                 <button class="nav-btn" data-target="section-child-academy">
                     <i class="fas fa-child"></i> أكاديمية صحة الطفل (تشخيص وغذاء)
                 </button>
+                <button class="nav-btn" data-target="section-custom-consultant">
+                    <i class="fas fa-user-md"></i> مستشار الوجبات المخصص
+                </button>
                 <button class="nav-btn" data-target="section-meal-analyzer">
                     <i class="fas fa-pie-chart"></i> محلل الوجبة الأخيرة
                 </button>
@@ -181,6 +184,43 @@
                             البرنامج</button>
                         <button class="btn btn-reset" onclick="resetWizard()">تصميم برنامج جديد <i
                                 class="fas fa-redo"></i></button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- القسم الجديد: مستشار الوجبات المخصص (خبير التغذية العلاجية) -->
+            <section id="section-custom-consultant" class="interactive-section">
+                <div class="academy-intro consultant-header">
+                    <h2><i class="fas fa-user-md"></i> مستشار الوجبات المخصص (خبير التغذية العلاجية)</h2>
+                    <p>هذا القسم العام مخصص لكل الفئات العمرية (كبار، أطفال، رضع). اطرح سؤالك عن أي وجبة أو مكونات تود
+                        تحضيرها، وسيجيبك الخبير بمدى ملاءمتها وكيفية تدبيرها طبياً.</p>
+                </div>
+
+                <div class="consultant-container glass-panel">
+                    <div class="consultant-form">
+                        <div class="input-group">
+                            <label><i class="fas fa-comment-medical"></i> صف الوجبة أو المكونات التي تود الاستفسار
+                                عنها:</label>
+                            <textarea id="consultant-query" rows="3"
+                                placeholder="مثلاً: ابنتي عمرها 8 أشهر، أريد عمل شمندر مع جزر مهروس طازج دون طهي لفقر الدم، هل يصلح؟"></textarea>
+                        </div>
+                        <div class="diag-grid-compact">
+                            <div class="form-group" style="flex: 1;">
+                                <label><i class="fas fa-baby"></i> السن (سنوات أو أشهر):</label>
+                                <input type="text" id="consultant-age" placeholder="مثلاً: 8 أشهر">
+                            </div>
+                            <div class="form-group" style="flex: 1;">
+                                <label><i class="fas fa-pathology"></i> الحالة المرضية (إن وجدت):</label>
+                                <input type="text" id="consultant-condition" placeholder="مثلاً: فقر دم بسيط">
+                            </div>
+                        </div>
+                        <button class="btn btn-generate" onclick="analyzeCustomInquiry()">
+                            <i class="fas fa-search-dollar"></i> استشر الخبير الآن
+                        </button>
+                    </div>
+
+                    <div id="consultant-response" class="consultant-response hidden" style="margin-top: 20px;">
+                        <!-- Response will be injected here -->
                     </div>
                 </div>
             </section>

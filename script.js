@@ -2597,45 +2597,133 @@ function getSpiritualHTML(type) {
 
 function generateSmartMeal(type, humor, kitchen, age, complaint) {
     const isToddler = age < 2;
+    const isInfant = age < 1;
     // --- Classical medical classification (Hot/Cold/Dry/Wet) ---
     const isHot = humor.includes('hot');
     const isCold = humor.includes('cold');
     const isDry = humor.includes('dry');
     const isWet = humor.includes('wet');
 
-    const hasHoney = kitchen.includes('عسل');
-    const hasDates = kitchen.includes('تمر') || kitchen.includes('زبيب') || kitchen.includes('دبس');
-    const hasMeat = kitchen.includes('لحم') || kitchen.includes('كبد') || kitchen.includes('دجاج');
-    const hasEgg = kitchen.includes('بيض');
-    const hasOlive = kitchen.includes('زيت');
-    const hasRice = kitchen.includes('رز') || kitchen.includes('أرز');
-    const hasGrain = kitchen.includes('قمح') || kitchen.includes('شعير') || kitchen.includes('خبز');
+    // Extract available items from kitchen string
+    const lowerKitchen = kitchen.toLowerCase();
+    const ingredients = {
+        honey: lowerKitchen.includes('عسل'),
+        dates: lowerKitchen.includes('تمر') || lowerKitchen.includes('زبيب') || lowerKitchen.includes('دبس'),
+        meat: lowerKitchen.includes('لحم') || lowerKitchen.includes('كبد') || lowerKitchen.includes('دجاج'),
+        egg: lowerKitchen.includes('بيض'),
+        olive: lowerKitchen.includes('زيت'),
+        rice: lowerKitchen.includes('رز') || lowerKitchen.includes('أرز'),
+        grain: lowerKitchen.includes('قمح') || lowerKitchen.includes('شعير') || lowerKitchen.includes('خبز'),
+        veg: lowerKitchen.includes('خضار') || lowerKitchen.includes('كوسا') || lowerKitchen.includes('جزر') || lowerKitchen.includes('بطاطا'),
+        fruit: lowerKitchen.includes('تفاح') || lowerKitchen.includes('موز') || lowerKitchen.includes('اجاص'),
+        milk: lowerKitchen.includes('حليب') || lowerKitchen.includes('روب') || lowerKitchen.includes('زبادي')
+    };
 
-    // --- Logical Restrictions & Prioritization ---
     const isSugarRisk = humor.includes('cold') || complaint.includes('سكر');
-    const isBloodRisk = humor.includes('dry') || complaint.includes('أنيميا') || complaint.includes('فقر دم');
+    const isAnemic = complaint.includes('أنيميا') || complaint.includes('فقر دم') || complaint.includes('نقص حديد');
+
+    // Strict Adherence Logic
+    const fallback = (msg) => `<i class="fas fa-exclamation-triangle" style="color:#d4af37"></i> <strong>تنبيه الالتزام:</strong> لم نجد مكونات كافية في قائمة مطبخك لتحضير الوجبة المثالية؛ لذا ننصحكِ بتوفير <strong>${msg}</strong> أو استخدام البدائل المتاحة بحذر.`;
 
     if (type === 'breakfast') {
-        if (isSugarRisk) return isToddler ? "عصيدة شعير رقيقة (منعاً لارتفاع السكر)." : "خبز شعير كامل مع قليل من الجبن الطبيعي (تجنب القمح والسكريات).";
-        if (isHot) return "شربة ماء فاتر مع قليل من منقوع الخيار أو اليقطين لتبريد المزاج.";
-        if (isCold && hasHoney && age >= 1) return "ملعقة عسل في كوب ماء دافئ لتسخين العضو البارد.";
-        return isToddler ? "عصيدة قمح ناعمة بمسحة زيت زيتون." : "خبز أسمر مع بيضة مسلوقة.";
+        if (isInfant) {
+            if (ingredients.grain && ingredients.olive) return "عصيدة شعير أو قمح مطهية جيداً مع مسحة زيت زيتون (سمن قليل جداً).";
+            if (ingredients.fruit) return "تفاح أو أجاص مهروس (مسلوق) برطوبة دافئة.";
+            return fallback("شعير أو فاكهة مسلوقة");
+        }
+        if (isSugarRisk && ingredients.grain) return "خبز شعير كامل مع زيت زيتون (تجنب السكر والقمح الأبيض).";
+        if (isAnemic && ingredients.dates) return "3 تمرات منقوعة أو ملعقة دبس تمر مع قطعة خبز صغيرة (مولد دم).";
+        if (isHot && ingredients.veg) return "خيار أو يقطين (سفرجل) مع خبز شعير لتبريد فوران الصفراء.";
+        if (ingredients.egg && ingredients.olive) return "بيضة مسلوقة برفق مع زيت زيتون.";
+        return ingredients.grain ? "خبز أسمر مع ما توفر من إدام خفيف." : fallback("بيض أو شعير أو تمر");
     }
 
     if (type === 'lunch') {
-        if (isBloodRisk && hasMeat) return isToddler ? "شوربة كبدة مهروسة مصفاة." : "مرق لحم أحمر مع الخضروات الورقية الخضراء (مولد دم حار رطب).";
-        if (isHot) return "خضروات باردة رطبة (مثل الكوسا أو السلق) مطبوخة مع قليل من الشعير.";
-        if (isCold) return "مرق لحم (غنم أو طيور) مطيب بالكمون والزنجبيل لتحريك البرودة." + (hasRice ? " مع قليل من الأرز." : "");
-        return "شوربة دافئة متوازنة مع الخضروات المتوفرة ورشة كمون.";
+        if (isInfant) {
+            if (ingredients.meat && ingredients.veg) return "شوربة خضار (جزر وكوسا) مسلوقة مع قطعة كبدة صغيرة جداً ومهروسة جيداً.";
+            if (ingredients.rice && ingredients.veg) return "أرز مسلوق لدرجة الليونة مع مرق الخضار.";
+            return fallback("خضار مهروسة (كوسا/جزر)");
+        }
+        if (isAnemic && ingredients.meat) return "مرق لحم أحمر مع الخضروات الورقية (دليل الدم النقي).";
+        if (isHot && ingredients.veg) return "يقطين أو كوسا مطبوخة بالزيت (تبريد وترطيب).";
+        if (isCold && ingredients.meat) return "مرق لحم (غنم أو طيور) مطيب بالكمون والزنجبيل لتحريك البرودة.";
+        if (ingredients.rice && ingredients.meat) return "أرز مع مرق اللحم المتوفر.";
+        return fallback("لحم أحمر أو خضروات رطبة (كوسا/يقطين)");
     }
 
     if (type === 'dinner') {
-        const isBedWetting = complaint.includes('تبول') || complaint.includes('ليل');
-        if (isBedWetting) return "وجبة جافة (خبز بجبن أو زيتون) مع تقليل السوائل تماماً ومنع الفواكه المدرة للبول (كالبطيخ) ليلاً.";
-        if (isHot) return isToddler ? "روب (زبادي) ناعم لإطفاء حرارة الطفل." : "روب (زبادي) أو فواكه رطبة (كمثرى/تفاح) لإطفاء حرارة النهار.";
-        if (isCold) return isToddler ? "حساء خضروات دافئة مهروسة." : "حساء خضروات دافئة مع رشة فلفل أسود خفيفة لتنشيط الحرارة الغريزية.";
-        return isToddler ? "خضروات مهروسة سهلة الهضم." : "خضروات مسلوقة مع شرب منقوع دافئ.";
+        if (isInfant) {
+            if (ingredients.milk) return "روب (زبادي) ناعم طبيعي (إذا تجاوز السن 6 أشهر) أو إرضاع مشبع.";
+            if (ingredients.grain) return "حساء شعير رقيق جداً يهيئ للنوم.";
+            return "وجبة خفيفة مما تبقى من الغداء شريطة الهرس التام.";
+        }
+        if (complaint.includes('تبول')) return "وجبة جافة (خبز بجبن أو زيتون) مع منع السوائل تماماً ليلاً.";
+        if (isHot && ingredients.milk) return "روب (زبادي) أو فواكه رطبة لإطفاء حرارة النهار.";
+        if (isCold && ingredients.veg) return "حساء خضروات دافئة مع رشة فلفل أسود خفيفة لتنشيط الحرارة الغريزية.";
+        return "حساء دافئ خفيف مهيئ للمعدة للسكون.";
     }
+}
+
+// --- GENERAL MEAL CONSULTANT LOGIC ---
+
+function analyzeCustomInquiry() {
+    const query = document.getElementById('consultant-query').value.trim().toLowerCase();
+    const age = document.getElementById('consultant-age').value.trim().toLowerCase();
+    const condition = document.getElementById('consultant-condition').value.trim().toLowerCase();
+    const responseDiv = document.getElementById('consultant-response');
+
+    if (!query || !age) {
+        showToast("يرجى إدخال السؤال والسن.");
+        return;
+    }
+
+    let responseHTML = `
+        <div class="consultant-result fade-in" style="background: rgba(255,255,255,0.02); padding: 20px; border-radius: 15px; border-right: 5px solid var(--secondary-color);">
+            <h4 style="color: var(--secondary-color); margin-bottom: 15px;"><i class="fas fa-clipboard-check"></i> تحليل خبير التغذية العلاجية</h4>
+    `;
+
+    // 1. Infant Safety (Special Rule for babies under 1 year)
+    const isInfant = age.includes('شهر') || (parseInt(age) < 1 && !age.includes('سنة'));
+    const isRaw = query.includes('طازج') || query.includes('بدون طهي') || query.includes('نيء') || query.includes('دون طهي');
+
+    if (isInfant && isRaw && (query.includes('جزر') || query.includes('شمندر') || query.includes('خضار'))) {
+        responseHTML += `
+            <div class="advice-block danger" style="background: rgba(220, 38, 38, 0.1); padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #ef4444;">
+                <p><strong>⚠️ تحذير سلامة:</strong> بالنسبة لرضيع عمره ${age}، <strong>لا ينصح أبداً</strong> بتقديم الخضروات القاسية (مثل الشمندر والجزر) بشكل طازج دون طهي.</p>
+                <p><strong>السبب:</strong> الجهاز الهضمي للرضيع غير مهيأ لمعالجة الألياف القاسية النيئة، كما قد تسبب غصصاً أو عسراً في الهضم.</p>
+            </div>
+            <p><strong>التدبير المقترح (Tadbeer):</strong></p>
+            <ul style="color: #e2e8f0; line-height: 1.6;">
+                <li><strong>الطهي بالبخار:</strong> قومي بطهي الشمندر والجزر بالبخار حتى يصبحا ليّنين جداً (مثل الزبدة).</li>
+                <li><strong>الهرس:</strong> بعد الطهي، اسحقيهما جيداً مع إضافة قطرة من زيت الزيتون (لتحسين امتصاص الفيتامينات الذائبة في الدهون).</li>
+                <li><strong>لفقر الدم:</strong> الشمندر ممتاز، ولكن يفضل تنويع المصادر بإضافة كبدة دجاج مطهية جيداً ومهروسة مرتين أسبوعياً.</li>
+            </ul>
+        `;
+    } else if (query.includes('شمندر') && (condition.includes('أنيميا') || condition.includes('فقر دم'))) {
+        responseHTML += `
+            <p><strong>الحالة:</strong> استخدام الشمندر لعلاج فقر الدم.</p>
+            <p><strong>رأي الخبير:</strong> الشمندر خلطه (بارد يابس) في الغالب، وهو مفيد جداً لبناء خلايا الدم الحمراء.</p>
+            <p><strong>التدبير الذكي:</strong> لرفع كفاءة الامتصاص، أضيفي إليه مصدراً فيتامين C (مثل قطرات ليمون أو فلفل رومي) وتجنبي تناوله مع منتجات الألبان مباشرة (منهج الطب التكاملي).</p>
+        `;
+    } else if (query.includes('عسل') && isInfant) {
+        responseHTML += `
+            <div class="advice-block danger" style="background: rgba(220, 38, 38, 0.1); padding: 10px; border-radius: 8px; border: 1px solid #ef4444;">
+                <p><strong>⚠️ منع صحي:</strong> يمنع منعاً باتاً إعطاء العسل للأطفال دون سن السنة (12 شهر).</p>
+                <p><strong>السبب:</strong> خطر التسمم الوشيقي (Botulism) لأن أمعاء الرضيع لم تكتمل فيها البكتيريا النافعة القادرة على مقاومة أبواغ العسل.</p>
+            </div>
+        `;
+    } else {
+        responseHTML += `
+            <p><strong>التحليل الأولي:</strong> هذه الوجبة تبدو ${isRaw ? 'تحتاج لمراجعة في طريقة التحضير' : 'جيدة'} لمن هم في سن ${age}.</p>
+            <p><strong>قاعدة عامة:</strong> استعن دائماً بمبدأ "الإضداد"؛ إذا كان العرض حاراً فبرد الوجبة، وإذا كان بارداً فسخنها بالمطيبات كالزنجبيل والكمون.</p>
+            <p style="margin-top:10px; font-size: 0.9rem; font-style: italic;">هذه الإجابة مبنية على أصول منهاج القانون لابن سينا وأحدث توصيات التغذية السريرية للأطفال.</p>
+        `;
+    }
+
+    responseHTML += `</div>`;
+    responseDiv.innerHTML = responseHTML;
+    responseDiv.classList.remove('hidden');
+    responseDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 function getHealingTips(humor, organ, age) {
@@ -2669,15 +2757,15 @@ function getHealingTips(humor, organ, age) {
 function getCorrectors(humor, kitchen) {
     let html = "";
     if (kitchen.includes('بقوليات') || kitchen.includes('عدس')) {
-        html += "<li><strong>مصلح البقوليات:</strong> أضيفي الكمون والزنجبيل دائماً لتجنب الغازات والنفخة.</li>";
+        html += "<li><strong>مصلح البقوليات (Tadbeer):</strong> أضيفي الكمون والزنجبيل دائماً لتجنب الغازات، ولا تطبخ مع اللحم الأحمر لمرضى القولون.</li>";
     }
     if (humor === 'cold-wet') {
-        html += "<li><strong>تنبيه للمزاج البارد:</strong> قللي من الألبان والماء البارد، وركزي على تسخين الطعام جيداً.</li>";
+        html += "<li><strong>تنبيه للمزاج البارد:</strong> تجنبي الألبان الباردة والمشروبات المثلجة، وحلي الماء بالعسل دائماً لرفع القوة الغريزية.</li>";
     }
     if (humor === 'hot-dry') {
-        html += "<li><strong>تنبيه للمزاج اليابس:</strong> رطبي جسم الطفل بدهن زيت اللوز أو زيت الزيتون خارجياً وداخلياً.</li>";
+        html += "<li><strong>تنبيه للمزاج اليابس:</strong> احرصي على ترطيب بدن الطفل داخلياً بماء الشعير والقرع وخارجياً بمساج زيت اللوز.</li>";
     }
-    if (html === "") html = "<li>التزمي بالهدوء النفسي أثناء إطعام الطفل، فالقلق يفسد الهضم.</li>";
+    if (html === "") html = "<li>التزام الهدوء النفسي للأم والطفل أساس في هضم الغذاء وتحويله لدم نقي.</li>";
     return html;
 }
 

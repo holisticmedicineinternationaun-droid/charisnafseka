@@ -2494,3 +2494,60 @@ h2::after {
     background: rgba(156, 163, 175, 0.1);
     color: #9ca3af;
 }
+
+/* Consultant Section Styles */
+.consultant-container {
+    max-width: 850px;
+    margin: 30px auto;
+    padding: 30px;
+}
+
+.consultant-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.consultant-form textarea {
+    width: 100%;
+    padding: 15px;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--secondary-color);
+    color: white;
+    font-family: inherit;
+    font-size: 1.1rem;
+    resize: vertical;
+}
+
+.consultant-response {
+    animation: slideDown 0.5s ease-out;
+}
+
+.advice-block.danger {
+    background: rgba(220, 38, 38, 0.15) !important;
+    border: 1px solid #ef4444 !important;
+    color: #fca5a5;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.consultant-result {
+    border-right: 5px solid var(--secondary-color);
+    background: rgba(212, 175, 55, 0.05);
+    padding: 25px;
+    border-radius: 12px;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
