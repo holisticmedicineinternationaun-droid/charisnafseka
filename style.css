@@ -2533,12 +2533,64 @@ h2::after {
     margin-bottom: 15px;
 }
 
+/* Consultant Result Styling */
 .consultant-result {
     border-right: 5px solid var(--secondary-color);
     background: rgba(212, 175, 55, 0.05);
     padding: 25px;
     border-radius: 12px;
+    margin-top: 20px;
+    position: relative;
+    overflow: hidden;
 }
+
+.verdict-correct {
+    border-top: 8px solid #2ecc71;
+}
+
+.verdict-needs-fix {
+    border-top: 8px solid #f1c40f;
+}
+
+.verdict-incorrect {
+    border-top: 8px solid #e74c3c;
+}
+
+.verdict-warning {
+    border-top: 8px solid #e67e22;
+}
+
+.verdict-reason {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.clinical-context {
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+    border-right: 3px solid var(--secondary-color);
+    padding-right: 15px;
+}
+
+.fix-block {
+    background: rgba(46, 204, 113, 0.1);
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px dashed #2ecc71;
+    margin-top: 20px;
+}
+
+.danger-alert {
+    background: rgba(231, 76, 60, 0.2);
+    color: #fca5a5;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #e74c3c;
+    margin-top: 15px;
+}
+
 
 @keyframes slideDown {
     from {
