@@ -2702,9 +2702,9 @@ function generateSmartMeal(type, humor, kitchen, age, complaint) {
 // --- GENERAL MEAL CONSULTANT LOGIC ---
 
 function analyzeCustomInquiry() {
-    const query = document.getElementById('consultant-query').value.trim().toLowerCase();
-    const age = document.getElementById('consultant-age').value.trim().toLowerCase();
-    const condition = document.getElementById('consultant-condition').value.trim().toLowerCase();
+    const query = normalizeArabic(document.getElementById('consultant-query').value.trim().toLowerCase());
+    const age = normalizeArabic(document.getElementById('consultant-age').value.trim().toLowerCase());
+    const condition = normalizeArabic(document.getElementById('consultant-condition').value.trim().toLowerCase());
     const responseDiv = document.getElementById('consultant-response');
 
     if (!query || !age) {
@@ -2712,104 +2712,115 @@ function analyzeCustomInquiry() {
         return;
     }
 
-    // Apply trial limit if necessary
     if (typeof checkGlobalTrialLimit === 'function' && !checkGlobalTrialLimit('custom_consultant')) return;
 
-    let responseHTML = `
-        <div class="consultant-result fade-in" style="background: rgba(255,255,255,0.02); padding: 25px; border-radius: 20px; border-right: 6px solid var(--secondary-color); box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-            <h4 style="color: var(--secondary-color); margin-bottom: 20px; font-size: 1.3rem;"><i class="fas fa-user-md"></i> تحليل خبير التغذية العلاجية (الذكاء الاستدلالي)</h4>
-    `;
-
-    // 1. Match Disease/Condition
+    // 1. Identification
     const matchedDisease = getDiseaseFromComplaint(condition || query);
+    const isInfant = age.includes('شهر') || (parseInt(age) < 1 && !age.includes('سنه'));
 
-    // 2. Analyze Meal Nature (using existing KB)
+    // 2. Ingredient Analysis
     let mealNature = { hot: 0, cold: 0, dry: 0, wet: 0 };
     for (let nature in mealKnowledgeBase) {
         mealKnowledgeBase[nature].keywords.forEach(kw => {
-            if (query.includes(kw)) mealNature[nature]++;
+            if (query.includes(normalizeArabic(kw))) mealNature[nature]++;
         });
     }
 
-    const dominantMealNature = Object.keys(mealNature).reduce((a, b) => mealNature[a] > mealNature[b] ? a : b);
-    const hasMealNature = mealNature[dominantMealNature] > 0;
+    // 3. Verdict Logic (The "Judge" Mechanism)
+    let verdict = { status: "unknown", title: "تحليل عام", icon: "fa-question-circle", color: "#94a3b8", reason: "" };
+    let specificWarnings = [];
+    let specificFixes = [];
 
-    // 3. Infant Safety (Special Rules)
-    const isInfant = age.includes('شهر') || (parseInt(age) < 1 && !age.includes('سنة'));
-    const isRaw = query.includes('طازج') || query.includes('بدون طهي') || query.includes('نيء') || query.includes('دون طهي');
+    // --- Specific Medical Rules ---
+    if (matchedDisease) {
+        const dName = (condition || query).toLowerCase();
 
-    if (isInfant && isRaw && (query.includes('جزر') || query.includes('شمندر') || query.includes('خضار'))) {
-        responseHTML += `
-            <div class="advice-block danger" style="background: rgba(220, 38, 38, 0.1); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ef4444;">
-                <p style="color: #fca5a5; font-weight: bold; margin-bottom: 8px;"><i class="fas fa-exclamation-triangle"></i> تحذير سلامة للرضع:</p>
-                <p>بالنسبة لرضيع عمره ${age}، <strong>لا ينصح أبداً</strong> بتقديم الخضروات القاسية (مثل الشمندر والجزر) بشكل طازج دون طهي.</p>
-            </div>
-            <p><strong>التدبير الشفائي المقترح:</strong></p>
-            <ul style="color: #e2e8f0; line-height: 1.8; margin-bottom: 20px;">
-                <li><strong>الطهي بالبخار:</strong> يجب جعلها لينة جداً ليسهل هضمها.</li>
-                <li><strong>الهرس:</strong> امزجيها مع قطرة زيت زيتون لامتصاص الفيتامينات.</li>
-            </ul>
-        `;
-    } else if (query.includes('عسل') && isInfant) {
-        responseHTML += `
-            <div class="advice-block danger" style="background: rgba(220, 38, 38, 0.1); padding: 15px; border-radius: 8px; border: 1px solid #ef4444; margin-bottom: 20px;">
-                <p style="color: #fca5a5; font-weight: bold;"><i class="fas fa-ban"></i> منع طبي قطعي:</p>
-                <p>يمنع العسل تماماً لمن هم دون السنة (12 شهر) لتجنب التسمم الوشيقي.</p>
-            </div>
-        `;
-    } else {
-        // --- PROFESSIONAL ANALYSIS START ---
-
-        if (matchedDisease) {
-            responseHTML += `
-                <div class="analysis-summary" style="margin-bottom: 20px;">
-                    <p style="margin-bottom: 10px;"><strong>الحالة المرصودة:</strong> <span style="color: var(--secondary-color)">${condition || "عرض غير مسمى"}</span></p>
-                    <p style="margin-bottom: 10px;"><strong>طبيعة العلة (بالأرشيف):</strong> <span style="color: #e2e8f0">${getHumorText ? getHumorText(matchedDisease.nature) : matchedDisease.nature}</span></p>
-                    <div style="background: rgba(212,175,55,0.05); padding: 15px; border-radius: 10px; border: 1px dashed var(--secondary-color); margin-top: 10px;">
-                        <p><strong><i class="fas fa-lightbulb"></i> نصيحة الخبير:</strong> ${matchedDisease.tip}</p>
-                    </div>
-                </div>
-            `;
-
-            // Compatibility Check
-            const dNature = matchedDisease.nature;
-            let compatibilityMsg = "";
-            let compatibilityClass = "";
-
-            if (dNature.includes('hot') && mealNature.hot > 0) {
-                compatibilityMsg = "هذه الوجبة تميل للحرارة، وحالتك أصلها حار؛ قد تزيد من التهاب العضو. يُنصح بإضافة مبردات (خس، خيار) أو تقليل التوابل.";
-                compatibilityClass = "warning";
-            } else if (dNature.includes('cold') && mealNature.cold > 0) {
-                compatibilityMsg = "الوجبة باردة رطبة، وحالتك تميل للبرودة؛ قد تزيد من ركود الأخلاط. يُنصح بإضافة مسخنات (كمون، زنجبيل) أو طهيها جيداً.";
-                compatibilityClass = "warning";
-            } else if (hasMealNature) {
-                compatibilityMsg = "الوجبة تبدو متوازنة مع حالتك وفق مبدأ (الإضداد)؛ استمر في موازنة الأخلاط.";
-                compatibilityClass = "success";
+        // Diabetes Rules
+        if (dName.includes('سكر') || dName.includes('مقاومه انسولين')) {
+            if (query.includes('ارز') || query.includes('خبز ابيض') || query.includes('سكر') || query.includes('تمر')) {
+                verdict = { status: "needs-fix", title: "يحتاج لتعديل هام", icon: "fa-exclamation-triangle", color: "#f1c40f", reason: "الوجبة تحتوي على سكريات أو نشويات عالية ترفع معدل السكر وتزيد من رطوبة الدم الفضلية." };
+                specificFixes.push("استبدل الأرز الأبيض بالشعير أو خبز الشعير الكامل.", "أضف القليل من القرفة والخل لخفض مؤشر السكر.");
             } else {
-                compatibilityMsg = "الوجبة تبدو جيدة لمن هم في سن " + age + "، راعِ دائماً التوازن والاعتدال.";
-                compatibilityClass = "info";
+                verdict = { status: "correct", title: "وصفة موفقة", icon: "fa-check-circle", color: "#2ecc71", reason: "المكونات لا تثير الأخلاط السكرية وتتوافق مع حمية السكري." };
             }
+        }
 
-            responseHTML += `
-                <div class="compatibility-card ${compatibilityClass}" style="padding: 15px; border-radius: 10px; background: rgba(255,255,255,0.05); margin-bottom: 20px;">
-                    <p><strong><i class="fas fa-balance-scale"></i> حكم التوافق الغذائي:</strong> ${compatibilityMsg}</p>
-                </div>
-            `;
-        } else {
-            // General Expert Response
-            responseHTML += `
-                <p style="margin-bottom: 15px;"><strong>التحليل الأولي:</strong> الوجبة المذكورة (${query}) تبدو ${isRaw ? 'تحتاج لمراجعة في طريقة التدبير' : 'مقبولة تدبيرياً'} لمن هم في سن ${age}.</p>
-                <p style="margin-bottom: 15px;"><strong>قاعدة عامة (منهج ابن سينا):</strong> استعن بمبدأ "الإضداد"؛ فإذا كان عرضك حاراً (مثل التهاب أو حمرة) فبرد الوجبة، وإذا كان بارداً (مثل خمول أو بلغم) فسخنها بالزنجبيل أو الكمون.</p>
-            `;
+        // Phlegm / Cold-Moist Rules (e.g. Cough, Joint pain)
+        else if (matchedDisease.nature === 'cold-moist') {
+            if (query.includes('حليب') || query.includes('زبادي') || query.includes('موز') || query.includes('خيار')) {
+                verdict = { status: "incorrect", title: "غير ملائمة حالياً", icon: "fa-times-circle", color: "#e74c3c", reason: "مكونات الوجبة تزيد من البلغم والرطوبة الباردة التي هي أصل العلة لديك." };
+                specificFixes.push("استخدم العسل بدلاً من السكر.", "أضف الزنجبيل أو الفلفل الأسود لكسر برودة الوجبة.");
+            }
+        }
+
+        // Anemia / Cold-Dry Rules
+        else if (dName.includes('انيميا') || dName.includes('فقر دم')) {
+            if (query.includes('لحم') || query.includes('كبد') || query.includes('شمندر') || query.includes('تمر')) {
+                verdict = { status: "correct", title: "وصفة مثالية", icon: "fa-heart", color: "#e74c3c", reason: "هذه المكونات هي أعمدة بناء الدم (الأخلاط الدموية النقية)." };
+            } else {
+                verdict = { status: "needs-fix", title: "ضعيفة الفائدة", icon: "fa-info-circle", color: "#3498db", reason: "الوصفة تفتقر لمولدات الدم الأساسية." };
+                specificFixes.push("أضف الكبدة أو الدبس أو الزبيب الأسود لتعزيز قوة الدم.");
+            }
         }
     }
 
-    // Common Professional Footer
+    // Fallback if no specific rule matched but thermal conflict exists
+    if (verdict.status === "unknown" && matchedDisease) {
+        const dNature = matchedDisease.nature;
+        if ((dNature.includes('hot') && mealNature.hot > 0) || (dNature.includes('cold') && mealNature.cold > 0)) {
+            verdict = { status: "warning", title: "مخالفة لقاعدة الأضداد", icon: "fa-thermometer-half", color: "#e67e22", reason: "الوجبة تشبه طبيعة مرضك (حار مع حار أو بارد مع بارد)، وهذا يمنع الشفاء السريع." };
+        } else if (mealNature.hot + mealNature.cold + mealNature.dry + mealNature.wet > 0) {
+            verdict = { status: "correct", title: "متوازنة طبياً", icon: "fa-balance-scale", color: "#2ecc71", reason: "الوجبة تتبع قاعدة 'العلاج بالضد' وتوازن الانحراف المزاجي لديك." };
+        }
+    }
+
+    // 4. Building the UI
+    let responseHTML = `
+        <div class="consultant-result verdict-${verdict.status} fade-in" style="background: rgba(255,255,255,0.02); padding: 25px; border-radius: 20px; border-top: 8px solid ${verdict.color}; box-shadow: 0 15px 40px rgba(0,0,0,0.3);">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                <i class="fas ${verdict.icon}" style="font-size: 2.5rem; color: ${verdict.color};"></i>
+                <div>
+                    <h4 style="color: ${verdict.color}; font-size: 1.5rem; margin: 0;">${verdict.title}</h4>
+                    <span style="color: #94a3b8; font-size: 0.9rem;">بناءً على المعايير الطبية الاستدلالية</span>
+                </div>
+            </div>
+
+            <div class="verdict-reason" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-bottom: 20px;">
+                <p style="font-size: 1.1rem; line-height: 1.6;"><strong><i class="fas fa-comment-dots"></i> سبب الحكم:</strong> ${verdict.reason || "الوجبة مقبولة ضمن الحدود العامة للسن والتدبير."}</p>
+            </div>
+    `;
+
+    if (matchedDisease) {
+        responseHTML += `
+            <div class="clinical-context" style="margin-bottom: 20px; font-size: 0.95rem; border-right: 3px solid var(--secondary-color); padding-right: 15px;">
+                <p><strong>طبيعة حالتك (الأرشيف):</strong> ${getHumorText(matchedDisease.nature)}</p>
+                <p><strong>العضو المستهدف:</strong> ${getOrganText(matchedDisease.organ)}</p>
+            </div>
+        `;
+    }
+
+    if (specificFixes.length > 0) {
+        responseHTML += `
+            <div class="fix-block" style="background: rgba(46, 204, 113, 0.1); padding: 15px; border-radius: 12px; border: 1px dashed #2ecc71;">
+                <h5 style="color: #2ecc71; margin-bottom: 10px;"><i class="fas fa-magic"></i> كيف تجعل الوصفة صحيحة؟</h5>
+                <ul style="margin-right: 20px; color: #e2e8f0; line-height: 1.8;">
+                    ${specificFixes.map(f => `<li>${f}</li>`).join('')}
+                </ul>
+            </div>
+        `;
+    }
+
+    if (isInfant && query.includes('عسل')) {
+        responseHTML += `
+            <div class="danger-alert" style="background: rgba(231, 76, 60, 0.2); color: #fca5a5; padding: 15px; border-radius: 12px; border: 1px solid #e74c3c; margin-top: 15px;">
+                <strong><i class="fas fa-ban"></i> تنبيه قطعي:</strong> العسل ممنوع تماماً لسن أقل من سنة لخطر التسمم الوشيقي.
+            </div>
+        `;
+    }
+
     responseHTML += `
-        <hr style="border:0; border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;">
-        <div class="expert-reference" style="font-size: 0.9rem; color: #a0aec0;">
-            <p><i class="fas fa-book-medical"></i> هذه الإجابة مبنية على أصول <strong>منهاج القانون لابن سينا</strong> وأحدث توصيات التغذية السريرية المتكاملة.</p>
-            <p style="margin-top: 5px; font-style: italic; font-size: 0.8rem;">تنبيه: هذا التحليل استرشادي لدعم الصحة ولا يغني عن استشارة الطبيب في الحالات الحادة.</p>
+        <div style="margin-top: 25px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.85rem; color: #64748b; font-style: italic; text-align: center;">
+            هذا الحكم صادر عن محرك "ابن سينا الذكي" الذي يربط خصائص المادة بيبوسة وحرارة العضو.
         </div>
     </div>`;
 
