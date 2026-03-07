@@ -132,6 +132,43 @@ function translateSymptom() {
                     <button class="btn-option" onclick="finalizeTranslation('insomnia', 'hot')">قلق وحرارة في الأذنين (صفراوي)</button>
                 </div>
             </div>`;
+    } else if (input.includes("سكر") || input.includes("سكري")) {
+        responseHTML = `
+            <div class="translator-step">
+                <p><strong>السكري</strong> له وجهان في الطب الشمولي. أي الحالات تصف مريضك؟</p>
+                <div class="options-grid" style="margin-top:15px;">
+                    <button class="btn-option" onclick="finalizeTranslation('diabetes', 'hot')">عطش لا ينطفئ، نحافة متسارعة، وحرارة في البول (حار يابس)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('diabetes', 'cold')">كثرة تبول بدون عطش حارق، خمول، وشحوب (بارد رطب)</button>
+                </div>
+            </div>`;
+    } else if (input.includes("سحر") || input.includes("روحي")) {
+        responseHTML = `
+            <div class="translator-step">
+                <p><strong>تشخيص الإصابة بالسحر</strong> (منهج الطب الروحي الاستدلالي). أين يتركز الألم أو العرض الأقوى؟</p>
+                <div class="options-grid" style="margin-top:15px;">
+                    <button class="btn-option" onclick="finalizeTranslation('magic', 'eaten')">ألم دائم في المعدة، غثيان، ورائحة كريهة عند الاستيقاظ (مأكول/مشروب)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('magic', 'sprinkled')">ثقل وألم شديد في القدمين، تبقع الساقين، ونفور من البيت (مرشوش)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('magic', 'buried')">ضيق صدر شديد، كوابيس متكررة بسقوط من شاهق، وصداع متنقل (مدفون/معلق)</button>
+                </div>
+            </div>`;
+    } else if (input.includes("حسد") || input.includes("عين")) {
+        responseHTML = `
+            <div class="translator-step">
+                <p><strong>تشخيص العين والحسد</strong>. صف الحالة الجسدية المرافقة:</p>
+                <div class="options-grid" style="margin-top:15px;">
+                    <button class="btn-option" onclick="finalizeTranslation('envy', 'body')">تثاؤب مفرط مع دموع، خمول تام، وحرارة بين الكتفين (عين معجبة/حاسدة)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('envy', 'life')">تعطل مفاجئ في الرزق أو الدراسة، بقع زرقاء في الجسد، ونفور (حسد تراكمي)</button>
+                </div>
+            </div>`;
+    } else if (input.includes("مس") || input.includes("تلبس")) {
+        responseHTML = `
+            <div class="translator-step">
+                <p><strong>أعراض المس والأذى الروحي</strong>:</p>
+                <div class="options-grid" style="margin-top:15px;">
+                    <button class="btn-option" onclick="finalizeTranslation('spiritual', 'touch')">ثقل في الأكتاف، تنميل في الأطراف، ونفور من العبادات وسماع القرآن</button>
+                    <button class="btn-option" onclick="finalizeTranslation('spiritual', 'waswas')">وساوس قهرية، شكوك، وحالات تيه وضياع (مس الوسواس)</button>
+                </div>
+            </div>`;
     } else {
         responseHTML = `<p>هذه العلة مسجلة تحت باب <strong>"أسرار الأمزجة"</strong>.</p>
                         <p style="font-size: 0.9rem; margin-top: 10px;">يرجى مسح ما كتبت بالأعلى وكتابة <strong>اسم العضو المتألم</strong> (مثل: الكبد، المعدة) أو اختيار <strong>عرض أقرب</strong> ليتسنى للمحرك الاستدلالي خدمتك بدقة.</p>`;
@@ -183,6 +220,32 @@ function finalizeTranslation(type, origin) {
         const text = origin === 'dry' ? "يبوسة دماغية سوداوية" : "غلبة صفراوية نارية";
         const fix = origin === 'dry' ? "تقطير دهن بنفسج في الأنف، عشاء مرطب (قرع)، ومنع الهم." : "تبريد القدمين بماء بارد، شم الورد، شرب مغلي الليمون والنعناع.";
         finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}><div class="ref-badge"><i class="fas fa-scroll"></i> المنهج: القانون (ابن سينا)</div>النوم رطوبة في الدماغ كالسحاب، فإذا جف الدماغ طار النوم. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
+    } else if (type === 'diabetes') {
+        const text = origin === 'hot' ? "سكري حار يابس (منهج ابن سينا/الرازي)" : "سكري بارد رطب (منهج المغنى)";
+        const desc = origin === 'hot' ? "احتراق في الكبد والكلى يسحب السوائل بسرعة." : "ضعف في القوة الهضمية للكبد ومنع نضج السكر.";
+        const fix = origin === 'hot' ? "تبريد البدن بماء الشعير، اليقطين، وطلاء الكلى بماء الورد والنشا." : "تسخين الكبد بالزنجبيل والقرفة (باعتدال) والقسط الهندي.";
+        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}><div class="ref-badge"><i class="fas fa-balance-scale"></i> المنهج: الطب الشمولي (الجمع والموازنة)</div>${desc}<br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
+    } else if (type === 'magic') {
+        let text = ""; let fix = ""; let ref = "منهج وحيد بالي والشيخ الأزهري (الاستفراغ)";
+        if (origin === 'eaten') {
+            text = "سحر مأكول أو مشروب (في الجهاز الهضمي)";
+            fix = "برنامج الشيخ الأزهري (الاستفراغ) بالسنا والسنوت، شرب زيت زيتون مقروء عليه، وماء السدر.";
+        } else if (origin === 'sprinkled') {
+            text = "سحر مرشوش (على المداخل أو العتبات/أقدام)";
+            fix = "نقع الأقدام بماء وملح وسدر مقروء عليه، مسح مداخل البيت بماء وملح، ورقية إبطال السحر للحبشي.";
+        } else {
+            text = "سحر مدفون أو معلق (أثر روحي بعيد)";
+            fix = "كثافة رقية إبطال السحر، سورة البقرة يومياً، وبرنامج الدهن العام بالزيت والمسك قبل النوم.";
+        }
+        finalCode = `<strong>التشخيص الروحي: ${text}</strong><div ${medicalStyle}><div class="ref-badge"><i class="fas fa-ghost"></i> المرجع: ${ref}</div>العرض العضوي هو انعكاس للأثر الروحي. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
+    } else if (type === 'envy') {
+        const text = origin === 'body' ? "إصابة بالعين (نفس معجبة)" : "إصابة بالحسد (نفس حاقدة)";
+        const fix = origin === 'body' ? "الاغتسال بوضوء العائن (إن عُرف) أو الاغتسال بماء مقروء وسدر، والرقية العامة." : "الرقية الشرعية المطولة، التحصين بالأذكار، والاعتكاف على سورة البقرة والمعوذات.";
+        finalCode = `<strong>التشخيص الروحي: ${text}</strong><div ${medicalStyle}><div class="ref-badge"><i class="fas fa-eye"></i> المنهج: الشيخ خالد الحبشي</div>الحسد نار تحرق الجسد والروح؛ التدبير يكون بالتبريد بالماء والذكر. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
+    } else if (type === 'spiritual') {
+        const text = origin === 'touch' ? "مس أو أذى جني" : "مس الوسواس (عارض روحي)";
+        const fix = origin === 'touch' ? "المسح بالمسك الأسود، الحجامة النبوية، وسماع رقية الحرق والتعذيب." : "تقوية القلب بالذكر، عدم الالتفات للأفكار، والتحصين بالمعوذات والآذان.";
+        finalCode = `<strong>الحالة: ${text}</strong><div ${medicalStyle}><div class="ref-badge"><i class="fas fa-vial"></i> المرجع: منهاج الرقية الشرعية الموثق</div><strong>البرنامج المقترح:</strong> ${fix}</div>`;
     }
 
     responseDiv.innerHTML = `<div class="fade-in">${finalCode}</div>`;
@@ -2129,7 +2192,13 @@ const diseaseRegistry = {
     // 6. الأطفال (من تكميلات المغنى لعلاج الصبيان)
     "سعال الصبيان": { nature: "cold-moist", organ: "lung", tip: "تلطيف الصدر بملعقة عسل سدر مخففة بماء دافئ ودهن الصدر بزيت سمسم." },
     "مغص الرضيع": { nature: "cold-moist", organ: "stomach", tip: "تدليك البطن بدهن دافئ وتناول الأم لليانسون والكمون." },
-    "حرارة": { nature: "hot-dry", organ: "none", tip: "تبريد البدن بماء الورد والخل وتجنب الأغذية الحارة للأم (إذا كان يرضع)." }
+    "حرارة": { nature: "hot-dry", organ: "none", tip: "تبريد البدن بماء الورد والخل وتجنب الأغذية الحارة للأم (إذا كان يرضع)." },
+
+    // 7. الأمراض الروحية (Spiritual Maladies)
+    "سحر": { nature: "none", organ: "none", tip: "يتطلب برنامج استفراغ بماء السدر، وسماع رقية السحر للشيخ خالد الحبشي." },
+    "حسد": { nature: "none", organ: "none", tip: "يُعالج بالرقية العامة، والاغتسال بماء الوضوء (إن عُرف العائن) أو الماء المقروء." },
+    "عين": { nature: "none", organ: "none", tip: "تتطلب رقية العين والحسد، والدهن بزيت الزيتون المقروء عليه آيات الشفاء." },
+    "مس": { nature: "none", organ: "none", tip: "الالتزام بالأذكار، والمسك الأسود، وسماع رقية الحرق للظالمين." }
 };
 
 function getDiseaseFromComplaint(complaint) {
