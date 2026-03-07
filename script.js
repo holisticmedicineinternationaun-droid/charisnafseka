@@ -11,38 +11,45 @@ function translateSymptom() {
 
     let responseHTML = "";
 
-    // 1. Check in Registry first for direct match or partial match
-    let foundKey = null;
-    if (diseaseRegistry[input]) {
-        foundKey = input;
-    } else {
-        // Look for partial match
-        foundKey = Object.keys(diseaseRegistry).find(key => input.includes(key) || key.includes(input));
-    }
-
-    if (foundKey) {
-        const d = diseaseRegistry[foundKey];
-        const organName = organsMapData[d.organ] ? organsMapData[d.organ].title : "عام";
-        const natureAr = d.nature === "hot-dry" ? "حار يابس" : d.nature === "cold-moist" ? "بارد رطب" : d.nature === "cold-dry" ? "بارد يابس" : "حار رطب";
-
+    // 1. Interactive Steps for common complex symptoms (Priority for Inquiry)
+    if (input.includes("سكر") || input.includes("سكري")) {
         responseHTML = `
             <div class="translator-step fade-in">
-                <div class="ref-badge"><i class="fas fa-book-medical"></i> المرجع: كتاب المغنى (ابن اللبودي)</div>
-                <p><strong>العرض: ${foundKey}</strong></p>
-                <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border-right: 3px solid #d4af37; margin-top:15px;">
-                    <p><strong>التصنيف الفرعي:</strong> ${natureAr}</p>
-                    <p><strong>العضو المتأثر:</strong> ${organName}</p>
-                    <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:10px 0;">
-                    <p><strong>قاعدة التدبير:</strong> ${d.tip}</p>
+                <p><strong>السكري</strong> له وجهان في الطب الشمولي. أي الحالات تصف مريضك؟</p>
+                <div class="options-grid" style="margin-top:15px;">
+                    <button class="btn-option" onclick="finalizeTranslation('diabetes', 'hot')">عطش لا ينطفئ، نحافة متسارعة، وحرارة في البول (حار يابس)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('diabetes', 'cold')">كثرة تبول بدون عطش حارق، خمول، وشحوب (بارد رطب)</button>
                 </div>
             </div>`;
-        responseDiv.innerHTML = responseHTML;
-        responseDiv.classList.remove('hidden');
-        return;
-    }
-
-    // 2. Interactive Steps for common complex symptoms
-    if (input.includes("قولون")) {
+    } else if (input.includes("سحر") || input.includes("روحي")) {
+        responseHTML = `
+            <div class="translator-step fade-in">
+                <p><strong>تشخيص الإصابة بالسحر</strong> (منهج الطب الروحي الاستدلالي). أين يتركز الألم أو العرض الأقوى؟</p>
+                <div class="options-grid" style="margin-top:15px;">
+                    <button class="btn-option" onclick="finalizeTranslation('magic', 'eaten')">ألم دائم في المعدة، غثيان، ورائحة كريهة عند الاستيقاظ (مأكول/مشروب)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('magic', 'sprinkled')">ثقل وألم شديد في القدمين، تبقع الساقين، ونفور من البيت (مرشوش)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('magic', 'buried')">ضيق صدر شديد، كوابيس متكررة بسقوط من شاهق، وصداع متنقل (مدفون/معلق)</button>
+                </div>
+            </div>`;
+    } else if (input.includes("حسد") || input.includes("عين")) {
+        responseHTML = `
+            <div class="translator-step fade-in">
+                <p><strong>تشخيص العين والحسد</strong>. صف الحالة الجسدية المرافقة:</p>
+                <div class="options-grid" style="margin-top:15px;">
+                    <button class="btn-option" onclick="finalizeTranslation('envy', 'body')">تثاؤب مفرط مع دموع، خمول تام، وحرارة بين الكتفين (عين معجبة/حاسدة)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('envy', 'life')">تعطل مفاجئ في الرزق أو الدراسة، بقع زرقاء في الجسد، ونفور (حسد تراكمي)</button>
+                </div>
+            </div>`;
+    } else if (input.includes("مس") || input.includes("تلبس")) {
+        responseHTML = `
+            <div class="translator-step fade-in">
+                <p><strong>أعراض المس والأذى الروحي</strong>:</p>
+                <div class="options-grid" style="margin-top:15px;">
+                    <button class="btn-option" onclick="finalizeTranslation('spiritual', 'touch')">ثقل في الأكتاف، تنميل في الأطراف، ونفور من العبادات وسماع القرآن</button>
+                    <button class="btn-option" onclick="finalizeTranslation('spiritual', 'waswas')">وساوس قهرية، شكوك، وحالات تيه وضياع (مس الوسواس)</button>
+                </div>
+            </div>`;
+    } else if (input.includes("قولون")) {
         responseHTML = `
             <div class="translator-step">
                 <p><strong>القولون (القولنج)</strong> له أصول مختلفة في المنهج السينوي. لنحدد أصل المادة الفعالة:</p>
@@ -169,11 +176,66 @@ function translateSymptom() {
                     <button class="btn-option" onclick="finalizeTranslation('spiritual', 'waswas')">وساوس قهرية، شكوك، وحالات تيه وضياع (مس الوسواس)</button>
                 </div>
             </div>`;
-    } else {
-        responseHTML = `<p>هذه العلة مسجلة تحت باب <strong>"أسرار الأمزجة"</strong>.</p>
-                        <p style="font-size: 0.9rem; margin-top: 10px;">يرجى مسح ما كتبت بالأعلى وكتابة <strong>اسم العضو المتألم</strong> (مثل: الكبد، المعدة) أو اختيار <strong>عرض أقرب</strong> ليتسنى للمحرك الاستدلالي خدمتك بدقة.</p>`;
     }
-    responseDiv.innerHTML = responseHTML;
+
+    if (responseHTML) {
+        responseDiv.innerHTML = responseHTML;
+        responseDiv.classList.remove('hidden');
+        return;
+    }
+
+    // 2. Registry Search (Fallback for non-interactive symptoms)
+    let foundKey = null;
+    if (diseaseRegistry[input]) {
+        foundKey = input;
+    } else {
+        foundKey = Object.keys(diseaseRegistry).find(key => input.includes(key) || key.includes(input));
+    }
+
+    if (foundKey) {
+        const d = diseaseRegistry[foundKey];
+        const organName = organsMapData[d.organ] ? organsMapData[d.organ].title : "عام";
+
+        // Nature Mapping
+        let natureAr = "غير محدد";
+        if (d.nature === "hot-dry") natureAr = "حار يابس";
+        else if (d.nature === "cold-moist") natureAr = "بارد رطب";
+        else if (d.nature === "cold-dry") natureAr = "بارد يابس";
+        else if (d.nature === "hot-moist") natureAr = "حار رطب";
+
+        // Dynamic Source Reference
+        let refLabel = "كتاب المغنى (ابن اللبودي)";
+        let refIcon = "fa-book-medical";
+
+        const spiritualKeys = ["سحر", "حسد", "عين", "مس"];
+        if (spiritualKeys.some(sk => foundKey.includes(sk))) {
+            refLabel = "منهج الرقية الشرعية الموثق (وحيد بالي/الحبشي)";
+            refIcon = "fa-pray";
+            natureAr = "إصابة روحية";
+        } else if (foundKey.includes("سرطان")) {
+            refLabel = "منهج الطب الأصيل - مدرسة ابن سينا";
+            refIcon = "fa-scroll";
+        }
+
+        responseHTML = `
+            <div class="translator-step fade-in">
+                <div class="ref-badge"><i class="fas ${refIcon}"></i> المرجع: ${refLabel}</div>
+                <p><strong>العرض: ${foundKey}</strong></p>
+                <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border-right: 3px solid #d4af37; margin-top:15px;">
+                    <p><strong>التصنيف الفرعي:</strong> ${natureAr}</p>
+                    <p><strong>العضو المتأثر:</strong> ${organName}</p>
+                    <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:10px 0;">
+                    <p><strong>قاعدة التدبير:</strong> ${d.tip}</p>
+                </div>
+            </div>`;
+        responseDiv.innerHTML = responseHTML;
+        responseDiv.classList.remove('hidden');
+        return;
+    }
+
+    // Default response if absolutely nothing matches
+    responseDiv.innerHTML = `<p>هذه العلة مسجلة تحت باب <strong>"أسرار الأمزجة"</strong>.</p>
+                        <p style="font-size: 0.9rem; margin-top: 10px;">يرجى مسح ما كتبت بالأعلى وكتابة <strong>اسم العضو المتألم</strong> (مثل: الكبد، المعدة) أو اختيار <strong>عرض أقرب</strong> ليتسنى للمحرك الاستدلالي خدمتك بدقة.</p>`;
     responseDiv.classList.remove('hidden');
 }
 
