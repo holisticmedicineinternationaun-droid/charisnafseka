@@ -2317,10 +2317,19 @@ const diseaseRegistry = {
     "مس": { nature: "none", organ: "none", tip: "الالتزام بالأذكار، والمسك الأسود، وسماع رقية الحرق للظالمين." }
 };
 
+function normalizeArabic(text) {
+    if (!text) return "";
+    return text
+        .replace(/[أإآ]/g, "ا")
+        .replace(/ة/g, "ه")
+        .replace(/ى/g, "ي")
+        .replace(/[\u064B-\u0652]/g, ""); // Remove Tashkeel
+}
+
 function getDiseaseFromComplaint(complaint) {
-    const text = complaint.toLowerCase();
+    const text = normalizeArabic(complaint.toLowerCase());
     for (let d in diseaseRegistry) {
-        if (text.includes(d)) return diseaseRegistry[d];
+        if (text.includes(normalizeArabic(d.toLowerCase()))) return diseaseRegistry[d];
     }
     return null;
 }
@@ -2703,50 +2712,107 @@ function analyzeCustomInquiry() {
         return;
     }
 
+    // Apply trial limit if necessary
+    if (typeof checkGlobalTrialLimit === 'function' && !checkGlobalTrialLimit('custom_consultant')) return;
+
     let responseHTML = `
-        <div class="consultant-result fade-in" style="background: rgba(255,255,255,0.02); padding: 20px; border-radius: 15px; border-right: 5px solid var(--secondary-color);">
-            <h4 style="color: var(--secondary-color); margin-bottom: 15px;"><i class="fas fa-clipboard-check"></i> تحليل خبير التغذية العلاجية</h4>
+        <div class="consultant-result fade-in" style="background: rgba(255,255,255,0.02); padding: 25px; border-radius: 20px; border-right: 6px solid var(--secondary-color); box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+            <h4 style="color: var(--secondary-color); margin-bottom: 20px; font-size: 1.3rem;"><i class="fas fa-user-md"></i> تحليل خبير التغذية العلاجية (الذكاء الاستدلالي)</h4>
     `;
 
-    // 1. Infant Safety (Special Rule for babies under 1 year)
+    // 1. Match Disease/Condition
+    const matchedDisease = getDiseaseFromComplaint(condition || query);
+
+    // 2. Analyze Meal Nature (using existing KB)
+    let mealNature = { hot: 0, cold: 0, dry: 0, wet: 0 };
+    for (let nature in mealKnowledgeBase) {
+        mealKnowledgeBase[nature].keywords.forEach(kw => {
+            if (query.includes(kw)) mealNature[nature]++;
+        });
+    }
+
+    const dominantMealNature = Object.keys(mealNature).reduce((a, b) => mealNature[a] > mealNature[b] ? a : b);
+    const hasMealNature = mealNature[dominantMealNature] > 0;
+
+    // 3. Infant Safety (Special Rules)
     const isInfant = age.includes('شهر') || (parseInt(age) < 1 && !age.includes('سنة'));
     const isRaw = query.includes('طازج') || query.includes('بدون طهي') || query.includes('نيء') || query.includes('دون طهي');
 
     if (isInfant && isRaw && (query.includes('جزر') || query.includes('شمندر') || query.includes('خضار'))) {
         responseHTML += `
-            <div class="advice-block danger" style="background: rgba(220, 38, 38, 0.1); padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #ef4444;">
-                <p><strong>⚠️ تحذير سلامة:</strong> بالنسبة لرضيع عمره ${age}، <strong>لا ينصح أبداً</strong> بتقديم الخضروات القاسية (مثل الشمندر والجزر) بشكل طازج دون طهي.</p>
-                <p><strong>السبب:</strong> الجهاز الهضمي للرضيع غير مهيأ لمعالجة الألياف القاسية النيئة، كما قد تسبب غصصاً أو عسراً في الهضم.</p>
+            <div class="advice-block danger" style="background: rgba(220, 38, 38, 0.1); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ef4444;">
+                <p style="color: #fca5a5; font-weight: bold; margin-bottom: 8px;"><i class="fas fa-exclamation-triangle"></i> تحذير سلامة للرضع:</p>
+                <p>بالنسبة لرضيع عمره ${age}، <strong>لا ينصح أبداً</strong> بتقديم الخضروات القاسية (مثل الشمندر والجزر) بشكل طازج دون طهي.</p>
             </div>
-            <p><strong>التدبير المقترح (Tadbeer):</strong></p>
-            <ul style="color: #e2e8f0; line-height: 1.6;">
-                <li><strong>الطهي بالبخار:</strong> قومي بطهي الشمندر والجزر بالبخار حتى يصبحا ليّنين جداً (مثل الزبدة).</li>
-                <li><strong>الهرس:</strong> بعد الطهي، اسحقيهما جيداً مع إضافة قطرة من زيت الزيتون (لتحسين امتصاص الفيتامينات الذائبة في الدهون).</li>
-                <li><strong>لفقر الدم:</strong> الشمندر ممتاز، ولكن يفضل تنويع المصادر بإضافة كبدة دجاج مطهية جيداً ومهروسة مرتين أسبوعياً.</li>
+            <p><strong>التدبير الشفائي المقترح:</strong></p>
+            <ul style="color: #e2e8f0; line-height: 1.8; margin-bottom: 20px;">
+                <li><strong>الطهي بالبخار:</strong> يجب جعلها لينة جداً ليسهل هضمها.</li>
+                <li><strong>الهرس:</strong> امزجيها مع قطرة زيت زيتون لامتصاص الفيتامينات.</li>
             </ul>
-        `;
-    } else if (query.includes('شمندر') && (condition.includes('أنيميا') || condition.includes('فقر دم'))) {
-        responseHTML += `
-            <p><strong>الحالة:</strong> استخدام الشمندر لعلاج فقر الدم.</p>
-            <p><strong>رأي الخبير:</strong> الشمندر خلطه (بارد يابس) في الغالب، وهو مفيد جداً لبناء خلايا الدم الحمراء.</p>
-            <p><strong>التدبير الذكي:</strong> لرفع كفاءة الامتصاص، أضيفي إليه مصدراً فيتامين C (مثل قطرات ليمون أو فلفل رومي) وتجنبي تناوله مع منتجات الألبان مباشرة (منهج الطب التكاملي).</p>
         `;
     } else if (query.includes('عسل') && isInfant) {
         responseHTML += `
-            <div class="advice-block danger" style="background: rgba(220, 38, 38, 0.1); padding: 10px; border-radius: 8px; border: 1px solid #ef4444;">
-                <p><strong>⚠️ منع صحي:</strong> يمنع منعاً باتاً إعطاء العسل للأطفال دون سن السنة (12 شهر).</p>
-                <p><strong>السبب:</strong> خطر التسمم الوشيقي (Botulism) لأن أمعاء الرضيع لم تكتمل فيها البكتيريا النافعة القادرة على مقاومة أبواغ العسل.</p>
+            <div class="advice-block danger" style="background: rgba(220, 38, 38, 0.1); padding: 15px; border-radius: 8px; border: 1px solid #ef4444; margin-bottom: 20px;">
+                <p style="color: #fca5a5; font-weight: bold;"><i class="fas fa-ban"></i> منع طبي قطعي:</p>
+                <p>يمنع العسل تماماً لمن هم دون السنة (12 شهر) لتجنب التسمم الوشيقي.</p>
             </div>
         `;
     } else {
-        responseHTML += `
-            <p><strong>التحليل الأولي:</strong> هذه الوجبة تبدو ${isRaw ? 'تحتاج لمراجعة في طريقة التحضير' : 'جيدة'} لمن هم في سن ${age}.</p>
-            <p><strong>قاعدة عامة:</strong> استعن دائماً بمبدأ "الإضداد"؛ إذا كان العرض حاراً فبرد الوجبة، وإذا كان بارداً فسخنها بالمطيبات كالزنجبيل والكمون.</p>
-            <p style="margin-top:10px; font-size: 0.9rem; font-style: italic;">هذه الإجابة مبنية على أصول منهاج القانون لابن سينا وأحدث توصيات التغذية السريرية للأطفال.</p>
-        `;
+        // --- PROFESSIONAL ANALYSIS START ---
+
+        if (matchedDisease) {
+            responseHTML += `
+                <div class="analysis-summary" style="margin-bottom: 20px;">
+                    <p style="margin-bottom: 10px;"><strong>الحالة المرصودة:</strong> <span style="color: var(--secondary-color)">${condition || "عرض غير مسمى"}</span></p>
+                    <p style="margin-bottom: 10px;"><strong>طبيعة العلة (بالأرشيف):</strong> <span style="color: #e2e8f0">${getHumorText ? getHumorText(matchedDisease.nature) : matchedDisease.nature}</span></p>
+                    <div style="background: rgba(212,175,55,0.05); padding: 15px; border-radius: 10px; border: 1px dashed var(--secondary-color); margin-top: 10px;">
+                        <p><strong><i class="fas fa-lightbulb"></i> نصيحة الخبير:</strong> ${matchedDisease.tip}</p>
+                    </div>
+                </div>
+            `;
+
+            // Compatibility Check
+            const dNature = matchedDisease.nature;
+            let compatibilityMsg = "";
+            let compatibilityClass = "";
+
+            if (dNature.includes('hot') && mealNature.hot > 0) {
+                compatibilityMsg = "هذه الوجبة تميل للحرارة، وحالتك أصلها حار؛ قد تزيد من التهاب العضو. يُنصح بإضافة مبردات (خس، خيار) أو تقليل التوابل.";
+                compatibilityClass = "warning";
+            } else if (dNature.includes('cold') && mealNature.cold > 0) {
+                compatibilityMsg = "الوجبة باردة رطبة، وحالتك تميل للبرودة؛ قد تزيد من ركود الأخلاط. يُنصح بإضافة مسخنات (كمون، زنجبيل) أو طهيها جيداً.";
+                compatibilityClass = "warning";
+            } else if (hasMealNature) {
+                compatibilityMsg = "الوجبة تبدو متوازنة مع حالتك وفق مبدأ (الإضداد)؛ استمر في موازنة الأخلاط.";
+                compatibilityClass = "success";
+            } else {
+                compatibilityMsg = "الوجبة تبدو جيدة لمن هم في سن " + age + "، راعِ دائماً التوازن والاعتدال.";
+                compatibilityClass = "info";
+            }
+
+            responseHTML += `
+                <div class="compatibility-card ${compatibilityClass}" style="padding: 15px; border-radius: 10px; background: rgba(255,255,255,0.05); margin-bottom: 20px;">
+                    <p><strong><i class="fas fa-balance-scale"></i> حكم التوافق الغذائي:</strong> ${compatibilityMsg}</p>
+                </div>
+            `;
+        } else {
+            // General Expert Response
+            responseHTML += `
+                <p style="margin-bottom: 15px;"><strong>التحليل الأولي:</strong> الوجبة المذكورة (${query}) تبدو ${isRaw ? 'تحتاج لمراجعة في طريقة التدبير' : 'مقبولة تدبيرياً'} لمن هم في سن ${age}.</p>
+                <p style="margin-bottom: 15px;"><strong>قاعدة عامة (منهج ابن سينا):</strong> استعن بمبدأ "الإضداد"؛ فإذا كان عرضك حاراً (مثل التهاب أو حمرة) فبرد الوجبة، وإذا كان بارداً (مثل خمول أو بلغم) فسخنها بالزنجبيل أو الكمون.</p>
+            `;
+        }
     }
 
-    responseHTML += `</div>`;
+    // Common Professional Footer
+    responseHTML += `
+        <hr style="border:0; border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;">
+        <div class="expert-reference" style="font-size: 0.9rem; color: #a0aec0;">
+            <p><i class="fas fa-book-medical"></i> هذه الإجابة مبنية على أصول <strong>منهاج القانون لابن سينا</strong> وأحدث توصيات التغذية السريرية المتكاملة.</p>
+            <p style="margin-top: 5px; font-style: italic; font-size: 0.8rem;">تنبيه: هذا التحليل استرشادي لدعم الصحة ولا يغني عن استشارة الطبيب في الحالات الحادة.</p>
+        </div>
+    </div>`;
+
     responseDiv.innerHTML = responseHTML;
     responseDiv.classList.remove('hidden');
     responseDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
