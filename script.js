@@ -125,7 +125,8 @@ function translateSymptom() {
                 </div>
             </div>`;
     } else {
-        responseHTML = `<p>هذه العلة مسجلة تحت باب "أسرار الأمزجة". يرجى اختيار عرض أقرب أو كتابة اسم العضو المتألم.</p>`;
+        responseHTML = `<p>هذه العلة مسجلة تحت باب <strong>"أسرار الأمزجة"</strong>.</p>
+                        <p style="font-size: 0.9rem; margin-top: 10px;">يرجى مسح ما كتبت بالأعلى وكتابة <strong>اسم العضو المتألم</strong> (مثل: الكبد، المعدة) أو اختيار <strong>عرض أقرب</strong> ليتسنى للمحرك الاستدلالي خدمتك بدقة.</p>`;
     }
     responseDiv.innerHTML = responseHTML;
     responseDiv.classList.remove('hidden');
@@ -1999,6 +2000,7 @@ const diseaseRegistry = {
     "سكر": { nature: "cold-moist", organ: "liver", tip: "تقليل الرطوبات الفضلية، والاعتماد على الشعير والخل والرياضة." },
     "سكري": { nature: "cold-moist", organ: "liver", tip: "تقليل الرطوبات الفضلية، والاعتماد على الشعير والخل والرياضة." },
     "عسر هضم": { nature: "cold-moist", organ: "stomach", tip: "تسخين المعدة ومنع كثرة الطعام، واستخدام الكمون بزيت الزيتون." },
+    "فقر الدم": { nature: "cold-dry", organ: "liver", tip: "تقوية الكبد بالمسخنات المرطبة (كالعسل والتمر والزبيب)، وتجنب الحوامض والمجففات التي تمنع توليد الدم النقي." },
 
     // 4. الكلى والمثانة (Kidneys & Bladder - Al-Mughni Chapter 101-130)
     "حصى الكلى": { nature: "cold-dry", organ: "none", tip: "تفتيت الحصى بالمسخنات المدرة بحدة (كالحلبة وبزر الخلة والقرفة)." },
