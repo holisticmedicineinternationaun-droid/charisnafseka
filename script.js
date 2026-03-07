@@ -10,98 +10,122 @@ function translateSymptom() {
     if (!checkGlobalTrialLimit('symptom_translator')) return;
 
     let responseHTML = "";
+
+    // 1. Check in Registry first for direct match
+    if (diseaseRegistry[input]) {
+        const d = diseaseRegistry[input];
+        const organName = organsMapData[d.organ] ? organsMapData[d.organ].title : "عام";
+        const natureAr = d.nature === "hot-dry" ? "حار يابس" : d.nature === "cold-moist" ? "بارد رطب" : d.nature === "cold-dry" ? "بارد يابس" : "حار رطب";
+
+        responseHTML = `
+            <div class="translator-step fade-in">
+                <div class="ref-badge"><i class="fas fa-book-medical"></i> المرجع: كتاب المغنى (ابن اللبودي)</div>
+                <p><strong>العرض: ${input}</strong></p>
+                <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border-right: 3px solid #d4af37; margin-top:15px;">
+                    <p><strong>التصنيف الفرعي:</strong> ${natureAr}</p>
+                    <p><strong>العضو المتأثر:</strong> ${organName}</p>
+                    <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:10px 0;">
+                    <p><strong>قاعدة التدبير:</strong> ${d.tip}</p>
+                </div>
+            </div>`;
+        responseDiv.innerHTML = responseHTML;
+        responseDiv.classList.remove('hidden');
+        return;
+    }
+
+    // 2. Interactive Steps for common complex symptoms
     if (input.includes("قولون")) {
         responseHTML = `
             <div class="translator-step">
-                <p><strong>القولون</strong> له أصول مختلفة في الطب الأصيل. لنحدد أصل علتك:</p>
+                <p><strong>القولون (القولنج)</strong> له أصول مختلفة في المنهج السينوي. لنحدد أصل المادة الفعالة:</p>
                 <div class="options-grid" style="margin-top:15px;">
-                    <button class="btn-option" onclick="finalizeTranslation('colon', 'bile')">يزداد الألم عند الغضب أو الحرارة (هيجان صفراوي)</button>
-                    <button class="btn-option" onclick="finalizeTranslation('colon', 'black')">يزداد مع التفكير وكثرة الهم والبرد (غلبة سوداوية)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('colon', 'bile')">تمغص حاد ورياح محتبسة (خِلط صفراوي)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('colon', 'black')">ثقل ممتد مع تيبس في الطبيعة (خِلط سوداوي)</button>
                 </div>
             </div>`;
     } else if (input.includes("شقيقة") || input.includes("صداع")) {
         responseHTML = `
             <div class="translator-step">
-                <p><strong>الصداع/الشقيقة</strong> تختلف باختلاف المادة. كيف تشعر برأسك؟</p>
+                <p><strong>الصداع</strong> عرض مشترك. أين يتركز الثقل؟</p>
                 <div class="options-grid" style="margin-top:15px;">
-                    <button class="btn-option" onclick="finalizeTranslation('headache', 'hot')">نبض حار وضربات قوية (هيجان دموي/صفراوي)</button>
-                    <button class="btn-option" onclick="finalizeTranslation('headache', 'cold')">ثقل بارد وكأن الرأس مكبل (مادة بلغمية)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('headache', 'hot')">في المقدمة والصدغين مع حرارة (دموي/صفراوي)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('headache', 'cold')">في المؤخرة مع كسل في الحواس (بلغمي بارد)</button>
                 </div>
             </div>`;
     } else if (input.includes("مفاصل") || input.includes("روماتيزم")) {
         responseHTML = `
             <div class="translator-step">
-                <p><strong>آلام المفاصل</strong> تعتمد على الكيفية الغالبة. صف موضع الألم:</p>
+                <p><strong>آلام المفاصل</strong> تعتمد على انصباب المادة. كيف تبدو؟</p>
                 <div class="options-grid" style="margin-top:15px;">
-                    <button class="btn-option" onclick="finalizeTranslation('joints', 'cold')">يزداد بالبرد والرطوبة ويتحسن بالتدفئة (بلغمي)</button>
-                    <button class="btn-option" onclick="finalizeTranslation('joints', 'hot')">احمرار، تورم، وحرارة موضعية (دموي/صفراوي)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('joints', 'cold')">ألم يابس يزداد مع السكون والبرد (بلغمي غليظ)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('joints', 'hot')">ضربان حار موضع الورم (دموي هائج)</button>
                 </div>
             </div>`;
     } else if (input.includes("صدفية") || input.includes("صدفيه")) {
         responseHTML = `
             <div class="translator-step">
-                <p><strong>الصدفية</strong> في الطب الأصيل هي اندفاع للأخلاط الغليظة. لنحدد النوع:</p>
+                <p><strong>الصدفية</strong> هي اندفاع يبوسة احتراقية. صف نوع القشور:</p>
                 <div class="options-grid" style="margin-top:15px;">
-                    <button class="btn-option" onclick="finalizeTranslation('psoriasis', 'burnt')">قشور فضية يابسة جداً مع حكة شديدة (سوداء محترقة)</button>
-                    <button class="btn-option" onclick="finalizeTranslation('psoriasis', 'salty')">قشور تميل للرطوبة أو الصفار (بلغم مالح/صفراء)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('psoriasis', 'burnt')">بيضاء كالمسحوق (سوداء يابسة)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('psoriasis', 'salty')">مائلة للاصفرار مع نز بسيط (بلغم مالح)</button>
                 </div>
             </div>`;
     } else if (input.includes("اكزيما") || input.includes("إكزيما")) {
         responseHTML = `
             <div class="translator-step">
-                <p><strong>الاكزيما</strong> تختلف حسب الكيفية المادية. كيف تبدو؟</p>
+                <p><strong>الاكزيما</strong> اختلال في تنفس المسام. كيف حال الجلد؟</p>
                 <div class="options-grid" style="margin-top:15px;">
-                    <button class="btn-option" onclick="finalizeTranslation('eczema', 'wet')">رطبة، تخرج سائلاً، وبها احمرار (هيجان دموي)</button>
-                    <button class="btn-option" onclick="finalizeTranslation('eczema', 'dry')">جافة، متشققة، وتنزف أحياناً (سوداوية يابسة)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('eczema', 'wet')">رطوبة حارقة تظهر فجأة (دموي حاد)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('eczema', 'dry')">تشقق يابس وعميق (سوداوي رديء)</button>
                 </div>
             </div>`;
     } else if (input.includes("تبول") || input.includes("لاارادي") || input.includes("لا إرادي")) {
         responseHTML = `
             <div class="translator-step">
-                <p><strong>التبول اللاإرادي</strong> يعود لضعف القوة الماسكة. لنحدد السبب:</p>
+                <p><strong>التبول اللاإرادي</strong> يعود لضعف الماسكة. لنحدد السبب:</p>
                 <div class="options-grid" style="margin-top:15px;">
-                    <button class="btn-option" onclick="finalizeTranslation('bedwetting', 'cold')">نوم عميق جداً وبرودة في الأطراف (برودة ورخاوة)</button>
-                    <button class="btn-option" onclick="finalizeTranslation('bedwetting', 'fear')">يحدث بعد فزع أو توتر عصبي (يُبوسة وتقلص عصب)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('bedwetting', 'cold')">نوم ثقيل مع برودة الأطراف (رخاوة بلغمية)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('bedwetting', 'fear')">يحدث بعد فزع أو صدمة (يبوسة انقباضية)</button>
                 </div>
             </div>`;
     } else if (input.includes("رعشة") || input.includes("رعشه") || input.includes("باركنسون")) {
         responseHTML = `
             <div class="translator-step">
-                <p><strong>الرعشة</strong> في كتب التراث هي خلل في "القوة المحركة" للأعصاب. لنحدد نوعها:</p>
+                <p><strong>الرعشة</strong> اضطراب في الروح الحاملة للحس.</p>
                 <div class="options-grid" style="margin-top:15px;">
-                    <button class="btn-option" onclick="finalizeTranslation('tremor', 'cold')">رعشة تزداد مع البرد والراحة (برودة وبلغم غليظ)</button>
-                    <button class="btn-option" onclick="finalizeTranslation('tremor', 'dry')">رعشة مستمرة مع جفاف في الجلد والريق (يُبوسة سوداوية)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('tremor', 'cold')">تخف مع الدفء والحركة (برودة رطبة)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('tremor', 'dry')">تزداد مع الجوع والهم (يبوسة جافة)</button>
                 </div>
             </div>`;
     } else if (input.includes("شباب") || input.includes("بثور")) {
         responseHTML = `
             <div class="translator-step">
-                <p><strong>حب الشباب</strong> هو فوران للمادة الفضلية تحت الجلد. صف هذه البثور:</p>
+                <p><strong>بثور الوجه</strong> تفريغ لفضلات الكبد. كيف تبدو؟</p>
                 <div class="options-grid" style="margin-top:15px;">
-                    <button class="btn-option" onclick="finalizeTranslation('acne', 'hot')">بثور حمراء مؤلمة وكبيرة (هيجان المادة الدموية)</button>
-                    <button class="btn-option" onclick="finalizeTranslation('acne', 'white')">رؤوس بيضاء صلبة ومستمرة (غلظ في المادة البلغمية)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('acne', 'hot')">حمراء ملتهبة (دليل غليان الدم)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('acne', 'white')">برؤوس دهنية صامتة (دليل بلغم لزج)</button>
                 </div>
             </div>`;
     } else if (input.includes("شعر") || input.includes("تساقط")) {
         responseHTML = `
             <div class="translator-step">
-                <p><strong>سقوط الشعر</strong> يعتمد على "تغذية المنبت" وفق منهج د. عبد الباسط:</p>
+                <p><strong>تساقط الشعر</strong> يعتمد على تربة المنبت.</p>
                 <div class="options-grid" style="margin-top:15px;">
-                    <button class="btn-option" onclick="finalizeTranslation('hairloss', 'dry')">شعر جاف، باهت، ويسقط بسهولة (يبوسة مفرطة)</button>
-                    <button class="btn-option" onclick="finalizeTranslation('hairloss', 'weak')">شعر دهني لكنه ضعيف المنبت (رطوبة مرخية للمسام)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('hairloss', 'dry')">فروة جافة وقشرة يابسة (نقص ترطيب)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('hairloss', 'weak')">فروة دهنية وشعر لين جداً (فرط رطوبة)</button>
                 </div>
             </div>`;
     } else if (input.includes("أرق") || input.includes("ارق") || input.includes("نوم")) {
         responseHTML = `
             <div class="translator-step">
-                <p><strong>الأرق</strong> هو غلبة اليبوسة على الدماغ. كيف تشعر قبل النوم؟</p>
+                <p><strong>الأرق</strong> يبوسة دماغية. كيف تشعر قبل النوم؟</p>
                 <div class="options-grid" style="margin-top:15px;">
-                    <button class="btn-option" onclick="finalizeTranslation('insomnia', 'dry')">تفكير مفرط وجفاف في العين والأنف (يبوسة سوداوية)</button>
-                    <button class="btn-option" onclick="finalizeTranslation('insomnia', 'hot')">قلق، كوابيس، وحرارة في الرأس (هيجان صفراوي)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('insomnia', 'dry')">تفكير مفرط وحرقة في العين (سوداوي)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('insomnia', 'hot')">قلق وحرارة في الأذنين (صفراوي)</button>
                 </div>
             </div>`;
     } else {
-        responseHTML = `<p>هذه العلة مسجلة تحت باب "نوادر الأخلاط". يرجى تحديد العرض الأوضح لنربطه بمنهج <strong>مدرستنا</strong> بدقة.</p>`;
+        responseHTML = `<p>هذه العلة مسجلة تحت باب "أسرار الأمزجة". يرجى اختيار عرض أقرب أو كتابة اسم العضو المتألم.</p>`;
     }
     responseDiv.innerHTML = responseHTML;
     responseDiv.classList.remove('hidden');
@@ -115,41 +139,41 @@ function finalizeTranslation(type, origin) {
     const medicalStyle = `style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border-right: 3px solid #d4af37; margin-top:15px; font-size: 0.95rem; line-height:1.7;"`;
 
     if (type === 'colon') {
-        const text = origin === 'bile' ? "هيجان صفراوي حار" : "غلبة سوداوية باردة";
-        const fix = origin === 'bile' ? "تبريد وترطيب (كزبرة، خيار)." : "ترطيب وتتدفئة (يانسون، بابونج).";
-        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}>هذا الاضطراب يحدث بسبب خلل في كيمياء الأمعاء وتراكم الأبخرة. <br><strong>الإصلاح:</strong> ${fix}</div>`;
+        const text = origin === 'bile' ? "قولنج صفراوي حار" : "قولنج سوداوي يابس";
+        const fix = origin === 'bile' ? "منع التوابل الحادة، شرب ماء الرجلة، ودهن البطن بدهن ورد." : "منع العدس والباذنجان، شرب منقوع التين، ودهن البطن بدهن لوز.";
+        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}><div class="ref-badge"><i class="fas fa-scroll"></i> المنهج: القانون في الطب (ابن سينا)</div>هذا الاضطراب ناتج عن انصباب مادة حادة في الأمعاء تمنع مرور الرياح. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
     } else if (type === 'headache') {
-        const text = origin === 'hot' ? "هيجان حار (دموي/صفراوي)" : "امتلاء بلغمي بارد";
-        const fix = origin === 'hot' ? "شهيق عميق، شم ماء ورد، وتجنب الحار." : "مسخنات (زنجبيل، قرفة) وتدفئة الرأس.";
-        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}>الرأس مرآة المعدة؛ لذا الصداع غالباً ما يكون صعوداً لأبخرة الأخلاط المختلة. <br><strong>الإصلاح:</strong> ${fix}</div>`;
+        const text = origin === 'hot' ? "صداع دموي/صفراوي" : "صداع بارد مادي";
+        const fix = origin === 'hot' ? "تسكين الحرارة بماء الورد، ومنع الشمس، وتناول المبردات." : "استنشاق المسخنات (مثل القسط)، تدفئة الأطراف، وتناول الزنجبيل.";
+        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}><div class="ref-badge"><i class="fas fa-scroll"></i> المنهج: المغنى (الأمراض النفسانية)</div>الصداع هو انزعاج الروح الدماغية من أبخرة تصعد من الأسفل. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
     } else if (type === 'psoriasis') {
-        const text = origin === 'burnt' ? "سوداء محترقة (جفاف شديد)" : "بلغم مالح (رطوبة مختلة)";
-        const fix = origin === 'burnt' ? "دهن بزيت القسط البحري، شرب منقوع الهندباء، ومنع اليوابس (عدس، باذنجان)." : "تنشيف الجلد بماء الشعير والمرة، وتنقية البلغم بالهليلج.";
-        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}>قال الرازي: الصدفية هي محاولة الجسم طرد خلط غليظ نحو الجلد. <br><strong>الإصلاح:</strong> ${fix}</div>`;
+        const text = origin === 'burnt' ? "سوداء محترقة (يبوسة عميقة)" : "بلغم مالح (فساد رطوبة)";
+        const fix = origin === 'burnt' ? "تنقية السوداء (هندباء)، دهن بدهن بنفسج، والتركيز على المرطبات." : "منع الألبان، استخدام ماء المرة موضعياً، وتعديل خلط الدم بالأملج.";
+        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}><div class="ref-badge"><i class="fas fa-scroll"></i> المنهج: تقويم الأبدان (ابن جزلة)</div>الجلد يخرج ما عجزت الكلى والكبد عن تصريفه. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
     } else if (type === 'eczema') {
-        const text = origin === 'wet' ? "هيجان دموي حاد (رطوبة حارة)" : "غلظ سوداوي يابس (يبوسة باردة)";
-        const fix = origin === 'wet' ? "تبريد الدم (عناب، خل ورد)، منع المقليات تماماً." : "ترطيب دهني مكثف (فازلين طبيعي، زيت لوز)، شرب المليسا.";
-        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}>الجلد يتنفس، وعندما يفسد الدم يظهر أثره في مسامه. <br><strong>الإصلاح:</strong> ${fix}</div>`;
+        const text = origin === 'wet' ? "تموج دموي حار" : "يبوسة سوداوية صلبة";
+        const fix = origin === 'wet' ? "تبريد الدم (عناب، خل ورد)، منع المقليات تماماً." : "سقى البدن بماء الشعير، دهن بزيت كتان، ومنع كل يابس وحامض.";
+        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}>هيجان الجلد هو صراخ الكبد لطلب النجدة والتبريد. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
     } else if (type === 'bedwetting') {
-        const text = origin === 'cold' ? "برودة ورخاوة المثانة" : "يبوسة وتقلص عصبي";
-        const fix = origin === 'cold' ? "تدفئة المثانة بزيت زيتون، تناول عسل وجوز، منع السوائل ليلاً." : "ترطيب الأعصاب (بابونج)، منع التوتر، تدليك الظهر بزيت بنفسج.";
-        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}>استناداً لابن سينا: التبول اللاإرادي عجز من القوة الماسكة عن مدافعة القوة الدافعة بسبب البرد. <br><strong>الإصلاح:</strong> ${fix}</div>`;
+        const text = origin === 'cold' ? "برودة المثانة (رخاوة الفواتح)" : "يبوسة الأعصاب (تقلص لاإرادي)";
+        const fix = origin === 'cold' ? "دلك المثانة بمزلقة زيت زيتون دافئ، تناول عسل بذر حرمل." : "ترطيب عصب الظهر بدهن الخروع، منع الفزع، وشرب مغلي المليسا.";
+        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}>التبول في النوم هو عجز القوة الحافظة عن مقاومة الطبيعة المندفعة. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
     } else if (type === 'tremor') {
-        const text = origin === 'cold' ? "رعشة بلغمية باردة" : "رعشة سوداوية يابسة";
-        const fix = origin === 'cold' ? "تحمية الأعصاب (زنجبيل، خردل)، منع الألبان والبارد." : "ترطيب الجهاز العصبي (أوميقا 3 طبيعي، دهن الظهر بزيت كتان)، منع الحوامض والمنبهات.";
-        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}>الرعشة هي اضطراب في الروح الحيوانية الحاملة للحركة بسبب غلظ المادة أو شدة اليبوسة (ابن سينا). <br><strong>الإصلاح:</strong> ${fix}</div>`;
+        const text = origin === 'cold' ? "ارتعاش بردي (بلغمي)" : "ارتعاش يبسي (سوداوي)";
+        const fix = origin === 'cold' ? "تحمية الأعصاب بدهن فجل، أكل العسل بالزعتر، منع البارد." : "سقى الأعصاب بالدهون المرطبة (سمسم)، أكل الموفقات (قرع)، منع القهوة.";
+        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}><div class="ref-badge"><i class="fas fa-scroll"></i> المنهج: القانون في الطب (ابن سينا)</div>الرعشة هي حركة مضطربة للروح بين الدفع والجذب (الرازي). <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
     } else if (type === 'acne') {
-        const text = origin === 'hot' ? "اندفاع دموي حار" : "بثور بلغمية غليظة";
-        const fix = origin === 'hot' ? "تنقية الدم (عشبة الهندباء، شرب السنا والسنوت شهرياً)، منع الحلاوة." : "تنشيف الجلد (ماء المرة)، تقليل النشويات والدهون المهدرجة.";
-        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}>حب الشباب علامة على امتلاء الكبد بفضول الأخلاط التي لم تجد مخرجاً إلا مسام الجلد. <br><strong>الإصلاح:</strong> ${fix}</div>`;
+        const text = origin === 'hot' ? "بثور حارة (فوران دموي)" : "بثور باردة (رسوب بلغمي)";
+        const fix = origin === 'hot' ? "تبريد الكبد بماء الهندباء، منع المقليات، وطلاء الخل والورد." : "تنشيف الجلد بماء المرة، منع المعجنات، وتناول الكمون واليانسون.";
+        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}>حب الشباب هو طفح 'كيلوس' رديء لم ينضج في الكبد فدفع للجلد. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
     } else if (type === 'hairloss') {
-        const text = origin === 'dry' ? "يبوسة منبت (نقص تغذية)" : "رطوبة مرخية للمسام";
-        const fix = origin === 'dry' ? "ترطيب داخلي (زيت زيتون)، دهن الرأس بزيوت حارة (جرجير). كورس د. عبد الباسط: (أملج وكاموميل)." : "تنشيف الرطوبة الفضلية (رشة سدر)، منع غسل الشعر بماء حار جداً.";
-        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}>الشعر في الطب الأصيل دخان الأخلاط؛ بقاؤه يعتمد على اعتدال رطوبة الجلد وتغذية الدم. <br><strong>الإصلاح:</strong> ${fix}</div>`;
+        const text = origin === 'dry' ? "يبوسة مسام (احتراق)" : "رخاوة مسام (رطوبة)";
+        const fix = origin === 'dry' ? "ترطيب داخلي بدهن اللوز، منع الحواد (الخل)، طلاء زيت زيتون." : "دهن بزيوت قابضة (آس، سدر)، ومنع كثرة غسل الرأس بالماء الحار.";
+        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}>الشعر دخان نضج الأخلاط؛ ولا يثبت الدخان في أرض جافة محترقة ولا طينية رخوة. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
     } else if (type === 'insomnia') {
-        const text = origin === 'dry' ? "يبوسة دماغية سوداوية" : "حدة صفراوية قلقة";
-        const fix = origin === 'dry' ? "ترطيب الأنف بزيت بنفسج، شرب حليب دافئ بملعقة عسل." : "تبريد الكبد (بريد الأعصاب بشم الورد)، منع السهر أمام الشاشات.";
-        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}>النوم رطوبة في الدماغ، واليقظة المفرطة يبوسة تستهلك الروح الغريزي. <br><strong>الإصلاح:</strong> ${fix}</div>`;
+        const text = origin === 'dry' ? "يبوسة دماغية سوداوية" : "غلبة صفراوية نارية";
+        const fix = origin === 'dry' ? "تقطير دهن بنفسج في الأنف، عشاء مرطب (قرع)، ومنع الهم." : "تبريد القدمين بماء بارد، شم الورد، شرب مغلي الليمون والنعناع.";
+        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}><div class="ref-badge"><i class="fas fa-scroll"></i> المنهج: القانون (ابن سينا)</div>النوم رطوبة في الدماغ كالسحاب، فإذا جف الدماغ طار النوم. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
     }
 
     responseDiv.innerHTML = `<div class="fade-in">${finalCode}</div>`;
@@ -1942,48 +1966,58 @@ function generateChildPlan() {
 }
 
 // --- UNIVERSAL DISEASE KNOWLEDGE BASE (Based on Al-Mughni & Ibn Sina) ---
+// --- UNIVERSAL DISEASE KNOWLEDGE BASE (Enhanced with Al-Mughni & Ibn Sina Chapters) ---
 const diseaseRegistry = {
-    // Brain & Nerves (الدماغ والأعصاب)
-    "رعشة": { nature: "cold-moist", organ: "brain", tip: "تحتاج لتسخين الدماغ وتنشيف الرطوبات الفضلية، وتجنب البرد والبلغميات." },
-    "صرع": { nature: "cold-moist", organ: "brain", tip: "تقليل الألبان والأسماك والمبردات تماماً، والتركيز على اللطائف المسخنة." },
-    "صداع": { nature: "hot-dry", organ: "brain", tip: "تسكين الأبخرة بالخيارات والبرودة المعتدلة والشموم البارد." },
-    "نسيان": { nature: "cold-moist", organ: "brain", tip: "تحتاج للمسخنات اليابسة كالبان واللبان والزعتر لتقوية الحافظة." },
-    "أرق": { nature: "hot-dry", organ: "brain", tip: "ترطيب الدماغ بماء الشعير أو زيت اللوز قبيل النوم." },
-    "شلل": { nature: "cold-moist", organ: "brain", tip: "علاجها بالمسخنات القوية والتمريخ بالزيوت الحارة (كالفجل والخردل)." },
-    "اعتلال عصبي": { nature: "cold-dry", organ: "brain", tip: "تحتاج لترميم العصب بالحرارة اللطيفة والرطوبة (الزيوت والمساج)." },
+    // 1. الدماغ والأعصاب (Head & Nerves - Al-Mughni Chapter 1-15)
+    "صداع": { nature: "hot-dry", organ: "brain", tip: "تسكين الأبخرة الصاعدة من المعدة بالخل والماء البارد موضعياً، وتجنب التوابل الحادة." },
+    "شقيقة": { nature: "hot-dry", organ: "brain", tip: "تحتاج لردع المادة ومنع انصبابها، واستخدام دهن البنفسج أو الخل والورد." },
+    "رعشة": { nature: "cold-moist", organ: "brain", tip: "تحتاج لتسخين الدماغ وتنشيف الرطوبات الفضلية، والابتعاد عن الألبان والسكريات." },
+    "صرع": { nature: "cold-moist", organ: "brain", tip: "منع الأغذية الغليظة تماماً، واستخدام القسط الهندي والتدليك بالمسخنات." },
+    "نسيان": { nature: "cold-moist", organ: "brain", tip: "تقوية الحافظة بالمسخنات اليابسة كالبان واللبان والزعتر والجوز." },
+    "أرق": { nature: "hot-dry", organ: "brain", tip: "ترطيب الدماغ بماء الشعير أو زيت اللوز قبيل النوم، والجلوس في الرطوبات." },
+    "ماليخوليا": { nature: "cold-dry", organ: "brain", tip: "تنقية السوداء العكرة والتركيز على المرطبات المبهجة كالبنفسج والورد واليقطين." },
+    "وسواس": { nature: "cold-dry", organ: "brain", tip: "موازنة اليبوسة بالمرطبات المسخنة وتجنب العزلة والهم." },
+    "شلل": { nature: "cold-moist", organ: "brain", tip: "علاجها بالمسخنات القوية (كالفلفل والزنجبيل) والتمريخ بزيت الخردل." },
+    "دوار": { nature: "hot-moist", organ: "brain", tip: "تسكين فوران الدم وتبريد الرأس وتنقية المعدة من الأخلاط الصفراوية." },
 
-    // Chest & Breath (الصدر والتنفس)
-    "سعال": { nature: "cold-moist", organ: "lung", tip: "استخدام الصموغ والزوفا لتنقية البلغم من المجاري التنفسية." },
-    "ربو": { nature: "cold-moist", organ: "lung", tip: "تجنب كل ما يولد البلغم، والاعتماد على المسخنات المدرة للصدر." },
-    "ضيق تنفس": { nature: "hot-dry", organ: "lung", tip: "ترطيب الصدر باللعابات (مثل بزرة الكتان) وتجنب الغبار والدخان." },
-    "نزلة": { nature: "cold-moist", organ: "lung", tip: "تنشيف الرأس أولاً لمنع انحدار الفضلات للصدر." },
+    // 2. الصدر والرئة (Chest & Lungs - Al-Mughni Chapter 16-40)
+    "سعال": { nature: "cold-moist", organ: "lung", tip: "تنقية البلغم بالزوفا والصموغ (مثل اللبان الذكر) والعسل." },
+    "ربو": { nature: "cold-moist", organ: "lung", tip: "تجنب كل ما يولد البلغم، والاعتماد على المسخنات المدرة للصدر كالحلبة والقسط." },
+    "ضيق تنفس": { nature: "hot-dry", organ: "lung", tip: "ترطيب الصدر باللعابات (مثل بزرة الكتان والقطونا) وتجنب الغبار." },
+    "سل": { nature: "hot-dry", organ: "lung", tip: "تحتاج للترطيب الشديد بالألبان والماء البارد وإطفاء حرارة الرئة." },
+    "خفقان": { nature: "hot-moist", organ: "heart", tip: "تقوية القلب بالمفرحات الباردة كالتفاح والورد وشموم المسك والريحان." },
+    "نزيف الصدر": { nature: "hot-moist", organ: "lung", tip: "استخدام القوابض والرادعات كالطين الأرمني وعصارة الورد المبرد." },
 
-    // Digestive & Liver (الجهاز الهضمي والكبد)
-    "السكري النوع الأول": { nature: "hot-dry", organ: "liver", tip: "تسكين حرارة الكبد والتركيز على السوائل المرطبة (مثل الهندباء) والابتعاد عن التوابل الحادة." },
-    "السكري النوع الثاني": { nature: "cold-moist", organ: "stomach", tip: "تقليل البلغم والرطوبات الفضلية، والاعتماد على الشعير والخل والرياضة لتحفيز الهضم." },
-    "السكري": { nature: "cold-moist", organ: "liver", tip: "تقليل النشويات والسكريات، والتركيز على الشعير والخل لتلطيف الأخلاط." },
-    "سكر": { nature: "cold-moist", organ: "liver", tip: "تقليل النشويات والسكريات، والتركيز على الشعير والخل لتلطيف الأخلاط." },
-    "فقر دم": { nature: "cold-dry", organ: "liver", tip: "تحفيز توليد الدم بالأغذية الحارة الرطبة كالكبدة واللحم والزبيب." },
-    "أنيميا": { nature: "cold-dry", organ: "liver", tip: "تحفيز توليد الدم بالأغذية الحارة الرطبة كالكبدة واللحم والزبيب." },
-    "يرقان": { nature: "hot-dry", organ: "liver", tip: "تبريد الكبد بماء الهندباء والسلق وتجنب المقليات والتوابل الحارة." },
-    "استسقاء": { nature: "cold-moist", organ: "liver", tip: "تجفيف البدن بالمدرات والرياضة وتقليل شرب الماء دفعة واحدة." },
-    "قولون": { nature: "cold-moist", organ: "stomach", tip: "طرد الرياح بالكمون واليانسون والابتعاد عن البقوليات غير المصلحة." },
-    "إمساك": { nature: "hot-dry", organ: "stomach", tip: "تليين الطبيعة بالمرطبات كالخوخ والسبانخ وزيت الزيتون." },
-    "إسهال": { nature: "cold-moist", organ: "stomach", tip: "قبض الطبيعة بالسماق والرمان والرمان الحامض وتجنب الملينات." },
-    "حموضة": { nature: "hot-dry", organ: "stomach", tip: "إطفاء لهيب المعدة بالطباشير أو قشور الرمان أو ماء الشعير." },
-    "ديدان": { nature: "cold-moist", organ: "stomach", tip: "استخدام طاردات الديدان الحارة (مثل الثوم والشيح) وتنظيف الأمعاء." },
-    "غثيان": { nature: "hot-dry", organ: "stomach", tip: "تسكين المعدة بالمبردات العطرية كالسفرجل والنعناع البارد." },
+    // 3. المعدة والكبد (Digestive System - Al-Mughni Chapter 41-100)
+    "قولون": { nature: "cold-moist", organ: "stomach", tip: "طرد الرياح بالكمون واليانسون وتدليك البطن بدهن السذاب." },
+    "حموضة": { nature: "hot-dry", organ: "stomach", tip: "إطفاء لهيب المعدة بماء الشعير والقرع والابتعاد عن المقليات تماماً." },
+    "يرقان": { nature: "hot-dry", organ: "liver", tip: "تبريد الكبد بماء الهندباء والسلق وتناول الفواكه الحامضة (كمثرى أو رمان)." },
+    "استسقاء": { nature: "cold-moist", organ: "liver", tip: "تجفيف البدن بالمدرات الحادة والرياضة، وتقليل السوائل." },
+    "ورم الكبد": { nature: "hot-moist", organ: "liver", tip: "استخدام الرادعات أولاً (ماء الهندباء مع الكزبرة) ثم المنضجات." },
+    "ضعف الهضم": { nature: "cold-moist", organ: "stomach", tip: "تسخين المعدة بالجوارشنات الحارة (كمون وزنجبيل) وتقليل الماء أثناء الأكل." },
+    "ديدان": { nature: "cold-moist", organ: "stomach", tip: "طردها بالثوم والشيح والخردل على الريق وتنظيف الأمعاء بالخل." },
+    "سكر": { nature: "cold-moist", organ: "liver", tip: "تقليل الرطوبات الفضلية، والاعتماد على الشعير والخل والرياضة." },
+    "سكري": { nature: "cold-moist", organ: "liver", tip: "تقليل الرطوبات الفضلية، والاعتماد على الشعير والخل والرياضة." },
+    "عسر هضم": { nature: "cold-moist", organ: "stomach", tip: "تسخين المعدة ومنع كثرة الطعام، واستخدام الكمون بزيت الزيتون." },
 
-    // Joints & Bone (المفاصل والعظام)
-    "نقرس": { nature: "hot-moist", organ: "none", tip: "تقليل اللحوم الحمراء والأخلاط الغليظة، والتركيز على المبردات الملطفة." },
-    "روماتيزم": { nature: "cold-moist", organ: "none", tip: "تدفئة المفاصل وتجنب التعرض للبرد والرطوبة، واستخدام الزنجبيل." },
-    "ألم ظهر": { nature: "cold-moist", organ: "none", tip: "دلك الظهر بالزيوت المسخنة وتقليل الجلوس في الأماكن الباردة." },
+    // 4. الكلى والمثانة (Kidneys & Bladder - Al-Mughni Chapter 101-130)
+    "حصى الكلى": { nature: "cold-dry", organ: "none", tip: "تفتيت الحصى بالمسخنات المدرة بحدة (كالحلبة وبزر الخلة والقرفة)." },
+    "تبول": { nature: "cold-moist", organ: "none", tip: "تقوية المثانة بالمسخنات اليابسة (بندق، جوز الطيب) ومنع السوائل ليلاً." },
+    "حرقة البول": { nature: "hot-dry", organ: "none", tip: "تبريد مجرى البول باللعابات (بزر قطونا بماء فاتر) وشرب ماء الشعير." },
+    "سلس بول": { nature: "cold-moist", organ: "none", tip: "تحتاج لشد عضلات المثانة بالمسخنات المجففة وقشور الرمان." },
 
-    // General (أمراض عامة)
-    "حمى": { nature: "hot-dry", organ: "none", tip: "تبريد البدن بالكمادات والماء الفاتر ومنقوع الورد والشعير." },
-    "هزال": { nature: "cold-dry", organ: "none", tip: "تسمين البدن بالمرطبات المسخنة كالحلوى المصنوعة من السمن والعسل." },
-    "سمنة": { nature: "cold-moist", organ: "none", tip: "تجفيف الرطوبات بالرياضة وتقليل الغذاء واستخدام الخل." },
-    "تبول لا إرادي": { nature: "cold-moist", organ: "none", tip: "تقوية المثانة بالمسخنات اليابسة (مثل البندق وجوز الطيب) ومنع السوائل ليلاً." }
+    // 5. المفاصل والجلد (Joints & Skin - Al-Mughni Chapter 131-249)
+    "نقرس": { nature: "hot-moist", organ: "none", tip: "تقليل اللحوم الحمراء والدمويات، واستخدام مبردات موضعية (صندل أو ورد)." },
+    "عرق النسا": { nature: "cold-moist", organ: "none", tip: "تحليل المادة الغليظة بالتمريخ الحار والحجامة بعد النضج." },
+    "روماتيزم": { nature: "cold-moist", organ: "none", tip: "تدفئة المفصل وتجنب الرطوبات، واستخدام الزنجبيل والحرمل." },
+    "بهق": { nature: "cold-moist", organ: "none", tip: "تنقية البلغم وتسخين الجلد لإعادة اللون الطبيعي بالزيوت الحارة." },
+    "جذام": { nature: "cold-dry", organ: "none", tip: "تنقية السوداء العميقة من الدم بالاستفراغات المتتالية والمرطبات." },
+    "بواسير": { nature: "cold-dry", organ: "none", tip: "تنقية السوداء من أسفل البدن واستخدام طلاءات مرطبة (زيت لوز)." },
+
+    // 6. الأطفال (من تكميلات المغنى لعلاج الصبيان)
+    "سعال الصبيان": { nature: "cold-moist", organ: "lung", tip: "تلطيف الصدر بملعقة عسل سدر مخففة بماء دافئ ودهن الصدر بزيت سمسم." },
+    "مغص الرضيع": { nature: "cold-moist", organ: "stomach", tip: "تدليك البطن بدهن دافئ وتناول الأم لليانسون والكمون." },
+    "حرارة": { nature: "hot-dry", organ: "none", tip: "تبريد البدن بماء الورد والخل وتجنب الأغذية الحارة للأم (إذا كان يرضع)." }
 };
 
 function getDiseaseFromComplaint(complaint) {
