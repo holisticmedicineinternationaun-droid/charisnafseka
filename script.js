@@ -11,16 +11,24 @@ function translateSymptom() {
 
     let responseHTML = "";
 
-    // 1. Check in Registry first for direct match
+    // 1. Check in Registry first for direct match or partial match
+    let foundKey = null;
     if (diseaseRegistry[input]) {
-        const d = diseaseRegistry[input];
+        foundKey = input;
+    } else {
+        // Look for partial match
+        foundKey = Object.keys(diseaseRegistry).find(key => input.includes(key) || key.includes(input));
+    }
+
+    if (foundKey) {
+        const d = diseaseRegistry[foundKey];
         const organName = organsMapData[d.organ] ? organsMapData[d.organ].title : "عام";
         const natureAr = d.nature === "hot-dry" ? "حار يابس" : d.nature === "cold-moist" ? "بارد رطب" : d.nature === "cold-dry" ? "بارد يابس" : "حار رطب";
 
         responseHTML = `
             <div class="translator-step fade-in">
                 <div class="ref-badge"><i class="fas fa-book-medical"></i> المرجع: كتاب المغنى (ابن اللبودي)</div>
-                <p><strong>العرض: ${input}</strong></p>
+                <p><strong>العرض: ${foundKey}</strong></p>
                 <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border-right: 3px solid #d4af37; margin-top:15px;">
                     <p><strong>التصنيف الفرعي:</strong> ${natureAr}</p>
                     <p><strong>العضو المتأثر:</strong> ${organName}</p>
@@ -1187,26 +1195,11 @@ const mealScenarios = [
 
 function loadRandomMeal() {
     // --- Freemium Paywall check for Meals ---
-    const isPremium = checkActivation();
-    if (!isPremium) {
-        const now = new Date();
-        let trialStartStr = localStorage.getItem(TRIAL_START_KEY);
-        if (!trialStartStr) {
-            trialStartStr = now.toISOString();
-            localStorage.setItem(TRIAL_START_KEY, trialStartStr);
-        }
-        const trialStartDate = new Date(trialStartStr);
-        const diffDays = Math.ceil(Math.abs(now - trialStartDate) / (1000 * 60 * 60 * 24));
+    if (!checkGlobalTrialLimit('meal_scenarios')) return;
 
-        if (diffDays > MAX_FREE_DAYS) {
-            showPaywall("انتهت تجربة الوجبات!", "لقد انتهت فترة الـ 3 أيام التجريبية لتصفح وجبات التدبير. يرجى الاشتراك لفتح الموسوعة الكاملة.");
-            return;
-        }
-
-        // Show trial warning if it exists in DOM
-        const warning = document.getElementById('meals-trial-warning');
-        if (warning) warning.style.display = 'block';
-    }
+    // Show trial warning if it exists in DOM
+    const warning = document.getElementById('meals-trial-warning');
+    if (warning && !checkActivation()) warning.style.display = 'block';
 
     const randomIndex = Math.floor(Math.random() * mealScenarios.length);
     const m = mealScenarios[randomIndex];
@@ -1240,7 +1233,6 @@ function closeLightbox(event) {
 }
 
 // --- ACTIVATION & FREEMIUM LOGIC CONSTANTS ---
-const MAX_FREE_DAYS = 3; // تقليل الفترة التجريبية لـ 3 أيام كطلب الدكتورة
 const TRIAL_START_KEY = 'lailaApp_trialStart';
 const LAST_GENERATION_KEY = 'lailaApp_lastGenerationDate';
 const ACTIVATION_KEY = 'lailaApp_activationCode';
@@ -1324,6 +1316,9 @@ function openSupportLink(platform, event) {
 }
 
 // --- GLOBAL TRIAL LIMIT CHECKER ---
+const MAX_FREE_DAYS = 3;
+const MAX_DAILY_FREE_ATTEMPTS = 5;
+
 function checkGlobalTrialLimit(moduleName) {
     const isPremium = checkActivation();
     if (isPremium) return true;
@@ -1345,14 +1340,16 @@ function checkGlobalTrialLimit(moduleName) {
         return false;
     }
 
-    // Daily Limit Check per Module
-    const limitKey = `lastGen_${moduleName}_${todayStr}`;
-    if (localStorage.getItem(limitKey)) {
-        showPaywall("استنفدت الحد اليومي!", "في الفترة التجريبية، يُسمح باستخدام هذا المحلل مرة واحدة فقط يومياً لضمان التركيز.");
+    // Daily Limit Check per Module (Allow 5 attempts per day)
+    const limitKey = `attempts_${moduleName}_${todayStr}`;
+    let dailyAttempts = parseInt(localStorage.getItem(limitKey)) || 0;
+
+    if (dailyAttempts >= MAX_DAILY_FREE_ATTEMPTS) {
+        showPaywall("استنفدت الحد اليومي التجريبي!", `في الفترة التجريبية، يُسمح بـ ${MAX_DAILY_FREE_ATTEMPTS} محاولات يومياً فقط لكل قسم. للاستخدام غير المحدود، يرجى تفعيل النسخة الكاملة.`);
         return false;
     }
 
-    localStorage.setItem(limitKey, 'true');
+    localStorage.setItem(limitKey, dailyAttempts + 1);
     return true;
 }
 
