@@ -176,6 +176,17 @@ function translateSymptom() {
                     <button class="btn-option" onclick="finalizeTranslation('spiritual', 'waswas')">وساوس قهرية، شكوك، وحالات تيه وضياع (مس الوسواس)</button>
                 </div>
             </div>`;
+    } else if (input.includes("حمى") || input.includes("حرارة")) {
+        responseHTML = `
+            <div class="translator-step fade-in">
+                <p><strong>الحمى</strong> (منهاج القانون والمغنى). أي العلامات تظهر مع الارتفاع؟</p>
+                <div class="options-grid" style="margin-top:15px;">
+                    <button class="btn-option" onclick="finalizeTranslation('fever', 'blood')">حمرة الوجه، نبض ممتلئ، وحرارة شديدة (دموية)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('fever', 'bile')">مرارة الفم، عطش حارق، ولهيب في الجلد (صفراوية)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('fever', 'phlegm')">نافض (رجفة برد) تسبق الحرارة، وخمول (بلغمية)</button>
+                    <button class="btn-option" onclick="finalizeTranslation('fever', 'hectm')">ذبول البدن، حرارة تزداد بعد الأكل، وسعال (دق/سل)</button>
+                </div>
+            </div>`;
     }
 
     if (responseHTML) {
@@ -235,7 +246,7 @@ function translateSymptom() {
 
     // Default response if absolutely nothing matches
     responseDiv.innerHTML = `<p>هذه العلة مسجلة تحت باب <strong>"أسرار الأمزجة"</strong>.</p>
-                        <p style="font-size: 0.9rem; margin-top: 10px;">يرجى مسح ما كتبت بالأعلى وكتابة <strong>اسم العضو المتألم</strong> (مثل: الكبد، المعدة) أو اختيار <strong>عرض أقرب</strong> ليتسنى للمحرك الاستدلالي خدمتك بدقة.</p>`;
+            <p style="font-size: 0.9rem; margin-top: 10px;">يرجى مسح ما كتبت بالأعلى وكتابة <strong>اسم العضو المتألم</strong> (مثل: الكبد، المعدة) أو اختيار <strong>عرض أقرب</strong> ليتسنى للمحرك الاستدلالي خدمتك بدقة.</p>`;
     responseDiv.classList.remove('hidden');
 }
 
@@ -244,49 +255,65 @@ function finalizeTranslation(type, origin) {
     if (!responseDiv) return;
     let finalCode = "";
 
-    const medicalStyle = `style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border-right: 3px solid #d4af37; margin-top:15px; font-size: 0.95rem; line-height:1.7;"`;
+    const medicalStyle = `style = "background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border-right: 3px solid #d4af37; margin-top:15px; font-size: 0.95rem; line-height:1.7;"`;
 
     if (type === 'colon') {
         const text = origin === 'bile' ? "قولنج صفراوي حار" : "قولنج سوداوي يابس";
         const fix = origin === 'bile' ? "منع التوابل الحادة، شرب ماء الرجلة، ودهن البطن بدهن ورد." : "منع العدس والباذنجان، شرب منقوع التين، ودهن البطن بدهن لوز.";
-        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}><div class="ref-badge"><i class="fas fa-scroll"></i> المنهج: القانون في الطب (ابن سينا)</div>هذا الاضطراب ناتج عن انصباب مادة حادة في الأمعاء تمنع مرور الرياح. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
+        finalCode = `< strong > التشخيص: ${text}</strong > <div ${medicalStyle}><div class="ref-badge"><i class="fas fa-scroll"></i> المنهج: القانون في الطب (ابن سينا)</div>هذا الاضطراب ناتج عن انصباب مادة حادة في الأمعاء تمنع مرور الرياح. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
     } else if (type === 'headache') {
         const text = origin === 'hot' ? "صداع دموي/صفراوي" : "صداع بارد مادي";
         const fix = origin === 'hot' ? "تسكين الحرارة بماء الورد، ومنع الشمس، وتناول المبردات." : "استنشاق المسخنات (مثل القسط)، تدفئة الأطراف، وتناول الزنجبيل.";
-        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}><div class="ref-badge"><i class="fas fa-scroll"></i> المنهج: المغنى (الأمراض النفسانية)</div>الصداع هو انزعاج الروح الدماغية من أبخرة تصعد من الأسفل. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
+        finalCode = `< strong > التشخيص: ${text}</strong > <div ${medicalStyle}><div class="ref-badge"><i class="fas fa-scroll"></i> المنهج: المغنى (الأمراض النفسانية)</div>الصداع هو انزعاج الروح الدماغية من أبخرة تصعد من الأسفل. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
     } else if (type === 'psoriasis') {
         const text = origin === 'burnt' ? "سوداء محترقة (يبوسة عميقة)" : "بلغم مالح (فساد رطوبة)";
         const fix = origin === 'burnt' ? "تنقية السوداء (هندباء)، دهن بدهن بنفسج، والتركيز على المرطبات." : "منع الألبان، استخدام ماء المرة موضعياً، وتعديل خلط الدم بالأملج.";
-        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}><div class="ref-badge"><i class="fas fa-scroll"></i> المنهج: تقويم الأبدان (ابن جزلة)</div>الجلد يخرج ما عجزت الكلى والكبد عن تصريفه. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
+        finalCode = `< strong > التشخيص: ${text}</strong > <div ${medicalStyle}><div class="ref-badge"><i class="fas fa-scroll"></i> المنهج: تقويم الأبدان (ابن جزلة)</div>الجلد يخرج ما عجزت الكلى والكبد عن تصريفه. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
     } else if (type === 'eczema') {
         const text = origin === 'wet' ? "تموج دموي حار" : "يبوسة سوداوية صلبة";
         const fix = origin === 'wet' ? "تبريد الدم (عناب، خل ورد)، منع المقليات تماماً." : "سقى البدن بماء الشعير، دهن بزيت كتان، ومنع كل يابس وحامض.";
-        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}>هيجان الجلد هو صراخ الكبد لطلب النجدة والتبريد. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
+        finalCode = `< strong > التشخيص: ${text}</strong > <div ${medicalStyle}>هيجان الجلد هو صراخ الكبد لطلب النجدة والتبريد. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
     } else if (type === 'bedwetting') {
         const text = origin === 'cold' ? "برودة المثانة (رخاوة الفواتح)" : "يبوسة الأعصاب (تقلص لاإرادي)";
         const fix = origin === 'cold' ? "دلك المثانة بمزلقة زيت زيتون دافئ، تناول عسل بذر حرمل." : "ترطيب عصب الظهر بدهن الخروع، منع الفزع، وشرب مغلي المليسا.";
-        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}>التبول في النوم هو عجز القوة الحافظة عن مقاومة الطبيعة المندفعة. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
+        finalCode = `< strong > التشخيص: ${text}</strong > <div ${medicalStyle}>التبول في النوم هو عجز القوة الحافظة عن مقاومة الطبيعة المندفعة. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
     } else if (type === 'tremor') {
         const text = origin === 'cold' ? "ارتعاش بردي (بلغمي)" : "ارتعاش يبسي (سوداوي)";
         const fix = origin === 'cold' ? "تحمية الأعصاب بدهن فجل، أكل العسل بالزعتر، منع البارد." : "سقى الأعصاب بالدهون المرطبة (سمسم)، أكل الموفقات (قرع)، منع القهوة.";
-        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}><div class="ref-badge"><i class="fas fa-scroll"></i> المنهج: القانون في الطب (ابن سينا)</div>الرعشة هي حركة مضطربة للروح بين الدفع والجذب (الرازي). <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
+        finalCode = `< strong > التشخيص: ${text}</strong > <div ${medicalStyle}><div class="ref-badge"><i class="fas fa-scroll"></i> المنهج: القانون في الطب (ابن سينا)</div>الرعشة هي حركة مضطربة للروح بين الدفع والجذب (الرازي). <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
     } else if (type === 'acne') {
         const text = origin === 'hot' ? "بثور حارة (فوران دموي)" : "بثور باردة (رسوب بلغمي)";
         const fix = origin === 'hot' ? "تبريد الكبد بماء الهندباء، منع المقليات، وطلاء الخل والورد." : "تنشيف الجلد بماء المرة، منع المعجنات، وتناول الكمون واليانسون.";
-        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}>حب الشباب هو طفح 'كيلوس' رديء لم ينضج في الكبد فدفع للجلد. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
+        finalCode = `< strong > التشخيص: ${text}</strong > <div ${medicalStyle}>حب الشباب هو طفح 'كيلوس' رديء لم ينضج في الكبد فدفع للجلد. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
     } else if (type === 'hairloss') {
         const text = origin === 'dry' ? "يبوسة مسام (احتراق)" : "رخاوة مسام (رطوبة)";
         const fix = origin === 'dry' ? "ترطيب داخلي بدهن اللوز، منع الحواد (الخل)، طلاء زيت زيتون." : "دهن بزيوت قابضة (آس، سدر)، ومنع كثرة غسل الرأس بالماء الحار.";
-        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}>الشعر دخان نضج الأخلاط؛ ولا يثبت الدخان في أرض جافة محترقة ولا طينية رخوة. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
+        finalCode = `< strong > التشخيص: ${text}</strong > <div ${medicalStyle}>الشعر دخان نضج الأخلاط؛ ولا يثبت الدخان في أرض جافة محترقة ولا طينية رخوة. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
     } else if (type === 'insomnia') {
         const text = origin === 'dry' ? "يبوسة دماغية سوداوية" : "غلبة صفراوية نارية";
         const fix = origin === 'dry' ? "تقطير دهن بنفسج في الأنف، عشاء مرطب (قرع)، ومنع الهم." : "تبريد القدمين بماء بارد، شم الورد، شرب مغلي الليمون والنعناع.";
-        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}><div class="ref-badge"><i class="fas fa-scroll"></i> المنهج: القانون (ابن سينا)</div>النوم رطوبة في الدماغ كالسحاب، فإذا جف الدماغ طار النوم. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
+        finalCode = `< strong > التشخيص: ${text}</strong > <div ${medicalStyle}><div class="ref-badge"><i class="fas fa-scroll"></i> المنهج: القانون (ابن سينا)</div>النوم رطوبة في الدماغ كالسحاب، فإذا جف الدماغ طار النوم. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
     } else if (type === 'diabetes') {
         const text = origin === 'hot' ? "سكري حار يابس (منهج ابن سينا/الرازي)" : "سكري بارد رطب (منهج المغنى)";
         const desc = origin === 'hot' ? "احتراق في الكبد والكلى يسحب السوائل بسرعة." : "ضعف في القوة الهضمية للكبد ومنع نضج السكر.";
         const fix = origin === 'hot' ? "تبريد البدن بماء الشعير، اليقطين، وطلاء الكلى بماء الورد والنشا." : "تسخين الكبد بالزنجبيل والقرفة (باعتدال) والقسط الهندي.";
-        finalCode = `<strong>التشخيص: ${text}</strong><div ${medicalStyle}><div class="ref-badge"><i class="fas fa-balance-scale"></i> المنهج: الطب الشمولي (الجمع والموازنة)</div>${desc}<br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
+        finalCode = `< strong > التشخيص: ${text}</strong > <div ${medicalStyle}><div class="ref-badge"><i class="fas fa-balance-scale"></i> المنهج: الطب الشمولي (الجمع والموازنة)</div>${desc}<br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
+    } else if (type === 'fever') {
+        let text = ""; let fix = ""; let ref = "كتاب القانون (ابن سينا) والمغنى (ابن اللبودي)";
+        if (origin === 'blood') {
+            text = "حمى خلطية دموية";
+            fix = "تبريد الدم بماء الهندباء، الحجامة (إن جازت)، ومنع اللحوم والمسخنات.";
+        } else if (origin === 'bile') {
+            text = "حمى صفراوية حادة";
+            fix = "إطفاء بماء الشعير والرمان المر، ترطيب القدمين بالماء البارد والخل، وشم الورد.";
+        } else if (origin === 'phlegm') {
+            text = "حمى بلغمية (نافضة)";
+            fix = "تسخين البدن بماء الزنجبيل والعسل، التدثر جيداً، ومنع الألبان والبارد.";
+        } else {
+            text = "حمى الدق (وهن الأعضاء)";
+            fix = "تحتاج لترطيب شديد بماء الشعير والحليب اللطيف، ومنع المجهدات، واستشارة طبيب مختص فوراً.";
+        }
+        finalCode = `< strong > التشخيص: ${text}</strong > <div ${medicalStyle}><div class="ref-badge"><i class="fas fa-thermometer-half"></i> المرجع: ${ref}</div>تذكر أن الحمى عرض لسبب باطن، والترطيب أساسي دائماً. <br><strong>التدبير:</strong> ${fix}</div>`;
     } else if (type === 'magic') {
         let text = ""; let fix = ""; let ref = "منهج وحيد بالي والشيخ الأزهري (الاستفراغ)";
         if (origin === 'eaten') {
@@ -299,18 +326,18 @@ function finalizeTranslation(type, origin) {
             text = "سحر مدفون أو معلق (أثر روحي بعيد)";
             fix = "كثافة رقية إبطال السحر، سورة البقرة يومياً، وبرنامج الدهن العام بالزيت والمسك قبل النوم.";
         }
-        finalCode = `<strong>التشخيص الروحي: ${text}</strong><div ${medicalStyle}><div class="ref-badge"><i class="fas fa-ghost"></i> المرجع: ${ref}</div>العرض العضوي هو انعكاس للأثر الروحي. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
+        finalCode = `< strong > التشخيص الروحي: ${text}</strong > <div ${medicalStyle}><div class="ref-badge"><i class="fas fa-ghost"></i> المرجع: ${ref}</div>العرض العضوي هو انعكاس للأثر الروحي. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
     } else if (type === 'envy') {
         const text = origin === 'body' ? "إصابة بالعين (نفس معجبة)" : "إصابة بالحسد (نفس حاقدة)";
         const fix = origin === 'body' ? "الاغتسال بوضوء العائن (إن عُرف) أو الاغتسال بماء مقروء وسدر، والرقية العامة." : "الرقية الشرعية المطولة، التحصين بالأذكار، والاعتكاف على سورة البقرة والمعوذات.";
-        finalCode = `<strong>التشخيص الروحي: ${text}</strong><div ${medicalStyle}><div class="ref-badge"><i class="fas fa-eye"></i> المنهج: الشيخ خالد الحبشي</div>الحسد نار تحرق الجسد والروح؛ التدبير يكون بالتبريد بالماء والذكر. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
+        finalCode = `< strong > التشخيص الروحي: ${text}</strong > <div ${medicalStyle}><div class="ref-badge"><i class="fas fa-eye"></i> المنهج: الشيخ خالد الحبشي</div>الحسد نار تحرق الجسد والروح؛ التدبير يكون بالتبريد بالماء والذكر. <br><strong>التدبير المعتمد:</strong> ${fix}</div>`;
     } else if (type === 'spiritual') {
         const text = origin === 'touch' ? "مس أو أذى جني" : "مس الوسواس (عارض روحي)";
         const fix = origin === 'touch' ? "المسح بالمسك الأسود، الحجامة النبوية، وسماع رقية الحرق والتعذيب." : "تقوية القلب بالذكر، عدم الالتفات للأفكار، والتحصين بالمعوذات والآذان.";
-        finalCode = `<strong>الحالة: ${text}</strong><div ${medicalStyle}><div class="ref-badge"><i class="fas fa-vial"></i> المرجع: منهاج الرقية الشرعية الموثق</div><strong>البرنامج المقترح:</strong> ${fix}</div>`;
+        finalCode = `< strong > الحالة: ${text}</strong > <div ${medicalStyle}><div class="ref-badge"><i class="fas fa-vial"></i> المرجع: منهاج الرقية الشرعية الموثق</div><strong>البرنامج المقترح:</strong> ${fix}</div>`;
     }
 
-    responseDiv.innerHTML = `<div class="fade-in">${finalCode}</div>`;
+    responseDiv.innerHTML = `< div class="fade-in" > ${finalCode}</div > `;
 }
 
 const mealKnowledgeBase = {
@@ -348,11 +375,11 @@ function analyzeLastMeal() {
     // Check for disease names redirect
     if (mealText.match(/شقيقة|صداع|قولون|مفاصل|اكزيما|صدفية|رعشة/)) {
         resultDiv.innerHTML = `
-            <div class="meal-analysis-card">
+            < div class="meal-analysis-card" >
                 <p style="color:#f87171; font-weight:bold;"><i class="fas fa-info-circle"></i> تنبيه المحرك الذكي:</p>
                 <p>يبدو أنك أدخلت اسماً لمرض. هذا القسم مخصص لـ <strong>"الكيمياء الحرارية للأغذية"</strong>.</p>
                 <p>يرجى استخدام <strong>"المترجم الفوري"</strong> بالأسفل للحصول على التشخيص الدقيق.</p>
-            </div>`;
+            </div > `;
         resultDiv.classList.remove('hidden');
         return;
     }
@@ -375,7 +402,7 @@ function analyzeLastMeal() {
 
     if (!matchingFound) {
         resultDiv.innerHTML = `
-            <div class="meal-analysis-card">
+            < div class="meal-analysis-card" >
                 <p><strong><i class="fas fa-brain"></i> تحليل ذكاء الوجبة:</strong></p>
                 <p>لم أتعرف على تفاصيل هذه الوجبة في قاعدة الكلمات الحالية، لكن استناداً لقاعدة <strong>كليات الطب (ابن سينا، الأنطاكي، د. عبد الباسط السيد)</strong>:</p>
                 <p style="font-style: italic; color: #d4af37; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px;">
@@ -384,7 +411,7 @@ function analyzeLastMeal() {
                 <p style="margin-top: 15px; color: #f1c40f; font-weight: bold;">
                     <i class="fas fa-edit"></i> فضلاً، أعد كتابة "المكونات الأساسية" للوجبة (مثلاً: أرز، خضار، لحم، زيت) لأعطيك التحليل الحراري الدقيق الآن.
                 </p>
-            </div>`;
+            </div > `;
         resultDiv.classList.remove('hidden');
         return;
     }
@@ -428,7 +455,7 @@ function analyzeLastMeal() {
     }
 
     resultDiv.innerHTML = `
-        <div class="meal-analysis-card slide-up">
+            < div class="meal-analysis-card slide-up" >
             <span class="meal-quality-badge ${finalBC}">${finalQ}</span>
             <p><strong><i class="fas fa-microscope"></i> التحليل الحركي:</strong> ${analysis}</p>
             <p style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; font-size: 0.9rem; border-right: 3px solid #d4af37;">
@@ -436,7 +463,7 @@ function analyzeLastMeal() {
                 <br><small style="color:#d4af37;">تم رصد مكونات: [${detectedComponents.join(' - ')}]</small>
             </p>
             <div class="fix-suggestion"><strong><i class="fas fa-magic"></i> قاعدة الإصلاح:</strong> ${fix}</div>
-        </div>`;
+        </div > `;
 
     resultDiv.classList.remove('hidden');
     resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -526,15 +553,15 @@ function showHumorInfo(type) {
     });
 
     // إضافة التنسيق النشط للخلط المحدد
-    const activeCircle = document.querySelector(`.humor-circle.${type === 'yellow' ? 'yellow-bile' : type === 'black' ? 'black-bile' : type}`);
+    const activeCircle = document.querySelector(`.humor - circle.${type === 'yellow' ? 'yellow-bile' : type === 'black' ? 'black-bile' : type} `);
     if (activeCircle) {
         activeCircle.style.transform = 'scale(1.1) translateY(-5px)';
-        activeCircle.style.boxShadow = `0 10px 25px ${data.color}66`;
+        activeCircle.style.boxShadow = `0 10px 25px ${data.color} 66`;
     }
 
     box.style.borderRightColor = data.color;
     box.innerHTML = `
-        <h3 style="color: ${data.color};"><i class="fas ${data.icon}"></i> ${data.title}</h3>
+            < h3 style = "color: ${data.color};" > <i class="fas ${data.icon}"></i> ${data.title}</h3 >
         <div class="humor-info-grid">
             <div class="info-section">
                 <h4><i class="fas fa-fire-burner"></i> أين يتولد؟</h4>
@@ -561,7 +588,7 @@ function showHumorInfo(type) {
             <i class="fas fa-quote-right" style="color: #ccc; font-size: 1.2rem; margin-left: 10px;"></i>
             ${data.quote}
         </div>
-    `;
+        `;
 
     box.classList.remove('hidden');
 }
@@ -573,7 +600,7 @@ function showDiagTab(tabId) {
     document.querySelectorAll('.diag-content').forEach(content => content.classList.remove('active'));
 
     // Find the button that called this
-    const btn = document.querySelector(`.diag-tab[onclick="showDiagTab('${tabId}')"]`);
+    const btn = document.querySelector(`.diag - tab[onclick = "showDiagTab('${tabId}')"]`);
     if (btn) btn.classList.add('active');
 
     document.getElementById(tabId).classList.add('active');
@@ -626,19 +653,19 @@ function createCardHTML(item, isOrgan = false) {
     const titleColor = item.border || "var(--primary-color)";
 
     return `
-        <div class="flip-card">
-            <div class="flip-card-inner">
-                <div class="flip-card-front" style="background: ${bg};">
-                    <i class="fas ${item.icon} fa-3x" ${isOrgan ? '' : 'style="color: var(--secondary-color);"'}></i>
-                    <h3>${item.title}</h3>
+            < div class="flip-card" >
+                <div class="flip-card-inner">
+                    <div class="flip-card-front" style="background: ${bg};">
+                        <i class="fas ${item.icon} fa-3x" ${isOrgan ? '' : 'style="color: var(--secondary-color);"'}></i>
+                        <h3>${item.title}</h3>
+                    </div>
+                    <div class="flip-card-back" style="border-color: ${border};">
+                        <h3 style="color: ${titleColor};">طبيعته: ${item.nature}</h3>
+                        <p>${item.desc}</p>
+                    </div>
                 </div>
-                <div class="flip-card-back" style="border-color: ${border};">
-                    <h3 style="color: ${titleColor};">طبيعته: ${item.nature}</h3>
-                    <p>${item.desc}</p>
-                </div>
-            </div>
-        </div>
-    `;
+        </div >
+            `;
 }
 
 function updateCarousel(type) {
@@ -678,8 +705,8 @@ function renderAllGrids() {
 }
 
 function toggleViewAll(type) {
-    const container = document.querySelector(`#section-${type === 'herbs' ? '2' : '3'} .carousel-container`);
-    const grid = document.getElementById(`${type}-all-grid`);
+    const container = document.querySelector(`#section - ${type === 'herbs' ? '2' : '3'} .carousel - container`);
+    const grid = document.getElementById(`${type} -all - grid`);
 
     if (grid.classList.contains('hidden-grid')) {
         grid.classList.remove('hidden-grid');
@@ -973,10 +1000,10 @@ const organsMapData = {
 function showOrganDetails(organId) {
     const data = organsMapData[organId];
     document.getElementById('organ-details').innerHTML = `
-        <h3>${data.title}</h3>
+            < h3 > ${data.title}</h3 >
         <p><strong>طبيعته:</strong> <span style="color:var(--primary-color)">${data.nature}</span></p>
         <p style="margin-top:15px; line-height:1.6;">${data.desc}</p>
-    `;
+        `;
 }
 
 // --- CONCEPTS QUIZ LOGIC ---
@@ -1394,7 +1421,7 @@ function openSupportLink(platform, event) {
     if (event) event.preventDefault();
     const dateStr = new Date().toLocaleDateString('ar-DZ');
     const deviceId = getDeviceID();
-    const message = `مرحباً، أود تفعيل (الاشتراك الشهري لتطبيق التشخيص الذاتي).\nالتاريخ: ${dateStr}\nرمز الجهاز الخاص بي: ${deviceId}\n\nمرفق وصل الدفع للحصول على الكود فوراً.`;
+    const message = `مرحباً، أود تفعيل(الاشتراك الشهري لتطبيق التشخيص الذاتي).\nالتاريخ: ${dateStr} \nرمز الجهاز الخاص بي: ${deviceId} \n\nمرفق وصل الدفع للحصول على الكود فوراً.`;
 
     if (platform === 'whatsapp') {
         const encodedMessage = encodeURIComponent(message);
@@ -2200,6 +2227,7 @@ const diseaseRegistry = {
     "ميكروب": { nature: "hot-moist", organ: "none", tip: "تنقية الدم بالمضادات الطبيعية (ثوم، مر) وتبريد فوران الأخلاط." },
     "crp": { nature: "hot-moist", organ: "none", tip: "يدل على اشتعال 'نار' الالتهاب؛ علاجه بالتبريد والترطيب ومنع المقليات." },
     "حمى باردة": { nature: "cold-moist", organ: "none", tip: "تحمية البدن بالداخل بماء الزنجبيل والعسل وتدثر المريض جيداً." },
+    "حمى": { nature: "none", organ: "none", tip: "انظر قسم التشخيص الاستنطاقي؛ العلاج يختلف بحسب كونها دموية أو صفراوية أو بلغمية." },
     "شيب مبكر": { nature: "cold-moist", organ: "none", tip: "تحتاج لتجفيف رطوبات الرأس وإصلاح الهضم؛ دهن الرأس بزيت الآس والسدر." },
     "ارتفاع ضغط الدم": { nature: "hot-moist", organ: "heart", tip: "تقليل حجم الدم بالحجامة (إن جازت)، وتقليل الملح والمبردات كالكركديه." },
     "تصلب الشرايين": { nature: "cold-dry", organ: "heart", tip: "تحليل غلظ العروق بخل التفاح والثوم والليمون والرياضة." },
